@@ -33,6 +33,8 @@ dependencies:
   file_picker: ^3.0.1
   fluttertoast: ^8.0.6
   http: ^0.13.3
+  mime: ^1.0.0
+  permission_handler: ^7.1.0
 
 dev_dependencies:
   flutter_test:

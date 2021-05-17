@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -15,6 +17,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   File fileMedia;
+  bool isVideo = false;
+  dynamic vid;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +36,16 @@ class _HomeState extends State<Home> {
         child: OutlinedButton.icon(
           label: Text('Select file', style: TextStyle(fontSize: 30)),
           icon: Icon(Icons.image, size: 30),
-          onPressed: () => pickGalleryMedia(context),
+          onPressed: () async {
+            await [
+              Permission.storage,
+              Permission.manageExternalStorage,
+              Permission.systemAlertWindow,
+              Permission.ignoreBatteryOptimizations,
+            ].request();
+
+            pickGalleryMedia(context);
+          },
         ),
       ),
       SizedBox(height: 24),
@@ -86,34 +99,40 @@ class _HomeState extends State<Home> {
     final media = await FilePicker.platform.pickFiles(type: FileType.media);
     if (media == null) return;
     final file = File(media.files.first.path);
+    if (isVideoFile(file.path) == true) isVideo = true;
 
     if (file == null) {
       return;
     } else {
       setState(() {
-        fileMedia = file;
+          fileMedia = file;
       });
     }
   }
+}
 
-  Future uploadFile(File file) async {
-    final req = http.MultipartRequest(
-        'POST', Uri.parse('https://depressed-lemonade.me/sharexen.php'));
+Future uploadFile(File file) async {
+  final req = http.MultipartRequest(
+      'POST', Uri.parse('https://depressed-lemonade.me/sharexen.php'));
 
-    req.files.add(await http.MultipartFile.fromPath('image', file.path));
+  req.files.add(await http.MultipartFile.fromPath('image', file.path));
 
-    req.fields['endpoint'] = 'upload';
-    req.fields['token'] = '';
+  req.fields['endpoint'] = 'upload';
+  req.fields['token'] = '';
 
-    final response = await req.send();
-    print(response.statusCode);
+  final response = await req.send();
+  print(response.statusCode);
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final responseString = await response.stream.bytesToString();
-      final body = jsonDecode(responseString);
-      return body;
-    } else {
-      return null;
-    }
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    final responseString = await response.stream.bytesToString();
+    final body = jsonDecode(responseString);
+    return body;
+  } else {
+    return null;
   }
+}
+
+bool isVideoFile(String path) {
+  String mimeType = lookupMimeType(path);
+  return mimeType != null && mimeType.startsWith("video");
 }
