@@ -44,10 +44,10 @@ class _HomeState extends State<Home> {
           onPressed: () async {
             if (fileMedia == null) {
               Fluttertoast.showToast(
-                msg: "Please select an image!",
-                toastLength: Toast.LENGTH_SHORT,
-                timeInSecForIosWeb: 2,
-                fontSize: 16.0);
+                  msg: "Please select an image!",
+                  toastLength: Toast.LENGTH_SHORT,
+                  timeInSecForIosWeb: 2,
+                  fontSize: 16.0);
               return;
             }
             Fluttertoast.showToast(
@@ -103,8 +103,9 @@ class _HomeState extends State<Home> {
     req.fields['token'] = '';
 
     final response = await req.send();
+    print(response.statusCode);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final responseString = await response.stream.bytesToString();
       final body = jsonDecode(responseString);
       return body;
