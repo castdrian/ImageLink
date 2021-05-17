@@ -28,7 +28,9 @@ class _HomeState extends State<Home> {
       Expanded(
           child: fileMedia == null
               ? Icon(Icons.photo, size: 120)
-              : Image.file(fileMedia)),
+              : isVideo == true
+                  ? Icon(Icons.video_library, size: 120)
+                  : Image.file(fileMedia)),
       SizedBox(height: 140),
       Container(
         width: double.infinity,
@@ -37,6 +39,8 @@ class _HomeState extends State<Home> {
           label: Text('Select file', style: TextStyle(fontSize: 30)),
           icon: Icon(Icons.image, size: 30),
           onPressed: () async {
+            if (isVideo == true) isVideo = false;
+            
             await [
               Permission.storage,
               Permission.manageExternalStorage,
@@ -105,7 +109,7 @@ class _HomeState extends State<Home> {
       return;
     } else {
       setState(() {
-          fileMedia = file;
+        fileMedia = file;
       });
     }
   }
