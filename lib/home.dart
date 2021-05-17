@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
         width: double.infinity,
         height: 70.0,
         child: OutlinedButton.icon(
-          label: Text('Select Image', style: TextStyle(fontSize: 30)),
+          label: Text('Select file', style: TextStyle(fontSize: 30)),
           icon: Icon(Icons.image, size: 30),
           onPressed: () => pickGalleryMedia(context),
         ),
@@ -45,14 +45,14 @@ class _HomeState extends State<Home> {
           onPressed: () async {
             if (fileMedia == null) {
               Fluttertoast.showToast(
-                  msg: "Please select an image!",
+                  msg: "Please select a file!",
                   toastLength: Toast.LENGTH_SHORT,
                   timeInSecForIosWeb: 2,
                   fontSize: 16.0);
               return;
             }
             Fluttertoast.showToast(
-                msg: "Uploading Image...",
+                msg: "Uploading file...",
                 toastLength: Toast.LENGTH_SHORT,
                 timeInSecForIosWeb: 2,
                 fontSize: 16.0);
@@ -61,7 +61,7 @@ class _HomeState extends State<Home> {
 
             if (upload == null) {
               Fluttertoast.showToast(
-                  msg: "Failed to upload image!",
+                  msg: "Failed to upload file!",
                   toastLength: Toast.LENGTH_SHORT,
                   timeInSecForIosWeb: 2,
                   fontSize: 16.0);
@@ -71,7 +71,7 @@ class _HomeState extends State<Home> {
               final url = 'https://depressed-lemonade.me/${upload['filename']}';
               Clipboard.setData(ClipboardData(text: url));
               Fluttertoast.showToast(
-                  msg: "Successfully uploaded image!",
+                  msg: "File sucessfully uploaded!",
                   toastLength: Toast.LENGTH_SHORT,
                   timeInSecForIosWeb: 2,
                   fontSize: 16.0);
