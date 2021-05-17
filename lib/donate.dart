@@ -13,7 +13,7 @@ class _DonateState extends State<Donate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Column(children: <Widget>[
-      SizedBox(height: 14),
+        SizedBox(height: 14),
         Container(
           width: double.infinity,
           height: 70.0,
