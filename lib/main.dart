@@ -41,7 +41,7 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ImageLink'),
+        title: Text('ImageLink™ - by Adrian Castro'),
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
