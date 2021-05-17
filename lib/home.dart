@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -35,7 +36,16 @@ class _HomeState extends State<Home> {
             child: OutlinedButton.icon(
               label: Text('Upload', style: TextStyle(fontSize: 30)),
               icon: Icon(Icons.upload_file, size: 30),
-              onPressed: () {},
+              onPressed: () {
+                Fluttertoast.showToast(
+                    msg: "Uploading Image...",
+                    toastLength: Toast.LENGTH_SHORT,
+                    timeInSecForIosWeb: 2,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0
+                );
+              },
             ),
           ),
     ]));
