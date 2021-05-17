@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -57,6 +58,11 @@ class _SettingsState extends State<Settings> {
             label: Text('Save settings', style: TextStyle(fontSize: 25)),
             icon: Icon(Icons.save, size: 30),
             onPressed: () {
+              Fluttertoast.showToast(
+                msg: "Settings saved successfully!",
+                toastLength: Toast.LENGTH_SHORT,
+                timeInSecForIosWeb: 2,
+                fontSize: 16.0);
             },
           ),
         ),
