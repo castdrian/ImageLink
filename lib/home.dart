@@ -19,19 +19,30 @@ class _HomeState extends State<Home> {
   File fileMedia;
   bool isVideo = false;
   dynamic vid;
+  final txt = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(children: <Widget>[
-      SizedBox(height: 180),
+      SizedBox(height: 100),
       Expanded(
-          child: fileMedia == null
-              ? Icon(Icons.photo, size: 120)
+        child: fileMedia == null
+              ? Icon(Icons.photo, size: 150)
               : isVideo == true
                   ? Icon(Icons.video_library, size: 120)
                   : Image.file(fileMedia)),
-      SizedBox(height: 140),
+      SizedBox(height: 50),
+      TextField(
+        controller: txt,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: 'Selected file:',
+        ),
+        readOnly: true,
+        maxLines: null,
+      ),
+      SizedBox(height: 14),
       Container(
         width: double.infinity,
         height: 70.0,
@@ -40,7 +51,7 @@ class _HomeState extends State<Home> {
           icon: Icon(Icons.image, size: 30),
           onPressed: () async {
             if (isVideo == true) isVideo = false;
-            
+
             await [
               Permission.storage,
               Permission.manageExternalStorage,
@@ -52,7 +63,7 @@ class _HomeState extends State<Home> {
           },
         ),
       ),
-      SizedBox(height: 24),
+      SizedBox(height: 14),
       Container(
         width: double.infinity,
         height: 70.0,
@@ -110,6 +121,7 @@ class _HomeState extends State<Home> {
     } else {
       setState(() {
         fileMedia = file;
+        txt.text = file.path;
       });
     }
   }
