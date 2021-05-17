@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -67,6 +68,8 @@ class _HomeState extends State<Home> {
               return;
             } else {
               print(upload);
+              final url = 'https://depressed-lemonade.me/${upload['filename']}';
+              Clipboard.setData(ClipboardData(text: url));
               Fluttertoast.showToast(
                   msg: "Successfully uploaded image!",
                   toastLength: Toast.LENGTH_SHORT,
