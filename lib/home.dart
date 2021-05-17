@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   @override
@@ -39,12 +41,38 @@ class _HomeState extends State<Home> {
         child: OutlinedButton.icon(
           label: Text('Upload', style: TextStyle(fontSize: 30)),
           icon: Icon(Icons.upload_file, size: 30),
-          onPressed: () {
+          onPressed: () async {
+            if (fileMedia == null) {
+              Fluttertoast.showToast(
+                msg: "Please select an image!",
+                toastLength: Toast.LENGTH_SHORT,
+                timeInSecForIosWeb: 2,
+                fontSize: 16.0);
+              return;
+            }
             Fluttertoast.showToast(
                 msg: "Uploading Image...",
                 toastLength: Toast.LENGTH_SHORT,
                 timeInSecForIosWeb: 2,
                 fontSize: 16.0);
+
+            final upload = await uploadFile(fileMedia);
+
+            if (upload == null) {
+              Fluttertoast.showToast(
+                  msg: "Failed to upload image!",
+                  toastLength: Toast.LENGTH_SHORT,
+                  timeInSecForIosWeb: 2,
+                  fontSize: 16.0);
+              return;
+            } else {
+              print(upload);
+              Fluttertoast.showToast(
+                  msg: "Successfully uploaded image!",
+                  toastLength: Toast.LENGTH_SHORT,
+                  timeInSecForIosWeb: 2,
+                  fontSize: 16.0);
+            }
           },
         ),
       ),
@@ -62,6 +90,26 @@ class _HomeState extends State<Home> {
       setState(() {
         fileMedia = file;
       });
+    }
+  }
+
+  Future uploadFile(File file) async {
+    final req = http.MultipartRequest(
+        'POST', Uri.parse('https://depressed-lemonade.me/sharexen.php'));
+
+    req.files.add(await http.MultipartFile.fromPath('image', file.path));
+
+    req.fields['endpoint'] = 'upload';
+    req.fields['token'] = '';
+
+    final response = await req.send();
+
+    if (response.statusCode == 201) {
+      final responseString = await response.stream.bytesToString();
+      final body = jsonDecode(responseString);
+      return body;
+    } else {
+      return null;
     }
   }
 }
