@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -83,9 +83,9 @@ class _HomeState extends State<Home> {
   }
 
   Future pickGalleryMedia(BuildContext context) async {
-    final media = await ImagePicker().getImage(source: ImageSource.gallery);
+    final media = await FilePicker.platform.pickFiles(type: FileType.media);
     if (media == null) return;
-    final file = File(media.path);
+    final file = File(media.files.first.path);
 
     if (file == null) {
       return;

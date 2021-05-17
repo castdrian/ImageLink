@@ -30,7 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^9.0.0
   url_launcher: ^6.0.3
-  image_picker: ^0.7.5
+  file_picker: ^3.0.1
   fluttertoast: ^8.0.6
   http: ^0.13.3
 
