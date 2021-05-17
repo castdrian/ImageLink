@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Donate extends StatefulWidget {
   @override
@@ -19,7 +20,9 @@ class _DonateState extends State<Donate> {
           child: OutlinedButton.icon(
             label: Text('Paypal', style: TextStyle(fontSize: 25)),
             icon: Icon(FontAwesomeIcons.paypal, size: 30),
-            onPressed: () {},
+            onPressed: () {
+              launch('https://www.paypal.com/paypalme/adrifcastr');
+            },
           ),
         ),
         SizedBox(height: 24),
@@ -29,7 +32,9 @@ class _DonateState extends State<Donate> {
             child: OutlinedButton.icon(
               label: Text('Patreon', style: TextStyle(fontSize: 25)),
               icon: Icon(FontAwesomeIcons.patreon, size: 30),
-              onPressed: () {},
+              onPressed: () {
+                launch('https://www.patreon.com/gideonbot');
+              },
             ),
           ),
         SizedBox(height: 164),
@@ -39,7 +44,9 @@ class _DonateState extends State<Donate> {
             child: OutlinedButton.icon(
               label: Text('GitHub', style: TextStyle(fontSize: 25)),
               icon: Icon(FontAwesomeIcons.github, size: 30),
-              onPressed: () {},
+              onPressed: () {
+                launch('https://github.com/adrifcastr/ImageLink');
+              },
             ),
           ),
         SizedBox(height: 24),
@@ -49,7 +56,9 @@ class _DonateState extends State<Donate> {
           child: OutlinedButton.icon(
             label: Text('Discord', style: TextStyle(fontSize: 25)),
             icon: Icon(FontAwesomeIcons.discord, size: 30),
-            onPressed: () {},
+            onPressed: () {
+              launch('https://discord.gg/h9SEQaU');
+            },
           ),
         ),
         SizedBox(height: 24),
@@ -59,7 +68,9 @@ class _DonateState extends State<Donate> {
           child: OutlinedButton.icon(
             label: Text('Twitter', style: TextStyle(fontSize: 25)),
             icon: Icon(FontAwesomeIcons.twitter, size: 30),
-            onPressed: () {},
+            onPressed: () {
+              launch('https://twitter.com/castdrian');
+            },
           ),
         ),
       ])

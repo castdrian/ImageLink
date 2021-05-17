@@ -1,4 +1,4 @@
-package com.example.imagelink
+package com.castdrian.imagelink
 
 import io.flutter.embedding.android.FlutterActivity
 

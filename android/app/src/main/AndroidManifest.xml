@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.castdrian.imagelink">
    <application
-        android:label="imagelink"
+        android:label="ImageLink"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
