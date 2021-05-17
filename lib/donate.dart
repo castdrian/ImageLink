@@ -12,7 +12,9 @@ class Donate extends StatefulWidget {
 class _DonateState extends State<Donate> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Column(children: <Widget>[
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Column(children: <Widget>[
         SizedBox(height: 14),
         Container(
           width: double.infinity,

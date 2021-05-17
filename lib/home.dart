@@ -24,7 +24,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(children: <Widget>[
+      resizeToAvoidBottomInset: false,
+      body: Column(children: <Widget>[
       SizedBox(height: 100),
       Expanded(
         child: fileMedia == null
