@@ -4,7 +4,6 @@ import 'settings.dart';
 import 'history.dart';
 import 'donate.dart';
 
-
 void main() {
   runApp(MyApp());
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
+import 'package:permission_handler/permission_handler.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -66,8 +67,14 @@ class _SettingsState extends State<Settings> {
               label: Text('Import SXCU', style: TextStyle(fontSize: 25)),
               icon: Icon(Icons.upload_file, size: 30),
               onPressed: () async {
-                final media =
-                    await FilePicker.platform.pickFiles(type: FileType.any);
+                await [
+                  Permission.storage,
+                  Permission.manageExternalStorage,
+                  Permission.systemAlertWindow,
+                  Permission.ignoreBatteryOptimizations,
+                ].request();
+
+                final media = await FilePicker.platform.pickFiles(type: FileType.any);
                 if (media == null) return;
                 final file = File(media.files.first.path);
                 final extension = p.extension(file.path);
@@ -236,7 +243,14 @@ class _SettingsState extends State<Settings> {
             child: OutlinedButton.icon(
               label: Text('Save settings', style: TextStyle(fontSize: 25)),
               icon: Icon(Icons.save, size: 30),
-              onPressed: () {
+              onPressed: () async {
+                await [
+                  Permission.storage,
+                  Permission.manageExternalStorage,
+                  Permission.systemAlertWindow,
+                  Permission.ignoreBatteryOptimizations,
+                ].request();
+
                 Fluttertoast.showToast(
                     msg: 'Settings saved successfully!',
                     toastLength: Toast.LENGTH_SHORT,
