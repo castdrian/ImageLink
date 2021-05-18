@@ -44,6 +44,7 @@ class _NavBarState extends State<NavBar> {
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         onTap: onTabTapped, // new
         currentIndex: _currentIndex, // new
         items: [

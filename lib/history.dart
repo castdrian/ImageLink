@@ -8,7 +8,6 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  final sxc = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
