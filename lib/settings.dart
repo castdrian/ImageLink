@@ -18,21 +18,28 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(children: <Widget>[
-          SizedBox(height: 24),
+          SizedBox(height: 10),
           TextField(
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Request URL:',
+              labelText: 'Request URL (example.com/upload.php):',
             ),
           ),
-          SizedBox(height: 24),
+          SizedBox(height: 14),
+          TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'JSON res prop (\$json:filename\$):',
+            ),
+          ),
+          SizedBox(height: 14),
           TextField(
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               alignLabelWithHint: true,
-              labelText: 'JSON Body (multipart/form-data):'
+              labelText: 'JSON Arguments (multipart/form-data):'
             ),
-            maxLines: 10,
+            maxLines: 7,
           ),
           SizedBox(height: 24),
           TextField(
@@ -67,7 +74,7 @@ class _SettingsState extends State<Settings> {
               },
             ),
           ),
-          SizedBox(height: 24),
+          SizedBox(height: 10),
           Container(
           width: double.infinity,
           height: 70.0,
