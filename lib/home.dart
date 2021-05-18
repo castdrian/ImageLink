@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as p;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -25,90 +26,121 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Column(children: <Widget>[
-      SizedBox(height: 100),
-      Expanded(
-        child: fileMedia == null
-              ? Icon(Icons.photo, size: 150)
-              : isVideo == true
-                  ? Icon(Icons.video_library, size: 150)
-                  : Image.file(fileMedia)),
-      SizedBox(height: 50),
-      TextField(
-        controller: txt,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Selected file:',
-        ),
-        readOnly: true,
-      ),
-      SizedBox(height: 14),
-      Container(
-        width: double.infinity,
-        height: 70.0,
-        child: OutlinedButton.icon(
-          label: Text('Select file', style: TextStyle(fontSize: 30)),
-          icon: Icon(Icons.image, size: 30),
-          onPressed: () async {
-            if (isVideo == true) isVideo = false;
+        resizeToAvoidBottomInset: false,
+        body: Column(children: <Widget>[
+          SizedBox(height: 100),
+          Expanded(
+              child: fileMedia == null
+                  ? Icon(Icons.photo, size: 150)
+                  : isVideo == true
+                      ? Icon(Icons.video_library, size: 150)
+                      : Image.file(fileMedia)),
+          SizedBox(height: 50),
+          TextField(
+            controller: txt,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Selected file:',
+            ),
+            readOnly: true,
+          ),
+          SizedBox(height: 14),
+          Container(
+            width: double.infinity,
+            height: 70.0,
+            child: OutlinedButton.icon(
+              label: Text('Select file', style: TextStyle(fontSize: 30)),
+              icon: Icon(Icons.image, size: 30),
+              onPressed: () async {
+                if (isVideo == true) isVideo = false;
 
-            await [
-              Permission.storage,
-              Permission.manageExternalStorage,
-              Permission.systemAlertWindow,
-              Permission.ignoreBatteryOptimizations,
-            ].request();
+                await [
+                  Permission.storage,
+                  Permission.manageExternalStorage,
+                  Permission.systemAlertWindow,
+                  Permission.ignoreBatteryOptimizations,
+                ].request();
 
-            pickGalleryMedia(context);
-          },
-        ),
-      ),
-      SizedBox(height: 14),
-      Container(
-        width: double.infinity,
-        height: 70.0,
-        child: OutlinedButton.icon(
-          label: Text('Upload', style: TextStyle(fontSize: 30)),
-          icon: Icon(Icons.upload_file, size: 30),
-          onPressed: () async {
-            if (fileMedia == null) {
-              Fluttertoast.showToast(
-                  msg: 'Please select a file!',
-                  toastLength: Toast.LENGTH_SHORT,
-                  timeInSecForIosWeb: 2,
-                  fontSize: 16.0);
-              return;
-            }
-            Fluttertoast.showToast(
-                msg: 'Uploading file...',
-                toastLength: Toast.LENGTH_SHORT,
-                timeInSecForIosWeb: 2,
-                fontSize: 16.0);
+                final prefs = await SharedPreferences.getInstance();
+                final requrl = prefs.getString('requrl');
 
-            final upload = await uploadFile(fileMedia);
+                if (requrl == null) {
+                  Fluttertoast.showToast(
+                      msg: 'You must specify settings first!',
+                      toastLength: Toast.LENGTH_SHORT,
+                      timeInSecForIosWeb: 2,
+                      fontSize: 16.0);
+                  return;
+                }
 
-            if (upload == null) {
-              Fluttertoast.showToast(
-                  msg: 'Failed to upload file!',
-                  toastLength: Toast.LENGTH_SHORT,
-                  timeInSecForIosWeb: 2,
-                  fontSize: 16.0);
-              return;
-            } else {
-              print(upload);
-              final url = 'https://depressed-lemonade.me/${upload['filename']}';
-              Clipboard.setData(ClipboardData(text: url));
-              Fluttertoast.showToast(
-                  msg: 'File sucessfully uploaded!',
-                  toastLength: Toast.LENGTH_SHORT,
-                  timeInSecForIosWeb: 2,
-                  fontSize: 16.0);
-            }
-          },
-        ),
-      ),
-    ]));
+                pickGalleryMedia(context);
+              },
+            ),
+          ),
+          SizedBox(height: 14),
+          Container(
+            width: double.infinity,
+            height: 70.0,
+            child: OutlinedButton.icon(
+              label: Text('Upload', style: TextStyle(fontSize: 30)),
+              icon: Icon(Icons.upload_file, size: 30),
+              onPressed: () async {
+                if (fileMedia == null) {
+                  Fluttertoast.showToast(
+                      msg: 'Please select a file!',
+                      toastLength: Toast.LENGTH_SHORT,
+                      timeInSecForIosWeb: 2,
+                      fontSize: 16.0);
+                  return;
+                }
+                Fluttertoast.showToast(
+                    msg: 'Uploading file...',
+                    toastLength: Toast.LENGTH_SHORT,
+                    timeInSecForIosWeb: 2,
+                    fontSize: 16.0);
+
+                final upload = await uploadFile(fileMedia);
+
+                if (upload is int) {
+                  Fluttertoast.showToast(
+                      msg: 'Failed to upload file! HTTP Code $upload',
+                      toastLength: Toast.LENGTH_SHORT,
+                      timeInSecForIosWeb: 2,
+                      fontSize: 16.0);
+                  return;
+                } else {
+                  print(upload);
+                  final prefs = await SharedPreferences.getInstance();
+                  final resprop = prefs.getString('resprop');
+                  final regexp = RegExp(r'\$json:([a-zA-Z]+)\$');
+                  final match = regexp.firstMatch(resprop);
+                  final matched = match.group(1);
+                  final rawurl = upload[matched] as String;
+
+                  if (rawurl == null) {
+                    Fluttertoast.showToast(
+                        msg: 'Uploaded, but failed to parse response URL!',
+                        toastLength: Toast.LENGTH_SHORT,
+                        timeInSecForIosWeb: 2,
+                        fontSize: 16.0);
+                    return;
+                  }
+
+                  final url =
+                      rawurl.replaceAll(RegExp(r'/^http:\/\//i'), 'https://');
+
+                  Clipboard.setData(ClipboardData(text: url));
+
+                  Fluttertoast.showToast(
+                      msg: 'File sucessfully uploaded!',
+                      toastLength: Toast.LENGTH_SHORT,
+                      timeInSecForIosWeb: 2,
+                      fontSize: 16.0);
+                }
+              },
+            ),
+          ),
+        ]));
   }
 
   Future pickGalleryMedia(BuildContext context) async {
@@ -129,13 +161,18 @@ class _HomeState extends State<Home> {
 }
 
 Future uploadFile(File file) async {
-  final req = http.MultipartRequest(
-      'POST', Uri.parse('https://depressed-lemonade.me/sharexen.php'));
+  final prefs = await SharedPreferences.getInstance();
+  final requrl = prefs.getString('requrl');
+  final args = prefs.getString('args');
+
+  final fields = jsonDecode(args);
+  final req = http.MultipartRequest('POST', Uri.parse(requrl));
 
   req.files.add(await http.MultipartFile.fromPath('image', file.path));
 
-  req.fields['endpoint'] = 'upload';
-  req.fields['token'] = '';
+  fields.forEach((k, v) {
+    req.fields[k] = v;
+  });
 
   final response = await req.send();
   print(response.statusCode);
@@ -145,7 +182,7 @@ Future uploadFile(File file) async {
     final body = jsonDecode(responseString);
     return body;
   } else {
-    return null;
+    return response.statusCode;
   }
 }
 

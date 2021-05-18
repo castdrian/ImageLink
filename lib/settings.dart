@@ -136,6 +136,34 @@ class _SettingsState extends State<Settings> {
                   );
                   return;
                 }
+                final regexp = RegExp(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
+                final match = regexp.firstMatch(sxcu['RequestURL']);
+
+                if (match == null) {
+                  Widget okButton = TextButton(
+                    child: Text('I accept this error.'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: Text('Invalid request URL'),
+                    content:
+                        Text('The request URL needs to be a valid URL!'),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                  return;
+                }
 
                 final reqtype = sxcu['Body'];
                 print(reqtype);
@@ -193,9 +221,9 @@ class _SettingsState extends State<Settings> {
                 }
 
                 final url = sxcu['URL'];
-                final regexp = RegExp(r'\$json:([a-zA-Z]+)\$');
-                final match = regexp.firstMatch(url);
-                if (match == null) {
+                final urlregexp = RegExp(r'\$json:([a-zA-Z]+)\$');
+                final urlmatch = urlregexp.firstMatch(url);
+                if (urlmatch == null) {
                   Widget okButton = TextButton(
                     child: Text('I accept this error.'),
                     onPressed: () {
@@ -205,8 +233,7 @@ class _SettingsState extends State<Settings> {
 
                   AlertDialog alert = AlertDialog(
                     title: Text('Invalid response parameter'),
-                    content: Text(
-                        'The response URL must contain a \$json:parameter\$ argument!'),
+                    content: Text('The response URL must contain a \$json:parameter\$ argument!'),
                     actions: [
                       okButton,
                     ],
@@ -226,7 +253,7 @@ class _SettingsState extends State<Settings> {
                   sxc.text = p.basename(file.path);
                   rqc.text = sxcu['RequestURL'];
                   rsc.text = matchedText;
-                  agc.text = sxcu['Arguments'].toString();
+                  agc.text = jsonEncode(sxcu['Arguments']);
                 });
 
                 Fluttertoast.showToast(
@@ -306,12 +333,99 @@ class _SettingsState extends State<Settings> {
                   Permission.ignoreBatteryOptimizations,
                 ].request();
 
-                if ([rqc.text, rsc.text, agc.text].every((v) => v != null)) {
+                if ([rqc.text, rsc.text, agc.text].every((v) => v == '')) {
                   Fluttertoast.showToast(
                       msg: 'Nothing to save (all fields required)!',
                       toastLength: Toast.LENGTH_SHORT,
                       timeInSecForIosWeb: 2,
                       fontSize: 16.0);
+                  return;
+                }
+
+                final regexp = RegExp(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
+                final match = regexp.firstMatch(rqc.text);
+
+                if (match == null) {
+                  Widget okButton = TextButton(
+                    child: Text('I accept this error.'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: Text('Invalid request URL'),
+                    content:
+                        Text('The request URL needs to be a valid URL!'),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                  return;
+                }
+
+                final resregexp = RegExp(r'\$json:([a-zA-Z]+)\$');
+                final resmatch = resregexp.firstMatch(rsc.text);
+
+                if (resmatch == null) {
+                  Widget okButton = TextButton(
+                    child: Text('I accept this error.'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: Text('Invalid response property'),
+                    content:
+                        Text('The response property did not match \$json:value\$'),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                  return;
+                }
+
+                try {
+                  jsonDecode(agc.text);
+                } on FormatException catch (e) {
+                  print(e);
+                  Widget okButton = TextButton(
+                    child: Text('I accept this error.'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: Text('Invalid JSON'),
+                    content:
+                        Text('The arguments field did not contain valid JSON!'),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
                   return;
                 }
 
