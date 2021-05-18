@@ -58,7 +58,6 @@ class _SettingsState extends State<Settings> {
               labelText: 'Selected SXCU:',
             ),
             readOnly: true,
-            maxLines: null,
           ),
           SizedBox(height: 14),
           Container(
@@ -224,7 +223,7 @@ class _SettingsState extends State<Settings> {
                 final matchedText = match.group(0);
 
                 setState(() {
-                  sxc.text = file.path;
+                  sxc.text = p.basename(file.path);
                   rqc.text = sxcu['RequestURL'];
                   rsc.text = matchedText;
                   agc.text = sxcu['Arguments'].toString();
@@ -232,6 +231,17 @@ class _SettingsState extends State<Settings> {
 
                 Fluttertoast.showToast(
                     msg: 'Successfully imported SXCU!',
+                    toastLength: Toast.LENGTH_SHORT,
+                    timeInSecForIosWeb: 2,
+                    fontSize: 16.0);
+
+                final prefs = await SharedPreferences.getInstance();
+                prefs.setString('requrl', rqc.text);
+                prefs.setString('resprop', rsc.text);
+                prefs.setString('args', agc.text);
+
+                Fluttertoast.showToast(
+                    msg: 'Settings saved successfully!',
                     toastLength: Toast.LENGTH_SHORT,
                     timeInSecForIosWeb: 2,
                     fontSize: 16.0);
@@ -295,6 +305,20 @@ class _SettingsState extends State<Settings> {
                   Permission.systemAlertWindow,
                   Permission.ignoreBatteryOptimizations,
                 ].request();
+
+                if ([rqc.text, rsc.text, agc.text].every((v) => v != null)) {
+                  Fluttertoast.showToast(
+                      msg: 'Nothing to save (all fields required)!',
+                      toastLength: Toast.LENGTH_SHORT,
+                      timeInSecForIosWeb: 2,
+                      fontSize: 16.0);
+                  return;
+                }
+
+                final prefs = await SharedPreferences.getInstance();
+                prefs.setString('requrl', rqc.text);
+                prefs.setString('resprop', rsc.text);
+                prefs.setString('args', agc.text);
 
                 Fluttertoast.showToast(
                     msg: 'Settings saved successfully!',

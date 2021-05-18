@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:path/path.dart' as p;
 
 class Home extends StatefulWidget {
   @override
@@ -41,7 +42,6 @@ class _HomeState extends State<Home> {
           labelText: 'Selected file:',
         ),
         readOnly: true,
-        maxLines: null,
       ),
       SizedBox(height: 14),
       Container(
@@ -122,7 +122,7 @@ class _HomeState extends State<Home> {
     } else {
       setState(() {
         fileMedia = file;
-        txt.text = file.path;
+        txt.text = p.basename(file.path);
       });
     }
   }
