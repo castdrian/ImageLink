@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -47,7 +48,7 @@ class _SettingsState extends State<Settings> {
                 border: OutlineInputBorder(),
                 alignLabelWithHint: true,
                 labelText: 'JSON Arguments (multipart/form-data):'),
-            maxLines: 7,
+            maxLines: 5,
           ),
           SizedBox(height: 24),
           TextField(
@@ -74,7 +75,8 @@ class _SettingsState extends State<Settings> {
                   Permission.ignoreBatteryOptimizations,
                 ].request();
 
-                final media = await FilePicker.platform.pickFiles(type: FileType.any);
+                final media =
+                    await FilePicker.platform.pickFiles(type: FileType.any);
                 if (media == null) return;
                 final file = File(media.files.first.path);
                 final extension = p.extension(file.path);
@@ -192,10 +194,10 @@ class _SettingsState extends State<Settings> {
                 }
 
                 final url = sxcu['URL'];
-                final regexp = RegExp(r'\$json:([a-zA-Z]+)\$'); 
+                final regexp = RegExp(r'\$json:([a-zA-Z]+)\$');
                 final match = regexp.firstMatch(url);
                 if (match == null) {
-                   Widget okButton = TextButton(
+                  Widget okButton = TextButton(
                     child: Text('I accept this error.'),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -204,8 +206,8 @@ class _SettingsState extends State<Settings> {
 
                   AlertDialog alert = AlertDialog(
                     title: Text('Invalid response parameter'),
-                    content:
-                        Text('The response URL must contain a \$json:parameter\$ argument!'),
+                    content: Text(
+                        'The response URL must contain a \$json:parameter\$ argument!'),
                     actions: [
                       okButton,
                     ],
@@ -219,7 +221,7 @@ class _SettingsState extends State<Settings> {
                   );
                   return;
                 }
-                final matchedText = match.group(0); 
+                final matchedText = match.group(0);
 
                 setState(() {
                   sxc.text = file.path;
@@ -230,6 +232,49 @@ class _SettingsState extends State<Settings> {
 
                 Fluttertoast.showToast(
                     msg: 'Successfully imported SXCU!',
+                    toastLength: Toast.LENGTH_SHORT,
+                    timeInSecForIosWeb: 2,
+                    fontSize: 16.0);
+              },
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            width: double.infinity,
+            height: 70.0,
+            child: OutlinedButton.icon(
+              label: Text('Load settings', style: TextStyle(fontSize: 25)),
+              icon: Icon(Icons.open_in_browser, size: 30),
+              onPressed: () async {
+                await [
+                  Permission.storage,
+                  Permission.manageExternalStorage,
+                  Permission.systemAlertWindow,
+                  Permission.ignoreBatteryOptimizations,
+                ].request();
+
+                final prefs = await SharedPreferences.getInstance();
+                final requrl = prefs.getString('requrl');
+                final resprop = prefs.getString('resprop');
+                final args = prefs.getString('args');
+
+                if (requrl == null) {
+                  Fluttertoast.showToast(
+                      msg: 'Nothing to load!',
+                      toastLength: Toast.LENGTH_SHORT,
+                      timeInSecForIosWeb: 2,
+                      fontSize: 16.0);
+                  return;
+                }
+
+                setState(() {
+                  rqc.text = requrl;
+                  rsc.text = resprop;
+                  agc.text = args;
+                });
+
+                Fluttertoast.showToast(
+                    msg: 'Settings successfully loaded!',
                     toastLength: Toast.LENGTH_SHORT,
                     timeInSecForIosWeb: 2,
                     fontSize: 16.0);
