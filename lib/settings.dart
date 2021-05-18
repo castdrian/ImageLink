@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,6 +14,9 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final sxc = TextEditingController();
+  final rqc = TextEditingController();
+  final rsc = TextEditingController();
+  final agc = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +25,7 @@ class _SettingsState extends State<Settings> {
         body: Column(children: <Widget>[
           SizedBox(height: 10),
           TextField(
+            controller: rqc,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Request URL (example.com/upload.php):',
@@ -28,13 +33,15 @@ class _SettingsState extends State<Settings> {
           ),
           SizedBox(height: 14),
           TextField(
+            controller: rsc,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Res img url prop (\$json:url\$):',
+              labelText: 'Response img url prop (\$json:parameter\$):',
             ),
           ),
           SizedBox(height: 14),
           TextField(
+            controller: agc,
             decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 alignLabelWithHint: true,
@@ -64,26 +71,23 @@ class _SettingsState extends State<Settings> {
                 if (media == null) return;
                 final file = File(media.files.first.path);
                 final extension = p.extension(file.path);
-
-                if (extension != '.sxcu' || extension != '.json') {
-                  // set up the button
+                print(extension);
+                if (extension != '.sxcu') {
                   Widget okButton = TextButton(
-                    child: Text("I accept this error."),
+                    child: Text('I accept this error.'),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                   );
 
-                  // set up the AlertDialog
                   AlertDialog alert = AlertDialog(
-                    title: Text("Invalid file"),
-                    content: Text("Please select an .sxcu or .json file!"),
+                    title: Text('Invalid file'),
+                    content: Text('Please select an .sxcu file!'),
                     actions: [
                       okButton,
                     ],
                   );
 
-                  // show the dialog
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -92,12 +96,133 @@ class _SettingsState extends State<Settings> {
                   );
                   return;
                 }
+
+                dynamic sxcu;
+                try {
+                  final content = await file.readAsString();
+                  sxcu = jsonDecode(content);
+                  print(sxcu);
+                } on FormatException catch (e) {
+                  print(e);
+                  Widget okButton = TextButton(
+                    child: Text('I accept this error.'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: Text('Invalid JSON'),
+                    content:
+                        Text('The selected file did not contain valid JSON!'),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                  return;
+                }
+
+                final reqtype = sxcu['Body'];
+                print(reqtype);
+                if (reqtype != 'MultipartFormData') {
+                  Widget okButton = TextButton(
+                    child: Text('I accept this error.'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: Text('Invalid request type'),
+                    content: Text(
+                        'The SXCU request type must be multipart/form-data!'),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                  return;
+                }
+
+                final args = sxcu['Arguments'];
+                if (args == null) {
+                  Widget okButton = TextButton(
+                    child: Text('I accept this error.'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: Text('Invalid request arguments'),
+                    content:
+                        Text('The SXCU request body must contain arguments!'),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                  return;
+                }
+
+                final url = sxcu['URL'];
+                final regexp = RegExp(r'\$json:([a-zA-Z]+)\$'); 
+                final match = regexp.firstMatch(url);
+                if (match == null) {
+                   Widget okButton = TextButton(
+                    child: Text('I accept this error.'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: Text('Invalid response parameter'),
+                    content:
+                        Text('The response URL must contain a \$json:parameter\$ argument!'),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                  return;
+                }
+                final matchedText = match.group(0); 
+
                 setState(() {
                   sxc.text = file.path;
+                  rqc.text = sxcu['RequestURL'];
+                  rsc.text = matchedText;
+                  agc.text = sxcu['Arguments'].toString();
                 });
 
                 Fluttertoast.showToast(
-                    msg: "Successfully imported SXCU!",
+                    msg: 'Successfully imported SXCU!',
                     toastLength: Toast.LENGTH_SHORT,
                     timeInSecForIosWeb: 2,
                     fontSize: 16.0);
@@ -113,7 +238,7 @@ class _SettingsState extends State<Settings> {
               icon: Icon(Icons.save, size: 30),
               onPressed: () {
                 Fluttertoast.showToast(
-                    msg: "Settings saved successfully!",
+                    msg: 'Settings saved successfully!',
                     toastLength: Toast.LENGTH_SHORT,
                     timeInSecForIosWeb: 2,
                     fontSize: 16.0);

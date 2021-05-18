@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
         child: fileMedia == null
               ? Icon(Icons.photo, size: 150)
               : isVideo == true
-                  ? Icon(Icons.video_library, size: 120)
+                  ? Icon(Icons.video_library, size: 150)
                   : Image.file(fileMedia)),
       SizedBox(height: 50),
       TextField(
@@ -74,14 +74,14 @@ class _HomeState extends State<Home> {
           onPressed: () async {
             if (fileMedia == null) {
               Fluttertoast.showToast(
-                  msg: "Please select a file!",
+                  msg: 'Please select a file!',
                   toastLength: Toast.LENGTH_SHORT,
                   timeInSecForIosWeb: 2,
                   fontSize: 16.0);
               return;
             }
             Fluttertoast.showToast(
-                msg: "Uploading file...",
+                msg: 'Uploading file...',
                 toastLength: Toast.LENGTH_SHORT,
                 timeInSecForIosWeb: 2,
                 fontSize: 16.0);
@@ -90,7 +90,7 @@ class _HomeState extends State<Home> {
 
             if (upload == null) {
               Fluttertoast.showToast(
-                  msg: "Failed to upload file!",
+                  msg: 'Failed to upload file!',
                   toastLength: Toast.LENGTH_SHORT,
                   timeInSecForIosWeb: 2,
                   fontSize: 16.0);
@@ -100,7 +100,7 @@ class _HomeState extends State<Home> {
               final url = 'https://depressed-lemonade.me/${upload['filename']}';
               Clipboard.setData(ClipboardData(text: url));
               Fluttertoast.showToast(
-                  msg: "File sucessfully uploaded!",
+                  msg: 'File sucessfully uploaded!',
                   toastLength: Toast.LENGTH_SHORT,
                   timeInSecForIosWeb: 2,
                   fontSize: 16.0);
@@ -151,5 +151,5 @@ Future uploadFile(File file) async {
 
 bool isVideoFile(String path) {
   String mimeType = lookupMimeType(path);
-  return mimeType != null && mimeType.startsWith("video");
+  return mimeType != null && mimeType.startsWith('video');
 }
