@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'settings.dart';
+import 'history.dart';
 import 'donate.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -31,11 +33,7 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   int _currentIndex = 0;
-  final List<Widget> _children = [
-    Home(),
-    Settings(),
-    Donate()
-  ];
+  final List<Widget> _children = [Home(), Settings(), History(), Donate()];
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +56,17 @@ class _NavBarState extends State<NavBar> {
             label: 'Settings',
           ),
           BottomNavigationBarItem(
+            icon: new Icon(Icons.history),
+            label: 'History',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.monetization_on_rounded),
             label: 'Donate')
         ],
       ),
     );
   }
+
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
