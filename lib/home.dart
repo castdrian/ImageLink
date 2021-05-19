@@ -92,6 +92,10 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     shareIntent();
+
+    // Request Permissions after loading the Home Screen
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) async => await loadAsync(context));
   }
 
   @override
@@ -135,13 +139,6 @@ class _HomeState extends State<Home> {
               icon: Icon(Icons.image, size: 30),
               onPressed: () async {
                 if (isVideo == true) isVideo = false;
-
-                await [
-                  Permission.storage,
-                  Permission.manageExternalStorage,
-                  Permission.systemAlertWindow,
-                  Permission.ignoreBatteryOptimizations,
-                ].request();
 
                 final prefs = await SharedPreferences.getInstance();
                 final requrl = prefs.getString('requrl');
@@ -227,6 +224,15 @@ class _HomeState extends State<Home> {
             ),
           ),
         ]));
+  }
+
+  Future loadAsync(BuildContext context) async {
+    await [
+      Permission.storage,
+      Permission.manageExternalStorage,
+      Permission.systemAlertWindow,
+      Permission.ignoreBatteryOptimizations,
+    ].request();
   }
 
   Future pickGalleryMedia(BuildContext context) async {
