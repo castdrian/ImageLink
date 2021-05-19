@@ -50,6 +50,10 @@ class _HomeState extends State<Home> {
           ),
           SizedBox(height: 14),
           Container(
+            constraints: new BoxConstraints(
+              minHeight: 70.0,
+              maxHeight: 70.0,
+            ),
             width: double.infinity,
             height: 70.0,
             child: OutlinedButton.icon(
@@ -83,6 +87,10 @@ class _HomeState extends State<Home> {
           ),
           SizedBox(height: 14),
           Container(
+            constraints: new BoxConstraints(
+              minHeight: 70.0,
+              maxHeight: 70.0,
+            ),
             width: double.infinity,
             height: 70.0,
             child: OutlinedButton.icon(

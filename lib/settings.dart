@@ -98,6 +98,10 @@ class _SettingsState extends State<Settings> {
           ),
           SizedBox(height: 10),
           Container(
+            constraints: new BoxConstraints(
+              minHeight: 60.0,
+              maxHeight: 60.0,
+            ),
             width: double.infinity,
             height: 60.0,
             child: OutlinedButton.icon(
@@ -361,6 +365,10 @@ class _SettingsState extends State<Settings> {
           ),
           SizedBox(height: 5),
           Container(
+            constraints: new BoxConstraints(
+              minHeight: 60.0,
+              maxHeight: 60.0,
+            ),
             width: double.infinity,
             height: 60.0,
             child: OutlinedButton.icon(
@@ -408,6 +416,10 @@ class _SettingsState extends State<Settings> {
           ),
           SizedBox(height: 5),
           Container(
+            constraints: new BoxConstraints(
+              minHeight: 60.0,
+              maxHeight: 60.0,
+            ),
             width: double.infinity,
             height: 60.0,
             child: OutlinedButton.icon(
