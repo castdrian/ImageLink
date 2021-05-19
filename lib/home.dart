@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
             ),
             width: double.infinity,
             height: 70.0,
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               label: Text('Select file', style: TextStyle(fontSize: 30)),
               icon: Icon(Icons.image, size: 30),
               onPressed: () async {
@@ -93,7 +93,7 @@ class _HomeState extends State<Home> {
             ),
             width: double.infinity,
             height: 70.0,
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               label: Text('Upload', style: TextStyle(fontSize: 30)),
               icon: Icon(Icons.upload_file, size: 30),
               onPressed: () async {

@@ -23,7 +23,7 @@ class _DonateState extends State<Donate> {
             ),
           width: double.infinity,
           height: 70.0,
-          child: OutlinedButton.icon(
+          child: ElevatedButton.icon(
             label: Text('Paypal', style: TextStyle(fontSize: 25)),
             icon: Icon(FontAwesomeIcons.paypal, size: 30),
             onPressed: () {
@@ -39,7 +39,7 @@ class _DonateState extends State<Donate> {
             ),
             width: double.infinity,
             height: 70.0,
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               label: Text('Patreon', style: TextStyle(fontSize: 25)),
               icon: Icon(FontAwesomeIcons.patreon, size: 30),
               onPressed: () {
@@ -55,7 +55,7 @@ class _DonateState extends State<Donate> {
             ),
             width: double.infinity,
             height: 70.0,
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               label: Text('GitHub', style: TextStyle(fontSize: 25)),
               icon: Icon(FontAwesomeIcons.github, size: 30),
               onPressed: () {
@@ -71,7 +71,7 @@ class _DonateState extends State<Donate> {
             ),
           width: double.infinity,
           height: 70.0,
-          child: OutlinedButton.icon(
+          child: ElevatedButton.icon(
             label: Text('Discord', style: TextStyle(fontSize: 25)),
             icon: Icon(FontAwesomeIcons.discord, size: 30),
             onPressed: () {
@@ -87,7 +87,7 @@ class _DonateState extends State<Donate> {
             ),
           width: double.infinity,
           height: 70.0,
-          child: OutlinedButton.icon(
+          child: ElevatedButton.icon(
             label: Text('Twitter', style: TextStyle(fontSize: 25)),
             icon: Icon(FontAwesomeIcons.twitter, size: 30),
             onPressed: () {

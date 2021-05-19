@@ -74,7 +74,7 @@ class _SettingsState extends State<Settings> {
             minHeight: 50,
             minWidth: double.infinity,
             cornerRadius: 20.0,
-            activeBgColor: Colors.cyan,
+            activeBgColor: Colors.blue,
             activeFgColor: Colors.white,
             inactiveBgColor: Colors.grey,
             inactiveFgColor: Colors.white,
@@ -104,7 +104,7 @@ class _SettingsState extends State<Settings> {
             ),
             width: double.infinity,
             height: 60.0,
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               label: Text('Import SXCU', style: TextStyle(fontSize: 25)),
               icon: Icon(Icons.upload_file, size: 25),
               onPressed: () async {
@@ -371,7 +371,7 @@ class _SettingsState extends State<Settings> {
             ),
             width: double.infinity,
             height: 60.0,
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               label: Text('Load settings', style: TextStyle(fontSize: 25)),
               icon: Icon(Icons.open_in_browser, size: 25),
               onPressed: () async {
@@ -422,7 +422,7 @@ class _SettingsState extends State<Settings> {
             ),
             width: double.infinity,
             height: 60.0,
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               label: Text('Save settings', style: TextStyle(fontSize: 25)),
               icon: Icon(Icons.save, size: 25),
               onPressed: () async {
