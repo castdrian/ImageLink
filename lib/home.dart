@@ -8,7 +8,10 @@ import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
+<<<<<<< HEAD
 import 'main.dart' as main;
+=======
+>>>>>>> 883473134d2914ee1a053550b7317cc9c8885c9b
 import 'package:permission_handler/permission_handler.dart';
 
 class Home extends StatefulWidget {

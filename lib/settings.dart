@@ -365,10 +365,13 @@ class _SettingsState extends State<Settings> {
           ),
           SizedBox(height: 5),
           Container(
+<<<<<<< HEAD
             constraints: new BoxConstraints(
               minHeight: 60.0,
               maxHeight: 60.0,
             ),
+=======
+>>>>>>> 883473134d2914ee1a053550b7317cc9c8885c9b
             width: double.infinity,
             height: 60.0,
             child: OutlinedButton.icon(
