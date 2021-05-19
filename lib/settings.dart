@@ -47,7 +47,7 @@ class _SettingsState extends State<Settings> {
             decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 alignLabelWithHint: true,
-                labelText: 'JSON Arguments (multipart/form-data):'),
+                labelText: 'JSON Arguments/Headers (multipart/form-data):'),
             maxLines: 5,
           ),
           SizedBox(height: 24),
@@ -166,8 +166,10 @@ class _SettingsState extends State<Settings> {
                 }
 
                 final reqtype = sxcu['Body'];
-                print(reqtype);
-                if (reqtype != 'MultipartFormData') {
+                final reqregexp = RegExp(r'/^(?=.*\b(multipart)\b)(?=.*?\b(form)\b)(?=.*?\b(data)\b).*/g');
+                final reqmatch = reqregexp.firstMatch(reqtype);
+                
+                if (reqmatch == null) {
                   Widget okButton = TextButton(
                     child: Text('I accept this error.'),
                     onPressed: () {
