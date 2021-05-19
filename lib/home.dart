@@ -41,6 +41,7 @@ class _HomeState extends State<Home> {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Selected file:',
+              isDense: true,
             ),
             readOnly: true,
           ),
@@ -164,15 +165,22 @@ Future uploadFile(File file) async {
   final prefs = await SharedPreferences.getInstance();
   final requrl = prefs.getString('requrl');
   final args = prefs.getString('args');
+  final type = prefs.getInt('argtype');
+  final filename = prefs.getString('fileform');
 
   final fields = jsonDecode(args);
   final req = http.MultipartRequest('POST', Uri.parse(requrl));
 
-  req.files.add(await http.MultipartFile.fromPath('image', file.path));
+  req.files.add(await http.MultipartFile.fromPath(filename, file.path));
 
-  fields.forEach((k, v) {
-    req.fields[k] = v;
-  });
+  if (type == 0) {
+    fields.forEach((k, v) {
+      req.fields[k] = v;
+    });
+  } else {
+    final headers = new Map<String, String>.from(fields);
+    req.headers.addAll(headers);
+  }
 
   final response = await req.send();
   print(response.statusCode);

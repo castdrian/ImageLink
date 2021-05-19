@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -19,53 +20,89 @@ class _SettingsState extends State<Settings> {
   final rqc = TextEditingController();
   final rsc = TextEditingController();
   final agc = TextEditingController();
+  final fnc = TextEditingController();
+  int idx = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Column(children: <Widget>[
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           TextField(
             controller: rqc,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Request URL (example.com/upload.php):',
+              isDense: true,
             ),
           ),
-          SizedBox(height: 14),
+          SizedBox(height: 5),
           TextField(
             controller: rsc,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Response img url prop (\$json:parameter\$):',
+              labelText: 'Response property (\$json:parameter\$):',
+              isDense: true,
             ),
           ),
-          SizedBox(height: 14),
+          SizedBox(height: 5),
+          TextField(
+            controller: fnc,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'FileFormName:',
+              isDense: true,
+            ),
+          ),
+          SizedBox(height: 5),
           TextField(
             controller: agc,
             decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 alignLabelWithHint: true,
-                labelText: 'JSON Arguments/Headers (multipart/form-data):'),
-            maxLines: 5,
+                labelText: 'JSON (multipart/form-data):'),
+            maxLines: 4,
           ),
-          SizedBox(height: 24),
+          SizedBox(height: 5),
+          ToggleSwitch(
+            fontSize: 20,
+            initialLabelIndex: idx,
+            minHeight: 50,
+            minWidth: double.infinity,
+            cornerRadius: 20.0,
+            activeBgColor: Colors.cyan,
+            activeFgColor: Colors.white,
+            inactiveBgColor: Colors.grey,
+            inactiveFgColor: Colors.white,
+            labels: ['Arguments', 'Headers'],
+            onToggle: (index) async {
+              final prefs = await SharedPreferences.getInstance();
+              prefs.setInt('argtype', index);
+
+              setState(() {
+                idx = index;
+              });
+              print('switched to: $index');
+            },
+          ),
+          SizedBox(height: 5),
           TextField(
             controller: sxc,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Selected SXCU:',
+              isDense: true,
             ),
             readOnly: true,
           ),
-          SizedBox(height: 14),
+          SizedBox(height: 5),
           Container(
             width: double.infinity,
-            height: 70.0,
+            height: 50.0,
             child: OutlinedButton.icon(
               label: Text('Import SXCU', style: TextStyle(fontSize: 25)),
-              icon: Icon(Icons.upload_file, size: 30),
+              icon: Icon(Icons.upload_file, size: 25),
               onPressed: () async {
                 await [
                   Permission.storage,
@@ -136,7 +173,8 @@ class _SettingsState extends State<Settings> {
                   );
                   return;
                 }
-                final regexp = RegExp(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
+                final regexp = RegExp(
+                    r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
                 final match = regexp.firstMatch(sxcu['RequestURL']);
 
                 if (match == null) {
@@ -149,8 +187,7 @@ class _SettingsState extends State<Settings> {
 
                   AlertDialog alert = AlertDialog(
                     title: Text('Invalid request URL'),
-                    content:
-                        Text('The request URL needs to be a valid URL!'),
+                    content: Text('The request URL needs to be a valid URL!'),
                     actions: [
                       okButton,
                     ],
@@ -166,9 +203,11 @@ class _SettingsState extends State<Settings> {
                 }
 
                 final reqtype = sxcu['Body'];
-                final reqregexp = RegExp(r'/^(?=.*\b(multipart)\b)(?=.*?\b(form)\b)(?=.*?\b(data)\b).*/g');
+                final reqregexp = RegExp(
+                    r'(?=.*?multi)(?=.*?part)(?=.*?form)(?=.*?data).*',
+                    caseSensitive: false);
                 final reqmatch = reqregexp.firstMatch(reqtype);
-                
+
                 if (reqmatch == null) {
                   Widget okButton = TextButton(
                     child: Text('I accept this error.'),
@@ -196,7 +235,9 @@ class _SettingsState extends State<Settings> {
                 }
 
                 final args = sxcu['Arguments'];
-                if (args == null) {
+                final headers = sxcu['Headers'];
+
+                if (args == null && headers == null) {
                   Widget okButton = TextButton(
                     child: Text('I accept this error.'),
                     onPressed: () {
@@ -205,9 +246,9 @@ class _SettingsState extends State<Settings> {
                   );
 
                   AlertDialog alert = AlertDialog(
-                    title: Text('Invalid request arguments'),
-                    content:
-                        Text('The SXCU request body must contain arguments!'),
+                    title: Text('Invalid request data'),
+                    content: Text(
+                        'The SXCU request must contain arguments or headers!'),
                     actions: [
                       okButton,
                     ],
@@ -223,9 +264,9 @@ class _SettingsState extends State<Settings> {
                 }
 
                 final url = sxcu['URL'];
-                final urlregexp = RegExp(r'\$json:([a-zA-Z]+)\$');
-                final urlmatch = urlregexp.firstMatch(url);
-                if (urlmatch == null) {
+                final resregexp = RegExp(r'\$json:([a-zA-Z]+)\$');
+                final resmatch = resregexp.firstMatch(url);
+                if (resmatch == null) {
                   Widget okButton = TextButton(
                     child: Text('I accept this error.'),
                     onPressed: () {
@@ -235,7 +276,8 @@ class _SettingsState extends State<Settings> {
 
                   AlertDialog alert = AlertDialog(
                     title: Text('Invalid response parameter'),
-                    content: Text('The response URL must contain a \$json:parameter\$ argument!'),
+                    content: Text(
+                        'The response URL must contain a \$json:parameter\$ argument!'),
                     actions: [
                       okButton,
                     ],
@@ -249,13 +291,52 @@ class _SettingsState extends State<Settings> {
                   );
                   return;
                 }
-                final matchedText = match.group(0);
+
+                final formname = sxcu['FileFormName'];
+
+                if (formname == null) {
+                  Widget okButton = TextButton(
+                    child: Text('I accept this error.'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: Text('Invalid file form name'),
+                    content: Text('The SXCU request must a file form name!'),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                  return;
+                }
+
+                final matchedText = resmatch.group(0);
+                final idxprefs = await SharedPreferences.getInstance();
 
                 setState(() {
                   sxc.text = p.basename(file.path);
                   rqc.text = sxcu['RequestURL'];
                   rsc.text = matchedText;
-                  agc.text = jsonEncode(sxcu['Arguments']);
+                  fnc.text = sxcu['FileFormName'];
+
+                  if (sxcu['Headers'] == null) {
+                    agc.text = jsonEncode(sxcu['Arguments']);
+                    idx = 0;
+                    idxprefs.setInt('argtype', 0);
+                  } else {
+                    agc.text = jsonEncode(sxcu['Headers']);
+                    idx = 1;
+                    idxprefs.setInt('argtype', 1);
+                  }
                 });
 
                 Fluttertoast.showToast(
@@ -266,8 +347,9 @@ class _SettingsState extends State<Settings> {
 
                 final prefs = await SharedPreferences.getInstance();
                 prefs.setString('requrl', rqc.text);
-                prefs.setString('resprop', rsc.text);
+                prefs.setString('resprop', matchedText);
                 prefs.setString('args', agc.text);
+                prefs.setString('fileform', fnc.text);
 
                 Fluttertoast.showToast(
                     msg: 'Settings saved successfully!',
@@ -277,13 +359,13 @@ class _SettingsState extends State<Settings> {
               },
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           Container(
             width: double.infinity,
-            height: 70.0,
+            height: 50.0,
             child: OutlinedButton.icon(
               label: Text('Load settings', style: TextStyle(fontSize: 25)),
-              icon: Icon(Icons.open_in_browser, size: 30),
+              icon: Icon(Icons.open_in_browser, size: 25),
               onPressed: () async {
                 await [
                   Permission.storage,
@@ -296,6 +378,8 @@ class _SettingsState extends State<Settings> {
                 final requrl = prefs.getString('requrl');
                 final resprop = prefs.getString('resprop');
                 final args = prefs.getString('args');
+                final type = prefs.getInt('argtype');
+                final filename = prefs.getString('fileform');
 
                 if (requrl == null) {
                   Fluttertoast.showToast(
@@ -310,6 +394,8 @@ class _SettingsState extends State<Settings> {
                   rqc.text = requrl;
                   rsc.text = resprop;
                   agc.text = args;
+                  fnc.text = filename;
+                  idx = type;
                 });
 
                 Fluttertoast.showToast(
@@ -320,13 +406,13 @@ class _SettingsState extends State<Settings> {
               },
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           Container(
             width: double.infinity,
-            height: 70.0,
+            height: 50.0,
             child: OutlinedButton.icon(
               label: Text('Save settings', style: TextStyle(fontSize: 25)),
-              icon: Icon(Icons.save, size: 30),
+              icon: Icon(Icons.save, size: 25),
               onPressed: () async {
                 await [
                   Permission.storage,
@@ -344,7 +430,8 @@ class _SettingsState extends State<Settings> {
                   return;
                 }
 
-                final regexp = RegExp(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
+                final regexp = RegExp(
+                    r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
                 final match = regexp.firstMatch(rqc.text);
 
                 if (match == null) {
@@ -357,8 +444,7 @@ class _SettingsState extends State<Settings> {
 
                   AlertDialog alert = AlertDialog(
                     title: Text('Invalid request URL'),
-                    content:
-                        Text('The request URL needs to be a valid URL!'),
+                    content: Text('The request URL needs to be a valid URL!'),
                     actions: [
                       okButton,
                     ],
@@ -386,8 +472,8 @@ class _SettingsState extends State<Settings> {
 
                   AlertDialog alert = AlertDialog(
                     title: Text('Invalid response property'),
-                    content:
-                        Text('The response property did not match \$json:value\$'),
+                    content: Text(
+                        'The response property did not match \$json:value\$'),
                     actions: [
                       okButton,
                     ],
@@ -435,6 +521,7 @@ class _SettingsState extends State<Settings> {
                 prefs.setString('requrl', rqc.text);
                 prefs.setString('resprop', rsc.text);
                 prefs.setString('args', agc.text);
+                prefs.setString('fileform', fnc.text);
 
                 Fluttertoast.showToast(
                     msg: 'Settings saved successfully!',
