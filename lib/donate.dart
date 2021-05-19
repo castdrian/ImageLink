@@ -116,7 +116,7 @@ class _DonateState extends State<Donate> {
 
                   AlertDialog alert = AlertDialog(
                     title: Text('Credits:'),
-                    content: Text('- Adrian Castro\n- Sören'),
+                    content: Text('- Adrian Castro\n- Sören Stabenow'),
                     actions: [
                       okButton,
                     ],
