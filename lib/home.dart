@@ -6,10 +6,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart' as main;
+import 'package:permission_handler/permission_handler.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -136,13 +136,6 @@ class _HomeState extends State<Home> {
               onPressed: () async {
                 if (isVideo == true) isVideo = false;
 
-                await [
-                  Permission.storage,
-                  Permission.manageExternalStorage,
-                  Permission.systemAlertWindow,
-                  Permission.ignoreBatteryOptimizations,
-                ].request();
-
                 final prefs = await SharedPreferences.getInstance();
                 final requrl = prefs.getString('requrl');
 
@@ -244,6 +237,22 @@ class _HomeState extends State<Home> {
       });
     }
   }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) async => await loadAsync(context));
+  }
+}
+
+Future loadAsync(BuildContext context) async {
+  await [
+    Permission.storage,
+    Permission.manageExternalStorage,
+    Permission.systemAlertWindow,
+    Permission.ignoreBatteryOptimizations,
+  ].request();
 }
 
 Future uploadFile(File file) async {

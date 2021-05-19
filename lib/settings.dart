@@ -371,58 +371,7 @@ class _SettingsState extends State<Settings> {
             ),
             width: double.infinity,
             height: 60.0,
-            child: ElevatedButton.icon(
-              label: Text('Load settings', style: TextStyle(fontSize: 25)),
-              icon: Icon(Icons.open_in_browser, size: 25),
-              onPressed: () async {
-                await [
-                  Permission.storage,
-                  Permission.manageExternalStorage,
-                  Permission.systemAlertWindow,
-                  Permission.ignoreBatteryOptimizations,
-                ].request();
-
-                final prefs = await SharedPreferences.getInstance();
-                final requrl = prefs.getString('requrl');
-                final resprop = prefs.getString('resprop');
-                final args = prefs.getString('args');
-                final type = prefs.getInt('argtype');
-                final filename = prefs.getString('fileform');
-
-                if (requrl == null) {
-                  Fluttertoast.showToast(
-                      msg: 'Nothing to load!',
-                      toastLength: Toast.LENGTH_SHORT,
-                      timeInSecForIosWeb: 2,
-                      fontSize: 16.0);
-                  return;
-                }
-
-                setState(() {
-                  rqc.text = requrl;
-                  rsc.text = resprop;
-                  agc.text = args;
-                  fnc.text = filename;
-                  idx = type;
-                });
-
-                Fluttertoast.showToast(
-                    msg: 'Settings successfully loaded!',
-                    toastLength: Toast.LENGTH_SHORT,
-                    timeInSecForIosWeb: 2,
-                    fontSize: 16.0);
-              },
-            ),
-          ),
-          SizedBox(height: 5),
-          Container(
-            constraints: new BoxConstraints(
-              minHeight: 60.0,
-              maxHeight: 60.0,
-            ),
-            width: double.infinity,
-            height: 60.0,
-            child: ElevatedButton.icon(
+            child: OutlinedButton.icon(
               label: Text('Save settings', style: TextStyle(fontSize: 25)),
               icon: Icon(Icons.save, size: 25),
               onPressed: () async {
@@ -544,5 +493,52 @@ class _SettingsState extends State<Settings> {
             ),
           ),
         ]));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) async => await loadAsync(context));
+  }
+
+  Future loadAsync(BuildContext context) async {
+    await [
+      Permission.storage,
+      Permission.manageExternalStorage,
+      Permission.systemAlertWindow,
+      Permission.ignoreBatteryOptimizations,
+    ].request();
+
+    final prefs = await SharedPreferences.getInstance();
+    final requrl = prefs.getString('requrl');
+    final resprop = prefs.getString('resprop');
+    final args = prefs.getString('args');
+    final type = prefs.getInt('argtype');
+    final filename = prefs.getString('fileform');
+
+    if (requrl == null) {
+      Fluttertoast.showToast(
+      msg: 'Nothing to load!',
+      toastLength: Toast.LENGTH_SHORT,
+      timeInSecForIosWeb: 2,
+      fontSize: 16.0);
+      return;
+    }
+
+    setState(() {
+      rqc.text = requrl;
+      rsc.text = resprop;
+      agc.text = args;
+      fnc.text = filename;
+      idx = type;
+    });
+
+    Fluttertoast.showToast(
+      msg: 'Settings successfully loaded!',
+      toastLength: Toast.LENGTH_SHORT,
+      timeInSecForIosWeb: 2,
+      fontSize: 16.0
+    );
   }
 }
