@@ -31,7 +31,7 @@ class _DonateState extends State<Donate> {
             },
           ),
         ),
-        SizedBox(height: 24),
+        SizedBox(height: 14),
         Container(
           constraints: new BoxConstraints(
               minHeight: 70.0,
@@ -47,7 +47,7 @@ class _DonateState extends State<Donate> {
               },
             ),
           ),
-        SizedBox(height: 24),
+        SizedBox(height: 14),
         Container(
           constraints: new BoxConstraints(
               minHeight: 70.0,
@@ -63,7 +63,7 @@ class _DonateState extends State<Donate> {
               },
             ),
           ),
-        SizedBox(height: 24),
+        SizedBox(height: 14),
         Container(
           constraints: new BoxConstraints(
               minHeight: 70.0,
@@ -79,7 +79,7 @@ class _DonateState extends State<Donate> {
             },
           ),
         ),
-        SizedBox(height: 24),
+        SizedBox(height: 14),
         Container(
           constraints: new BoxConstraints(
               minHeight: 70.0,
@@ -92,6 +92,42 @@ class _DonateState extends State<Donate> {
             icon: Icon(FontAwesomeIcons.twitter, size: 30),
             onPressed: () {
               launch('https://twitter.com/castdrian');
+            },
+          ),
+        ),
+        SizedBox(height: 14),
+        Container(
+          constraints: new BoxConstraints(
+              minHeight: 70.0,
+              maxHeight: 70.0,
+            ),
+          width: double.infinity,
+          height: 70.0,
+          child: ElevatedButton.icon(
+            label: Text('Credits', style: TextStyle(fontSize: 25)),
+            icon: Icon(FontAwesomeIcons.creditCard, size: 30),
+            onPressed: () {
+              Widget okButton = TextButton(
+                    child: Text('I respect these people.'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: Text('Credits:'),
+                    content: Text('- Adrian Castro\n- Sören'),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
             },
           ),
         ),
