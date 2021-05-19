@@ -80,13 +80,9 @@ class _SettingsState extends State<Settings> {
             inactiveFgColor: Colors.white,
             labels: ['Arguments', 'Headers'],
             onToggle: (index) async {
-              final prefs = await SharedPreferences.getInstance();
-              prefs.setInt('argtype', index);
-
               setState(() {
                 idx = index;
               });
-              print('switched to: $index');
             },
           ),
           SizedBox(height: 10),
