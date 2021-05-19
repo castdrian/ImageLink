@@ -88,7 +88,7 @@ class _NavBarState extends State<NavBar> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('ImageLink™ - by Adrian Castro'),
+        title: Text('ImageLink™'),
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
