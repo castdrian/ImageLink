@@ -17,7 +17,10 @@ class MyApp extends StatelessWidget {
       theme:
           ThemeData(primarySwatch: Colors.blue, brightness: Brightness.light),
       themeMode: ThemeMode.dark,
-      darkTheme: ThemeData(brightness: Brightness.dark),
+      darkTheme: ThemeData(brightness: Brightness.dark,
+       primaryColor: Colors.black, 
+       scaffoldBackgroundColor: Colors.black,
+       bottomNavigationBarTheme: BottomNavigationBarThemeData(backgroundColor: Colors.black)),
       home: NavBar(),
     );
   }
