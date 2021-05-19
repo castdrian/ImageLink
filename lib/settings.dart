@@ -35,27 +35,30 @@ class _SettingsState extends State<Settings> {
               border: OutlineInputBorder(),
               labelText: 'Request URL (example.com/upload.php):',
               isDense: true,
+              contentPadding: EdgeInsets.all(8),
             ),
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 10),
           TextField(
             controller: rsc,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Response property (\$json:parameter\$):',
               isDense: true,
+              contentPadding: EdgeInsets.all(8),
             ),
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 10),
           TextField(
             controller: fnc,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'FileFormName:',
               isDense: true,
+              contentPadding: EdgeInsets.all(8),
             ),
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 10),
           TextField(
             controller: agc,
             decoration: InputDecoration(
@@ -64,7 +67,7 @@ class _SettingsState extends State<Settings> {
                 labelText: 'JSON (multipart/form-data):'),
             maxLines: 4,
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 10),
           ToggleSwitch(
             fontSize: 20,
             initialLabelIndex: idx,
@@ -86,20 +89,21 @@ class _SettingsState extends State<Settings> {
               print('switched to: $index');
             },
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 10),
           TextField(
             controller: sxc,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Selected SXCU:',
               isDense: true,
+              contentPadding: EdgeInsets.all(8),
             ),
             readOnly: true,
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 10),
           Container(
             width: double.infinity,
-            height: 50.0,
+            height: 60.0,
             child: OutlinedButton.icon(
               label: Text('Import SXCU', style: TextStyle(fontSize: 25)),
               icon: Icon(Icons.upload_file, size: 25),
@@ -362,7 +366,7 @@ class _SettingsState extends State<Settings> {
           SizedBox(height: 5),
           Container(
             width: double.infinity,
-            height: 50.0,
+            height: 60.0,
             child: OutlinedButton.icon(
               label: Text('Load settings', style: TextStyle(fontSize: 25)),
               icon: Icon(Icons.open_in_browser, size: 25),
@@ -409,7 +413,7 @@ class _SettingsState extends State<Settings> {
           SizedBox(height: 5),
           Container(
             width: double.infinity,
-            height: 50.0,
+            height: 60.0,
             child: OutlinedButton.icon(
               label: Text('Save settings', style: TextStyle(fontSize: 25)),
               icon: Icon(Icons.save, size: 25),

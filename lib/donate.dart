@@ -39,7 +39,7 @@ class _DonateState extends State<Donate> {
               },
             ),
           ),
-        SizedBox(height: 164),
+        SizedBox(height: 24),
         Container(
             width: double.infinity,
             height: 70.0,
@@ -59,7 +59,7 @@ class _DonateState extends State<Donate> {
             label: Text('Discord', style: TextStyle(fontSize: 25)),
             icon: Icon(FontAwesomeIcons.discord, size: 30),
             onPressed: () {
-              launch('https://discord.gg/h9SEQaU');
+              launch('https://discord.gg/MSDcP79cch');
             },
           ),
         ),

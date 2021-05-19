@@ -28,13 +28,15 @@ class _HomeState extends State<Home> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Column(children: <Widget>[
-          SizedBox(height: 100),
-          Expanded(
-              child: fileMedia == null
+          SizedBox(height: 50),
+          Flexible(child: Flex(
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.center,
+              children: [ fileMedia == null
                   ? Icon(Icons.photo, size: 150)
                   : isVideo == true
                       ? Icon(Icons.video_library, size: 150)
-                      : Image.file(fileMedia)),
+                      : Image.file(fileMedia)])),
           SizedBox(height: 50),
           TextField(
             controller: txt,
@@ -42,6 +44,7 @@ class _HomeState extends State<Home> {
               border: OutlineInputBorder(),
               labelText: 'Selected file:',
               isDense: true,
+              contentPadding: EdgeInsets.all(8),
             ),
             readOnly: true,
           ),
