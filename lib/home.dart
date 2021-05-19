@@ -9,6 +9,7 @@ import 'package:mime/mime.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'main.dart' as main;
 
 class Home extends StatefulWidget {
   @override
@@ -20,8 +21,78 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   File fileMedia;
   bool isVideo = false;
-  dynamic vid;
   final txt = TextEditingController();
+  final List shared = main.getShared();
+
+  Future<void> shareIntent() async {
+    if (shared == null || shared.isEmpty) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final requrl = prefs.getString('requrl');
+
+    if (requrl == null) {
+      Fluttertoast.showToast(
+          msg: 'You must specify settings first!',
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 2,
+          fontSize: 16.0);
+      return;
+    }
+
+    setState(() {
+      fileMedia = File(shared.first.path);
+    });
+
+    Fluttertoast.showToast(
+        msg: 'Uploading file...',
+        toastLength: Toast.LENGTH_SHORT,
+        timeInSecForIosWeb: 2,
+        fontSize: 16.0);
+
+    final upload = await uploadFile(fileMedia);
+
+    if (upload is int) {
+      Fluttertoast.showToast(
+          msg: 'Failed to upload file! HTTP Code $upload',
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 2,
+          fontSize: 16.0);
+      return;
+    } else {
+      print(upload);
+      final prefs = await SharedPreferences.getInstance();
+      final resprop = prefs.getString('resprop');
+      final regexp = RegExp(r'\$json:([a-zA-Z]+)\$');
+      final match = regexp.firstMatch(resprop);
+      final matched = match.group(1);
+      final rawurl = upload[matched] as String;
+
+      if (rawurl == null) {
+        Fluttertoast.showToast(
+            msg: 'Uploaded, but failed to parse response URL!',
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 2,
+            fontSize: 16.0);
+        return;
+      }
+
+      final url = rawurl.replaceAll(RegExp(r'/^http:\/\//i'), 'https://');
+
+      Clipboard.setData(ClipboardData(text: url));
+
+      Fluttertoast.showToast(
+          msg: 'File sucessfully uploaded!',
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 2,
+          fontSize: 16.0);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    shareIntent();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +100,17 @@ class _HomeState extends State<Home> {
         resizeToAvoidBottomInset: false,
         body: Column(children: <Widget>[
           SizedBox(height: 50),
-          Flexible(child: Flex(
-            direction: Axis.horizontal,
-            mainAxisAlignment: MainAxisAlignment.center,
-              children: [ fileMedia == null
-                  ? Icon(Icons.photo, size: 150)
-                  : isVideo == true
-                      ? Icon(Icons.video_library, size: 150)
-                      : Image.file(fileMedia)])),
+          Flexible(
+              child: new OverflowBox(
+              minWidth: 0.0, 
+              minHeight: 0.0, 
+              maxWidth: double.infinity, 
+               child: fileMedia == null
+                    ? Icon(Icons.photo, size: 150)
+                    : isVideo == true
+                        ? Icon(Icons.video_library, size: 150)
+                        : Image.file(fileMedia)
+        )),
           SizedBox(height: 50),
           TextField(
             controller: txt,

@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'home.dart';
 import 'settings.dart';
 import 'history.dart';
@@ -17,10 +19,12 @@ class MyApp extends StatelessWidget {
       theme:
           ThemeData(primarySwatch: Colors.blue, brightness: Brightness.light),
       themeMode: ThemeMode.dark,
-      darkTheme: ThemeData(brightness: Brightness.dark,
-       primaryColor: Colors.black, 
-       scaffoldBackgroundColor: Colors.black,
-       bottomNavigationBarTheme: BottomNavigationBarThemeData(backgroundColor: Colors.black)),
+      darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          primaryColor: Colors.black,
+          scaffoldBackgroundColor: Colors.black,
+          bottomNavigationBarTheme:
+              BottomNavigationBarThemeData(backgroundColor: Colors.black)),
       home: NavBar(),
     );
   }
@@ -33,9 +37,46 @@ class NavBar extends StatefulWidget {
   }
 }
 
+List<SharedMediaFile> _sharedFiles;
+
+getShared() {
+  return _sharedFiles;
+}
+
 class _NavBarState extends State<NavBar> {
+  StreamSubscription _intentDataStreamSubscription;
+
   int _currentIndex = 0;
   final List<Widget> _children = [Home(), Settings(), History(), Donate()];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // For sharing images coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
+        .listen((List<SharedMediaFile> value) {
+      print('lol');
+      setState(() {
+        _sharedFiles = value;
+      });
+      Navigator.push( context, MaterialPageRoute( builder: (context) => NavBar()), ).then((value) => setState(() {}));
+    }, onError: (err) {});
+
+    // For sharing images coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialMedia().then((List<SharedMediaFile> value) {
+      setState(() {
+        _sharedFiles = value;
+      });
+    });
+
+    @override
+    // ignore: unused_element
+    void dispose() {
+      _intentDataStreamSubscription.cancel();
+      super.dispose();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +104,7 @@ class _NavBarState extends State<NavBar> {
             label: 'History',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.monetization_on_rounded),
-            label: 'Donate')
+              icon: Icon(Icons.monetization_on_rounded), label: 'Donate')
         ],
       ),
     );
