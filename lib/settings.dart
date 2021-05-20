@@ -75,13 +75,13 @@ class _SettingsState extends State<Settings> {
                 border: OutlineInputBorder(),
                 alignLabelWithHint: true,
                 labelText: 'JSON (multipart/form-data):'),
-            maxLines: 4,
+            maxLines: 3,
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           ToggleSwitch(
             fontSize: 20,
             initialLabelIndex: idx,
-            minHeight: 50,
+            minHeight: 40,
             minWidth: double.infinity,
             cornerRadius: 20.0,
             activeBgColor: Colors.blue,
@@ -95,7 +95,7 @@ class _SettingsState extends State<Settings> {
               });
             },
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           Row(
             children: [
               Expanded(
@@ -163,13 +163,24 @@ class _SettingsState extends State<Settings> {
             controller: sxc,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
+              labelText: 'Screenshot directory:',
+              isDense: true,
+              contentPadding: EdgeInsets.all(8),
+            ),
+            readOnly: true,
+          ),
+          SizedBox(height: 5),
+          TextField(
+            controller: sxc,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
               labelText: 'Selected SXCU:',
               isDense: true,
               contentPadding: EdgeInsets.all(8),
             ),
             readOnly: true,
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           Container(
             constraints: new BoxConstraints(
               minHeight: 60.0,
@@ -628,7 +639,7 @@ class _SettingsState extends State<Settings> {
           fontSize: 16.0);
     } else {
       bool enabled = FlutterBackground.isBackgroundExecutionEnabled;
-      
+
       if (enabled == true) {
         await FlutterBackground.disableBackgroundExecution();
 
