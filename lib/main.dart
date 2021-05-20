@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -71,9 +72,9 @@ class _NavBarState extends State<NavBar> {
     subscription = FGBGEvents.stream.listen((event) {
       if (event == FGBGType.foreground) {
         Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => NavBar()),
-      ).then((value) => setState(() {}));
+          context,
+          MaterialPageRoute(builder: (context) => NavBar()),
+        ).then((value) => setState(() {}));
       }
       print(event); // FGBGType.foreground or FGBGType.background
     });
@@ -116,6 +117,27 @@ class _NavBarState extends State<NavBar> {
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 2,
           fontSize: 16.0);
+
+      final screendir = prefs.getString('screendir');
+      final dir = Directory(screendir);
+      final files = dir.listSync();
+
+      List dates = [];
+      List screenshotfiles = [];
+
+      files.forEach((f) {
+        final file = File(f.path);
+        dates.add(file.lastModifiedSync());
+        screenshotfiles.add(file);
+      });
+
+      dates.sort((a, b) => b.compareTo(a));
+      printWarning(dates[0].toString());
+
+      final newestdate = dates[0].toString();
+      final uploadfile = screenshotfiles
+          .where((x) => x.lastModifiedSync().toString() == newestdate).first;
+      print(uploadfile is File);
     });
   }
 
@@ -144,9 +166,7 @@ class _NavBarState extends State<NavBar> {
             icon: new Icon(Icons.history),
             label: 'History',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info_outline), 
-            label: 'Info')
+          BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: 'Info')
         ],
       ),
     );
