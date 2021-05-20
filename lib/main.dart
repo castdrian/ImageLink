@@ -110,7 +110,8 @@ class _NavBarState extends State<NavBar> {
             label: 'History',
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.monetization_on_rounded), label: 'Donate')
+              icon: Icon(Icons.info_outline),
+              label: 'Info')
         ],
       ),
     );
