@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_background/flutter_background.dart';
+import 'package:filesystem_picker/filesystem_picker.dart';
+import 'package:path_provider_ex/path_provider_ex.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -19,12 +21,14 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final sxc = TextEditingController();
+  final sdc = TextEditingController();
   final rqc = TextEditingController();
   final rsc = TextEditingController();
   final agc = TextEditingController();
   final fnc = TextEditingController();
   int idx = 0;
   bool status = false;
+  String dir;
 
   @override
   void initState() {
@@ -114,13 +118,43 @@ class _SettingsState extends State<Settings> {
                       showOnOff: true,
                       onToggle: (val) async {
                         final prefs = await SharedPreferences.getInstance();
+
                         setState(() {
                           status = val;
                           prefs.setBool('screenshots', status);
                         });
 
                         if (status == true) {
-                          bool enabled = FlutterBackground.isBackgroundExecutionEnabled;
+                          List storageInfo =
+                              await PathProviderEx.getStorageInfo();
+                          print(storageInfo[0].rootDir);
+                          Directory rootPath = Directory(storageInfo[0].rootDir);
+
+                          String path = await FilesystemPicker.open(
+                            title: 'Screenshots folder',
+                            context: context,
+                            rootDirectory: rootPath,
+                            fsType: FilesystemType.folder,
+                            pickText: 'Save screenshots folder',
+                            folderIconColor: Colors.blue,
+                          );
+
+                          if (path == null) {
+                            prefs.setBool('screenshots', false);
+                            setState(() {
+                              status = false;
+                            });
+                            return;
+                          }
+                          dir = path;
+
+                          setState(() {
+                            sdc.text = dir;
+                            prefs.setString('screendir', dir);
+                          });
+
+                          bool enabled =
+                              FlutterBackground.isBackgroundExecutionEnabled;
                           if (enabled == true) return;
                           await FlutterBackground.hasPermissions;
 
@@ -160,7 +194,7 @@ class _SettingsState extends State<Settings> {
           ),
           SizedBox(height: 10),
           TextField(
-            controller: sxc,
+            controller: sdc,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Screenshot directory:',
@@ -591,6 +625,7 @@ class _SettingsState extends State<Settings> {
     final type = prefs.getInt('argtype');
     final filename = prefs.getString('fileform');
     final screenshots = prefs.getBool('screenshots');
+    final screendir = prefs.getString('screendir');
 
     if (requrl == null) {
       Fluttertoast.showToast(
@@ -608,6 +643,7 @@ class _SettingsState extends State<Settings> {
       fnc.text = filename;
       idx = type;
       status = screenshots ?? false;
+      sdc.text = screendir;
     });
 
     Fluttertoast.showToast(
@@ -648,7 +684,7 @@ class _SettingsState extends State<Settings> {
             toastLength: Toast.LENGTH_SHORT,
             timeInSecForIosWeb: 2,
             fontSize: 16.0);
-        }
+      }
     }
   }
 }

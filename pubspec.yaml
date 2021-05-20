@@ -44,6 +44,7 @@ dependencies:
   flutter_background: ^1.0.0
   filesystem_picker: ^1.0.4
   in_app_purchase: ^1.0.0
+  path_provider_ex: ^1.0.1
 
 dev_dependencies:
   flutter_test:
