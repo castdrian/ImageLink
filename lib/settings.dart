@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:flutter_background/flutter_background.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -119,12 +120,35 @@ class _SettingsState extends State<Settings> {
                         });
 
                         if (status == true) {
+                          bool enabled = FlutterBackground.isBackgroundExecutionEnabled;
+                          if (enabled == true) return;
+                          await FlutterBackground.hasPermissions;
+
+                          final config = FlutterBackgroundAndroidConfig(
+                            notificationTitle: 'ImageLink',
+                            notificationText: 'Screenshot detection enabled',
+                            notificationImportance:
+                                AndroidNotificationImportance.Min,
+                            notificationIcon: AndroidResource(
+                                name: 'background_icon', defType: 'drawable'),
+                          );
+
+                          await FlutterBackground.initialize(
+                              androidConfig: config);
+                          await FlutterBackground.enableBackgroundExecution();
+
                           Fluttertoast.showToast(
                               msg: 'Enabled screenshot intercepting!',
                               toastLength: Toast.LENGTH_SHORT,
                               timeInSecForIosWeb: 2,
                               fontSize: 16.0);
                         } else {
+                          bool enabled =
+                              FlutterBackground.isBackgroundExecutionEnabled;
+                          if (enabled == true)
+                            await FlutterBackground
+                                .disableBackgroundExecution();
+
                           Fluttertoast.showToast(
                               msg: 'Disabled screenshot intercepting!',
                               toastLength: Toast.LENGTH_SHORT,
@@ -580,5 +604,40 @@ class _SettingsState extends State<Settings> {
         toastLength: Toast.LENGTH_SHORT,
         timeInSecForIosWeb: 2,
         fontSize: 16.0);
+
+    if (screenshots == true) {
+      bool enabled = FlutterBackground.isBackgroundExecutionEnabled;
+      if (enabled == true) return;
+      await FlutterBackground.hasPermissions;
+
+      final config = FlutterBackgroundAndroidConfig(
+        notificationTitle: 'ImageLink',
+        notificationText: 'Screenshot detection enabled',
+        notificationImportance: AndroidNotificationImportance.Min,
+        notificationIcon:
+            AndroidResource(name: 'background_icon', defType: 'drawable'),
+      );
+
+      await FlutterBackground.initialize(androidConfig: config);
+      await FlutterBackground.enableBackgroundExecution();
+
+      Fluttertoast.showToast(
+          msg: 'Enabled screenshot intercepting!',
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 2,
+          fontSize: 16.0);
+    } else {
+      bool enabled = FlutterBackground.isBackgroundExecutionEnabled;
+      
+      if (enabled == true) {
+        await FlutterBackground.disableBackgroundExecution();
+
+        Fluttertoast.showToast(
+            msg: 'Disabled screenshot intercepting!',
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 2,
+            fontSize: 16.0);
+        }
+    }
   }
 }
