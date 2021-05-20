@@ -38,6 +38,8 @@ dependencies:
   shared_preferences: ^2.0.5
   toggle_switch: ^0.1.9
   receive_sharing_intent: ^1.4.5
+  screenshot_callback: any
+  flutter_switch: ^0.3.1
 
 dev_dependencies:
   flutter_test:

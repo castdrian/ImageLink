@@ -85,6 +85,8 @@ class _HomeState extends State<Home> {
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 2,
           fontSize: 16.0);
+          
+      SystemChannels.platform.invokeMethod('SystemNavigator.pop');
     }
   }
 
