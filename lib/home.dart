@@ -9,7 +9,9 @@ import 'package:mime/mime.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'main.dart' as main;
+import 'package:package_info/package_info.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -226,15 +228,19 @@ class _HomeState extends State<Home> {
         ]));
   }
 
+  /// Executes async methods on loading completion.
   Future loadAsync(BuildContext context) async {
-    await [
+    Map<Permission, PermissionStatus> perms = await [
       Permission.storage,
       Permission.manageExternalStorage,
-      Permission.systemAlertWindow,
       Permission.ignoreBatteryOptimizations,
     ].request();
+
+    // Check for new releases
+    await checkLatestRelease(context);
   }
 
+  /// Opens the gallery with a File Picker.
   Future pickGalleryMedia(BuildContext context) async {
     final media = await FilePicker.platform.pickFiles(type: FileType.media);
     if (media == null) return;
@@ -252,6 +258,72 @@ class _HomeState extends State<Home> {
   }
 }
 
+/// Checks for the latest version and opens a reminder if the current version is outdated.
+Future checkLatestRelease(BuildContext context) async {
+  // Grab the latest release from the GitHub API
+  http.MultipartRequest req = http.MultipartRequest('GET', Uri.parse('https://api.github.com/repos/adrifcastr/ImageLink/releases/latest'));
+  http.StreamedResponse response = await req.send();
+
+  String version = '';
+
+  if (response.statusCode == 404) {
+    req = http.MultipartRequest('GET', Uri.parse('https://api.github.com/repos/adrifcastr/ImageLink/releases'));
+    response = await req.send();
+
+    if (response.statusCode == 404) {
+      return print('No releases to check.');
+    }
+
+    version = jsonDecode(await response.stream.bytesToString())[0]['tag_name'];
+  } else {
+    version = jsonDecode(await response.stream.bytesToString())['tag_name'];
+  }
+
+  // Compare versions
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+  final prefs = await SharedPreferences.getInstance();
+
+  if (version != packageInfo.version && (prefs.getBool('updateAck') == null || !prefs.getBool('updateAck'))) {
+    print('Version outdated. Current version: ' + packageInfo.version + ' | Latest version: ' + version);
+
+    Widget okButton = TextButton(
+      child: Text('Acknowledged.'),
+      onPressed: () async {
+        await prefs.setBool('updateAck', true);
+        Navigator.of(context).pop();
+      },
+    );
+
+    Widget githubButton = TextButton(
+      child: Text('Update'),
+      onPressed: () async {
+        await prefs.setBool('updateAck', true);
+        launch('https://github.com/adrifcastr/ImageLink/releases');
+        Navigator.of(context).pop();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text('Outdated Version!'),
+      content: Text('Please update to the latest version available on GitHub.'),
+      actions: [
+        githubButton,
+        okButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+    return;
+  }
+}
+
+/// Sends a request with a file to the server specified in Settings.
 Future uploadFile(File file) async {
   final prefs = await SharedPreferences.getInstance();
   final requrl = prefs.getString('requrl');
@@ -285,6 +357,7 @@ Future uploadFile(File file) async {
   }
 }
 
+/// Checks if the file is a Video
 bool isVideoFile(String path) {
   String mimeType = lookupMimeType(path);
   return mimeType != null && mimeType.startsWith('video');
