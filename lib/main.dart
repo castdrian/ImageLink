@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       ]);
     return MaterialApp(
       title: 'ImageLink',
+      debugShowCheckedModeBanner: false,
       theme:
           ThemeData(primarySwatch: Colors.blue, brightness: Brightness.light),
       themeMode: ThemeMode.dark,
