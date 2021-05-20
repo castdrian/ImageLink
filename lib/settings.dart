@@ -125,6 +125,17 @@ class _SettingsState extends State<Settings> {
                         });
 
                         if (status == true) {
+                          final requrl = prefs.getString('requrl');
+
+                          if (requrl == null) {
+                                Fluttertoast.showToast(
+                                    msg: 'Nothing to load!',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    timeInSecForIosWeb: 2,
+                                    fontSize: 16.0);
+                                return;
+                              }
+                              
                           List storageInfo =
                               await PathProviderEx.getStorageInfo();
                           print(storageInfo[0].rootDir);

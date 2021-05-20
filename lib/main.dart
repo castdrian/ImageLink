@@ -121,7 +121,7 @@ class _NavBarState extends State<NavBar> {
       final screendir = prefs.getString('screendir');
       final dir = Directory(screendir);
       final files = dir.listSync();
-
+      if (files == null) return;
       List dates = [];
       List screenshotfiles = [];
 
@@ -136,7 +136,8 @@ class _NavBarState extends State<NavBar> {
 
       final newestdate = dates[0].toString();
       final uploadfile = screenshotfiles
-          .where((x) => x.lastModifiedSync().toString() == newestdate).first;
+          .where((x) => x.lastModifiedSync().toString() == newestdate)
+          .first;
       print(uploadfile is File);
     });
   }
