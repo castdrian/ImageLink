@@ -7,6 +7,7 @@ import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -22,6 +23,7 @@ class _SettingsState extends State<Settings> {
   final agc = TextEditingController();
   final fnc = TextEditingController();
   int idx = 0;
+  bool status = false;
 
 
   @override
@@ -93,6 +95,25 @@ class _SettingsState extends State<Settings> {
               });
             },
           ),
+          SizedBox(height: 10),
+          Row(children: [
+            Text('Intercept screenshots:', style: TextStyle(fontSize: 20), textAlign: TextAlign.center,),
+            SizedBox(width: 35),
+            FlutterSwitch(
+              width: 100.0,
+              height: 40.0,
+              valueFontSize: 20.0,
+              toggleSize: 40.0,
+              value: status,
+              borderRadius: 30.0,
+              padding: 8.0,
+              showOnOff: true,
+              onToggle: (val) {
+                setState(() {
+                  status = val;
+                });
+              }),
+          ],),
           SizedBox(height: 10),
           TextField(
             controller: sxc,
