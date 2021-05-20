@@ -25,7 +25,6 @@ class _SettingsState extends State<Settings> {
   int idx = 0;
   bool status = false;
 
-
   @override
   void initState() {
     super.initState();
@@ -96,24 +95,45 @@ class _SettingsState extends State<Settings> {
             },
           ),
           SizedBox(height: 10),
-          Row(children: [
-            Text('Intercept screenshots:', style: TextStyle(fontSize: 20), textAlign: TextAlign.center,),
-            SizedBox(width: 35),
-            FlutterSwitch(
-              width: 100.0,
-              height: 40.0,
-              valueFontSize: 20.0,
-              toggleSize: 40.0,
-              value: status,
-              borderRadius: 30.0,
-              padding: 8.0,
-              showOnOff: true,
-              onToggle: (val) {
-                setState(() {
-                  status = val;
-                });
-              }),
-          ],),
+          Row(
+            children: [
+              Expanded(
+                  child: Text('Intercept screenshots:',
+                      style: TextStyle(fontSize: 19),
+                      textAlign: TextAlign.center)),
+              Expanded(
+                  child: FlutterSwitch(
+                      width: 100.0,
+                      height: 40.0,
+                      valueFontSize: 20.0,
+                      toggleSize: 40.0,
+                      value: status,
+                      borderRadius: 30.0,
+                      padding: 8.0,
+                      showOnOff: true,
+                      onToggle: (val) async {
+                        final prefs = await SharedPreferences.getInstance();
+                        setState(() {
+                          status = val;
+                          prefs.setBool('screenshots', status);
+                        });
+
+                        if (status == true) {
+                          Fluttertoast.showToast(
+                              msg: 'Enabled screenshot intercepting!',
+                              toastLength: Toast.LENGTH_SHORT,
+                              timeInSecForIosWeb: 2,
+                              fontSize: 16.0);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: 'Disabled screenshot intercepting!',
+                              toastLength: Toast.LENGTH_SHORT,
+                              timeInSecForIosWeb: 2,
+                              fontSize: 16.0);
+                        }
+                      })),
+            ],
+          ),
           SizedBox(height: 10),
           TextField(
             controller: sxc,
@@ -538,6 +558,7 @@ class _SettingsState extends State<Settings> {
     final args = prefs.getString('args');
     final type = prefs.getInt('argtype');
     final filename = prefs.getString('fileform');
+    final screenshots = prefs.getBool('screenshots');
 
     if (requrl == null) {
       Fluttertoast.showToast(
@@ -554,6 +575,7 @@ class _SettingsState extends State<Settings> {
       agc.text = args;
       fnc.text = filename;
       idx = type;
+      status = screenshots ?? false;
     });
 
     Fluttertoast.showToast(
