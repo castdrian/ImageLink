@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:screenshot_callback/screenshot_callback.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'home.dart';
 import 'settings.dart';
 import 'history.dart';
@@ -16,9 +20,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       title: 'ImageLink',
       debugShowCheckedModeBanner: false,
@@ -59,14 +63,31 @@ class _NavBarState extends State<NavBar> {
   void initState() {
     super.initState();
 
+    void printWarning(String text) {
+      print('\x1B[33m$text\x1B[0m');
+    }
+
+    StreamSubscription<FGBGType> subscription;
+    subscription = FGBGEvents.stream.listen((event) {
+      if (event == FGBGType.foreground) {
+        Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => NavBar()),
+      ).then((value) => setState(() {}));
+      }
+      print(event); // FGBGType.foreground or FGBGType.background
+    });
+
     // For sharing images coming from outside the app while the app is in the memory
     _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
         .listen((List<SharedMediaFile> value) {
-      print('lol');
       setState(() {
         _sharedFiles = value;
       });
-      Navigator.push( context, MaterialPageRoute( builder: (context) => NavBar()), ).then((value) => setState(() {}));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => NavBar()),
+      ).then((value) => setState(() {}));
     }, onError: (err) {});
 
     // For sharing images coming from outside the app while the app is closed
@@ -80,8 +101,22 @@ class _NavBarState extends State<NavBar> {
     // ignore: unused_element
     void dispose() {
       _intentDataStreamSubscription.cancel();
+      subscription.cancel();
       super.dispose();
     }
+
+    ScreenshotCallback screenshotCallback = ScreenshotCallback();
+    screenshotCallback.addListener(() async {
+      final prefs = await SharedPreferences.getInstance();
+      final screenshots = prefs.getBool('screenshots');
+      if (screenshots == false) return;
+      printWarning('DETECTED SCREENSHOT');
+      Fluttertoast.showToast(
+          msg: 'Detected screenshot!',
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 2,
+          fontSize: 16.0);
+    });
   }
 
   @override
@@ -109,9 +144,7 @@ class _NavBarState extends State<NavBar> {
             icon: new Icon(Icons.history),
             label: 'History',
           ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.info_outline),
-              label: 'Info')
+          BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: 'Info')
         ],
       ),
     );

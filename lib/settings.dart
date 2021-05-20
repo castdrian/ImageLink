@@ -160,7 +160,6 @@ class _SettingsState extends State<Settings> {
                 await [
                   Permission.storage,
                   Permission.manageExternalStorage,
-                  Permission.systemAlertWindow,
                   Permission.ignoreBatteryOptimizations,
                 ].request();
 
@@ -427,7 +426,6 @@ class _SettingsState extends State<Settings> {
                 await [
                   Permission.storage,
                   Permission.manageExternalStorage,
-                  Permission.systemAlertWindow,
                   Permission.ignoreBatteryOptimizations,
                 ].request();
 
@@ -548,7 +546,6 @@ class _SettingsState extends State<Settings> {
     await [
       Permission.storage,
       Permission.manageExternalStorage,
-      Permission.systemAlertWindow,
       Permission.ignoreBatteryOptimizations,
     ].request();
 

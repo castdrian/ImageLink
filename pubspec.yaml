@@ -40,6 +40,8 @@ dependencies:
   receive_sharing_intent: ^1.4.5
   screenshot_callback: any
   flutter_switch: ^0.3.1
+  flutter_fgbg: ^0.1.0
+  flutter_background: ^1.0.0
 
 dev_dependencies:
   flutter_test:

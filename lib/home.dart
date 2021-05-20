@@ -232,7 +232,6 @@ class _HomeState extends State<Home> {
     await [
       Permission.storage,
       Permission.manageExternalStorage,
-      Permission.systemAlertWindow,
       Permission.ignoreBatteryOptimizations,
     ].request();
   }
