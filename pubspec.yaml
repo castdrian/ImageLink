@@ -42,6 +42,8 @@ dependencies:
   flutter_switch: ^0.3.1
   flutter_fgbg: ^0.1.0
   flutter_background: ^1.0.0
+  filesystem_picker: ^1.0.4
+  in_app_purchase: ^1.0.0
 
 dev_dependencies:
   flutter_test:

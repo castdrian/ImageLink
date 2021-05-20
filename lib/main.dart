@@ -9,7 +9,7 @@ import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'home.dart';
 import 'settings.dart';
 import 'history.dart';
-import 'donate.dart';
+import 'info.dart';
 
 void main() {
   runApp(MyApp());
@@ -57,7 +57,7 @@ class _NavBarState extends State<NavBar> {
   StreamSubscription _intentDataStreamSubscription;
 
   int _currentIndex = 0;
-  final List<Widget> _children = [Home(), Settings(), History(), Donate()];
+  final List<Widget> _children = [Home(), Settings(), History(), Info()];
 
   @override
   void initState() {
@@ -144,7 +144,9 @@ class _NavBarState extends State<NavBar> {
             icon: new Icon(Icons.history),
             label: 'History',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: 'Info')
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info_outline), 
+            label: 'Info')
         ],
       ),
     );

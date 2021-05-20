@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Donate extends StatefulWidget {
+class Info extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _DonateState();
+    return _InfoState();
   }
 }
 
-class _DonateState extends State<Donate> {
+class _InfoState extends State<Info> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,10 +24,9 @@ class _DonateState extends State<Donate> {
           width: double.infinity,
           height: 70.0,
           child: ElevatedButton.icon(
-            label: Text('Paypal', style: TextStyle(fontSize: 25)),
-            icon: Icon(FontAwesomeIcons.paypal, size: 30),
+            label: Text('In-app Purchase', style: TextStyle(fontSize: 25)),
+            icon: Icon(FontAwesomeIcons.googlePlay, size: 30),
             onPressed: () {
-              launch('https://www.paypal.com/paypalme/adrifcastr');
             },
           ),
         ),
@@ -40,10 +39,9 @@ class _DonateState extends State<Donate> {
             width: double.infinity,
             height: 70.0,
             child: ElevatedButton.icon(
-              label: Text('Patreon', style: TextStyle(fontSize: 25)),
-              icon: Icon(FontAwesomeIcons.patreon, size: 30),
+              label: Text('In-app Purchase', style: TextStyle(fontSize: 25)),
+              icon: Icon(FontAwesomeIcons.googlePlay, size: 30),
               onPressed: () {
-                launch('https://www.patreon.com/gideonbot');
               },
             ),
           ),

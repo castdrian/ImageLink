@@ -8,7 +8,7 @@ You can import existing .sxcu configuration that you use on your desktop devices
 - Share files to ImageLink for an immediate upload
 - Intercept and upload screenshots if wanted
 
-You can [join the ImageLink Discord Guild](https://discord.gg/MSDcP79cch) if you have any questions of feedback!
+You can [join the ImageLink Discord Guild](https://discord.gg/MSDcP79cch) if you have any questions or feedback!
 
 
 ### Screenshots
