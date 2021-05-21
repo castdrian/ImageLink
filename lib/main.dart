@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -72,24 +73,30 @@ class _NavBarState extends State<NavBar> {
     AppUpdateInfo _updateInfo;
     // ignore: unused_local_variable
     bool _flexibleUpdateAvailable = false;
+    if (kReleaseMode) {
+      Future<void> checkForUpdate() async {
+        InAppUpdate.checkForUpdate().then((info) {
+          setState(() {
+            _updateInfo = info;
+          });
+        }).catchError((e) {});
+      }
 
-    Future<void> checkForUpdate() async {
-      InAppUpdate.checkForUpdate().then((info) {
-        setState(() {
-          _updateInfo = info;
+      checkForUpdate();
+
+      if (_updateInfo?.updateAvailability ==
+          UpdateAvailability.updateAvailable) {
+        InAppUpdate.startFlexibleUpdate().then((_) {
+          setState(() {
+            _flexibleUpdateAvailable = true;
+          });
+        }).catchError((e) {
+          print(e);
         });
-      }).catchError((e) {});
+      }
     }
 
-    checkForUpdate();
-
-    if (_updateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
-      InAppUpdate.startFlexibleUpdate().then((_) {
-        setState(() {
-          _flexibleUpdateAvailable = true;
-        });
-      }).catchError((e) {});
-    }
+      
 
     StreamSubscription<FGBGType> subscription;
     subscription = FGBGEvents.stream.listen((event) async {
@@ -220,12 +227,9 @@ class _NavBarState extends State<NavBar> {
         title: Text('ImageLink™'),
       ),
       body: IndexedStack(
-            children: <Widget>[
-              Home(),
-              Settings(),
-              History(),
-              Info()
-            ], index: _currentIndex,),
+        children: <Widget>[Home(), Settings(), History(), Info()],
+        index: _currentIndex,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         onTap: onTabTapped, // new

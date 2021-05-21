@@ -10,27 +10,34 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  dynamic history;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Column(children: <Widget>[
-          history ?? Column(mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 100),
-            Row(children: [
-            Expanded(
-              child: Text(
-            'Doesn\'t look like anything to me',
-            textAlign: TextAlign.center, style: TextStyle(fontSize: 25),
-            )
-          ),
-          ],),
-          SizedBox(height: 40),
-          Icon(FontAwesomeIcons.question, size: 150)
-          ],)
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 100),
+              Row(
+                children: [
+                  Expanded(
+                      child: Text(
+                    'Doesn\'t look like anything to me',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 25),
+                  )),
+                ],
+              ),
+              SizedBox(height: 40),
+              Icon(FontAwesomeIcons.question, size: 150)
+            ],
+          )
         ]));
   }
 }
