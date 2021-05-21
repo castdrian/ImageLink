@@ -45,11 +45,16 @@ dependencies:
   filesystem_picker: ^1.0.4
   in_app_purchase: ^1.0.0
   path_provider_ex: ^1.0.1
+  flutter_launcher_icons: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/icon/icon.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
