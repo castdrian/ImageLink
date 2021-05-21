@@ -7,6 +7,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:screenshot_callback/screenshot_callback.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'home.dart';
 import 'settings.dart';
 import 'history.dart';
@@ -67,6 +68,28 @@ class _NavBarState extends State<NavBar> {
 
     void printWarning(String text) {
       print('\x1B[33m$text\x1B[0m');
+    }
+
+    AppUpdateInfo _updateInfo;
+    // ignore: unused_local_variable
+    bool _flexibleUpdateAvailable = false;
+
+    Future<void> checkForUpdate() async {
+      InAppUpdate.checkForUpdate().then((info) {
+        setState(() {
+          _updateInfo = info;
+        });
+      }).catchError((e) {});
+    }
+
+    checkForUpdate();
+
+    if (_updateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
+      InAppUpdate.startFlexibleUpdate().then((_) {
+        setState(() {
+          _flexibleUpdateAvailable = true;
+        });
+      }).catchError((e) {});
     }
 
     StreamSubscription<FGBGType> subscription;
@@ -144,49 +167,48 @@ class _NavBarState extends State<NavBar> {
       print(uploadfile is File);
 
       Fluttertoast.showToast(
-      msg: 'Uploading screenshot...',
-      toastLength: Toast.LENGTH_SHORT,
-      timeInSecForIosWeb: 2,
-      fontSize: 16.0);
+          msg: 'Uploading screenshot...',
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 2,
+          fontSize: 16.0);
 
       final upload = await home.uploadFile(uploadfile);
 
       if (upload is int) {
+        Fluttertoast.showToast(
+            msg: 'Failed to upload file! HTTP Code $upload',
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 2,
+            fontSize: 16.0);
+        return;
+      } else {
+        print(upload);
+        final prefs = await SharedPreferences.getInstance();
+        final resprop = prefs.getString('resprop');
+        final regexp = RegExp(r'\$json:([a-zA-Z]+)\$');
+        final match = regexp.firstMatch(resprop);
+        final matched = match.group(1);
+        final rawurl = upload[matched] as String;
+
+        if (rawurl == null) {
           Fluttertoast.showToast(
-              msg: 'Failed to upload file! HTTP Code $upload',
+              msg: 'Uploaded, but failed to parse response URL!',
               toastLength: Toast.LENGTH_SHORT,
               timeInSecForIosWeb: 2,
               fontSize: 16.0);
           return;
-        } else {
-          print(upload);
-          final prefs = await SharedPreferences.getInstance();
-          final resprop = prefs.getString('resprop');
-          final regexp = RegExp(r'\$json:([a-zA-Z]+)\$');
-          final match = regexp.firstMatch(resprop);
-          final matched = match.group(1);
-          final rawurl = upload[matched] as String;
-
-          if (rawurl == null) {
-            Fluttertoast.showToast(
-                msg: 'Uploaded, but failed to parse response URL!',
-                toastLength: Toast.LENGTH_SHORT,
-                timeInSecForIosWeb: 2,
-                fontSize: 16.0);
-            return;
-          }
-
-          final url =
-              rawurl.replaceAll(RegExp(r'/^http:\/\//i'), 'https://');
-
-          Clipboard.setData(ClipboardData(text: url));
-
-          Fluttertoast.showToast(
-              msg: 'File sucessfully uploaded!',
-              toastLength: Toast.LENGTH_SHORT,
-              timeInSecForIosWeb: 2,
-              fontSize: 16.0);
         }
+
+        final url = rawurl.replaceAll(RegExp(r'/^http:\/\//i'), 'https://');
+
+        Clipboard.setData(ClipboardData(text: url));
+
+        Fluttertoast.showToast(
+            msg: 'File sucessfully uploaded!',
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 2,
+            fontSize: 16.0);
+      }
     });
   }
 
