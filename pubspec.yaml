@@ -34,7 +34,7 @@ dependencies:
   fluttertoast: ^8.0.6
   http: ^0.13.3
   mime: ^1.0.0
-  permission_handler: ^7.1.0
+  permission_handler: ^8.0.0+1
   shared_preferences: ^2.0.5
   toggle_switch: ^0.1.9
   receive_sharing_intent: ^1.4.5
@@ -42,9 +42,7 @@ dependencies:
   flutter_switch: ^0.3.1
   flutter_fgbg: ^0.1.0
   flutter_background: ^1.0.0
-  filesystem_picker: ^1.0.4
   in_app_purchase: ^1.0.0
-  path_provider_ex: ^1.0.1
   flutter_launcher_icons: any
   in_app_update: ^2.0.0
   flutter_video_compress: ^0.3.7+8

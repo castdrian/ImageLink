@@ -9,8 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_background/flutter_background.dart';
-import 'package:filesystem_picker/filesystem_picker.dart';
-import 'package:path_provider_ex/path_provider_ex.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -82,7 +80,7 @@ class _SettingsState extends State<Settings> {
             maxLines: 3,
           ),
           SizedBox(height: 5),
-          ToggleSwitch(
+          new ToggleSwitch(
             fontSize: 20,
             initialLabelIndex: idx,
             minHeight: 40,
@@ -134,21 +132,9 @@ class _SettingsState extends State<Settings> {
                                     timeInSecForIosWeb: 2,
                                     fontSize: 16.0);
                                 return;
-                              }
-                              
-                          List storageInfo =
-                              await PathProviderEx.getStorageInfo();
-                          print(storageInfo[0].rootDir);
-                          Directory rootPath = Directory(storageInfo[0].rootDir);
+                              }                          
 
-                          String path = await FilesystemPicker.open(
-                            title: 'Screenshots folder',
-                            context: context,
-                            rootDirectory: rootPath,
-                            fsType: FilesystemType.folder,
-                            pickText: 'Save screenshots folder',
-                            folderIconColor: Colors.blue,
-                          );
+                          final path = await FilePicker.platform.getDirectoryPath();
 
                           if (path == null) {
                             prefs.setBool('screenshots', false);
