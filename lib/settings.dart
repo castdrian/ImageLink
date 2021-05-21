@@ -120,6 +120,7 @@ class _SettingsState extends State<Settings> {
                         setState(() {
                           status = val;
                           prefs.setBool('screenshots', status);
+                          prefs.setBool('refresh', true);
                         });
 
                         if (status == true) {

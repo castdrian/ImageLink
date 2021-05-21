@@ -133,6 +133,7 @@ class _NavBarState extends State<NavBar> {
 
     ScreenshotCallback screenshotCallback = ScreenshotCallback();
     screenshotCallback.addListener(() async {
+      printWarning('DETECTED SCREENSHOT');
       final prefs = await SharedPreferences.getInstance();
       final screenshots = prefs.getBool('screenshots');
       if (screenshots == false) return;
