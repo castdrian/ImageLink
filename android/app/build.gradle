@@ -56,9 +56,15 @@ android {
         }
    }
    
+   aaptOptions {
+      ignoreAssetsPattern "!x86:!*ffprobe"
+   }
+
    buildTypes {
        release {
            signingConfig signingConfigs.release
+           minifyEnabled = true
+           shrinkResources = true
        }
    }
 
