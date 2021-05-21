@@ -85,7 +85,7 @@ class _HomeState extends State<Home> {
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 2,
           fontSize: 16.0);
-          
+
       SystemChannels.platform.invokeMethod('SystemNavigator.pop');
     }
   }
@@ -108,15 +108,14 @@ class _HomeState extends State<Home> {
           SizedBox(height: 50),
           Flexible(
               child: new OverflowBox(
-              minWidth: 0.0, 
-              minHeight: 0.0, 
-              maxWidth: double.infinity, 
-               child: fileMedia == null
-                    ? Icon(Icons.photo, size: 150)
-                    : isVideo == true
-                        ? Icon(Icons.video_library, size: 150)
-                        : Image.file(fileMedia)
-        )),
+                  minWidth: 0.0,
+                  minHeight: 0.0,
+                  maxWidth: double.infinity,
+                  child: fileMedia == null
+                      ? Icon(Icons.photo, size: 150)
+                      : isVideo == true
+                          ? Icon(Icons.video_library, size: 150)
+                          : Image.file(fileMedia))),
           SizedBox(height: 50),
           TextField(
             controller: txt,
@@ -154,6 +153,7 @@ class _HomeState extends State<Home> {
                   return;
                 }
 
+                prefs.setBool('refresh', false);
                 pickGalleryMedia(context);
               },
             ),
@@ -280,6 +280,7 @@ Future uploadFile(File file) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final responseString = await response.stream.bytesToString();
     final body = jsonDecode(responseString);
+    prefs.setBool('refresh', true);
     return body;
   } else {
     return response.statusCode;

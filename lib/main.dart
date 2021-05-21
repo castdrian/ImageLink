@@ -70,8 +70,10 @@ class _NavBarState extends State<NavBar> {
     }
 
     StreamSubscription<FGBGType> subscription;
-    subscription = FGBGEvents.stream.listen((event) {
-      if (event == FGBGType.foreground) {
+    subscription = FGBGEvents.stream.listen((event) async {
+      final prefs = await SharedPreferences.getInstance();
+
+      if (event == FGBGType.foreground && prefs.getBool('refresh') == true) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NavBar()),
