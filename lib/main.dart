@@ -60,7 +60,6 @@ class _NavBarState extends State<NavBar> {
   StreamSubscription _intentDataStreamSubscription;
 
   int _currentIndex = 0;
-  final List<Widget> _children = [Home(), Settings(), History(), Info()];
 
   @override
   void initState() {
@@ -219,7 +218,13 @@ class _NavBarState extends State<NavBar> {
       appBar: AppBar(
         title: Text('ImageLink™'),
       ),
-      body: _children[_currentIndex],
+      body: IndexedStack(
+            children: <Widget>[
+              Home(),
+              Settings(),
+              History(),
+              Info()
+            ], index: _currentIndex,),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         onTap: onTabTapped, // new
