@@ -46,6 +46,7 @@ dependencies:
   in_app_purchase: ^1.0.0
   path_provider_ex: ^1.0.1
   flutter_launcher_icons: any
+  in_app_update: ^2.0.0
 
 dev_dependencies:
   flutter_test:
