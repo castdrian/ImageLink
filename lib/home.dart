@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
@@ -19,6 +20,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _flutterVideoCompress = FlutterVideoCompress();
+  File videopreview;
   File fileMedia;
   bool isVideo = false;
   final txt = TextEditingController();
@@ -39,8 +42,21 @@ class _HomeState extends State<Home> {
       return;
     }
 
+    File preview;
+
+    if (isVideo == true) {
+        final file = await _flutterVideoCompress.convertVideoToGif(
+        shared.first.path,
+        startTime: 0, // default(0)
+        duration: 3, // default(-1)
+        // endTime: -1 // default(-1)
+        );
+        preview = file;
+    }
+
     setState(() {
       fileMedia = File(shared.first.path);
+      if (preview != null) videopreview = preview;
     });
 
     Fluttertoast.showToast(
@@ -114,7 +130,7 @@ class _HomeState extends State<Home> {
                   child: fileMedia == null
                       ? Icon(Icons.photo, size: 150)
                       : isVideo == true
-                          ? Icon(Icons.video_library, size: 150)
+                          ? Image.file(videopreview)
                           : Image.file(fileMedia))),
           SizedBox(height: 50),
           TextField(
@@ -245,9 +261,23 @@ class _HomeState extends State<Home> {
     if (file == null) {
       return;
     } else {
+
+      File preview;
+
+      if (isVideo == true) {
+          final vfile = await _flutterVideoCompress.convertVideoToGif(
+          file.path,
+          startTime: 0, // default(0)
+          duration: 3, // default(-1)
+          // endTime: -1 // default(-1)
+          );
+          preview = vfile;
+      }
+
       setState(() {
         fileMedia = file;
         txt.text = p.basename(file.path);
+        if (preview != null) videopreview = preview;
       });
     }
   }
