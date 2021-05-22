@@ -256,6 +256,9 @@ class _NavBarState extends State<NavBar> {
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
+      if (index == 2) {
+        History();
+      }
     });
   }
 }
