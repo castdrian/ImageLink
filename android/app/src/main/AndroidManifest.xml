@@ -2,7 +2,7 @@
     package="com.castdrian.imagelink">
    <application
         android:label="ImageLink"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
