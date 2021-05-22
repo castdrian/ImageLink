@@ -610,12 +610,6 @@ class _SettingsState extends State<Settings> {
   }
 
   Future loadAsync(BuildContext context) async {
-    await [
-      Permission.storage,
-      Permission.manageExternalStorage,
-      Permission.ignoreBatteryOptimizations,
-    ].request();
-
     final prefs = await SharedPreferences.getInstance();
     final requrl = prefs.getString('requrl');
     final resprop = prefs.getString('resprop');
