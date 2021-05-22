@@ -24,14 +24,14 @@ class _SettingsState extends State<Settings> {
   final rsc = TextEditingController();
   final agc = TextEditingController();
   final fnc = TextEditingController();
-  int idx = 0;
+  int? idx = 0;
   bool status = false;
-  String dir;
+  String? dir;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
+    WidgetsBinding.instance!
         .addPostFrameCallback((_) async => await loadAsync(context));
   }
 
@@ -82,7 +82,7 @@ class _SettingsState extends State<Settings> {
           SizedBox(height: 5),
           new ToggleSwitch(
             fontSize: 20,
-            initialLabelIndex: idx,
+            initialLabelIndex: idx!,
             minHeight: 40,
             minWidth: double.infinity,
             cornerRadius: 20.0,
@@ -147,8 +147,8 @@ class _SettingsState extends State<Settings> {
                           dir = path;
 
                           setState(() {
-                            sdc.text = dir;
-                            prefs.setString('screendir', dir);
+                            sdc.text = dir!;
+                            prefs.setString('screendir', dir!);
                           });
 
                           bool enabled =
@@ -233,7 +233,7 @@ class _SettingsState extends State<Settings> {
                 final media =
                     await FilePicker.platform.pickFiles(type: FileType.any);
                 if (media == null) return;
-                final file = File(media.files.first.path);
+                final file = File(media.files.first.path!);
                 final extension = p.extension(file.path);
                 print(extension);
                 if (extension != '.sxcu') {
@@ -438,7 +438,7 @@ class _SettingsState extends State<Settings> {
                   return;
                 }
 
-                final matchedText = resmatch.group(0);
+                final matchedText = resmatch.group(0)!;
                 final idxprefs = await SharedPreferences.getInstance();
 
                 setState(() {
@@ -630,12 +630,12 @@ class _SettingsState extends State<Settings> {
 
     setState(() {
       rqc.text = requrl;
-      rsc.text = resprop;
-      agc.text = args;
-      fnc.text = filename;
+      rsc.text = resprop!;
+      agc.text = args!;
+      fnc.text = filename!;
       idx = type;
       status = screenshots ?? false;
-      sdc.text = screendir;
+      sdc.text = screendir!;
     });
 
     Fluttertoast.showToast(

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:screenshot_callback/screenshot_callback.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
@@ -52,14 +53,14 @@ class NavBar extends StatefulWidget {
   }
 }
 
-List<SharedMediaFile> _sharedFiles;
+List<SharedMediaFile>? _sharedFiles;
 
 getShared() {
   return _sharedFiles;
 }
 
 class _NavBarState extends State<NavBar> {
-  StreamSubscription _intentDataStreamSubscription;
+  late StreamSubscription _intentDataStreamSubscription;
 
   int _currentIndex = 0;
 
@@ -71,7 +72,7 @@ class _NavBarState extends State<NavBar> {
       print('\x1B[33m$text\x1B[0m');
     }
 
-    AppUpdateInfo _updateInfo;
+    AppUpdateInfo? _updateInfo;
     // ignore: unused_local_variable
     bool _flexibleUpdateAvailable = false;
     if (kReleaseMode) {
@@ -150,10 +151,10 @@ class _NavBarState extends State<NavBar> {
           timeInSecForIosWeb: 2,
           fontSize: 16.0);
 
-      final screendir = prefs.getString('screendir');
+      final screendir = prefs.getString('screendir')!;
       final dir = Directory(screendir);
       final files = dir.listSync();
-      if (files == null) return;
+      if (files.isEmpty == true) return;
       List dates = [];
       List screenshotfiles = [];
 
@@ -230,10 +231,10 @@ class _NavBarState extends State<NavBar> {
 
 Future uploadFile(File file) async {
   final prefs = await SharedPreferences.getInstance();
-  final requrl = prefs.getString('requrl');
-  final args = prefs.getString('args');
+  final requrl = prefs.getString('requrl')!;
+  final args = prefs.getString('args')!;
   final type = prefs.getInt('argtype');
-  final filename = prefs.getString('fileform');
+  final filename = prefs.getString('fileform')!;
 
   final fields = jsonDecode(args);
   final req = http.MultipartRequest('POST', Uri.parse(requrl));
@@ -273,11 +274,11 @@ Future postUpload(dynamic upload) async {
   } else {
     print(upload);
     final prefs = await SharedPreferences.getInstance();
-    final resprop = prefs.getString('resprop');
+    final resprop = prefs.getString('resprop')!;
     final regexp = RegExp(r'\$json:([a-zA-Z]+)\$');
-    final match = regexp.firstMatch(resprop);
+    final match = regexp.firstMatch(resprop)!;
     final matched = match.group(1);
-    final rawurl = upload[matched] as String;
+    final rawurl = upload[matched] as String?;
 
     if (rawurl == null) {
       Fluttertoast.showToast(

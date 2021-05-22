@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mime/mime.dart';
@@ -18,14 +19,14 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _flutterVideoCompress = FlutterVideoCompress();
-  File videopreview;
-  File fileMedia;
+  late File videopreview;
+  File? fileMedia;
   bool isVideo = false;
   final txt = TextEditingController();
-  final List shared = main.getShared();
+  final List? shared = main.getShared();
 
   Future<void> shareIntent() async {
-    if (shared == null || shared.isEmpty) return;
+    if (shared == null || shared!.isEmpty) return;
 
     final prefs = await SharedPreferences.getInstance();
     final requrl = prefs.getString('requrl');
@@ -39,11 +40,11 @@ class _HomeState extends State<Home> {
       return;
     }
 
-    File preview;
+    File? preview;
 
     if (isVideo == true) {
         final file = await _flutterVideoCompress.convertVideoToGif(
-        shared.first.path,
+        shared!.first.path,
         startTime: 0, // default(0)
         duration: 3, // default(-1)
         // endTime: -1 // default(-1)
@@ -52,7 +53,7 @@ class _HomeState extends State<Home> {
     }
 
     setState(() {
-      fileMedia = File(shared.first.path);
+      fileMedia = File(shared!.first.path);
       if (preview != null) videopreview = preview;
     });
 
@@ -62,7 +63,7 @@ class _HomeState extends State<Home> {
         timeInSecForIosWeb: 2,
         fontSize: 16.0);
 
-    final upload = await main.uploadFile(fileMedia);
+    final upload = await main.uploadFile(fileMedia!);
     await main.postUpload(upload);
   }
 
@@ -72,7 +73,7 @@ class _HomeState extends State<Home> {
     shareIntent();
 
     // Request Permissions after loading the Home Screen
-    WidgetsBinding.instance
+    WidgetsBinding.instance!
         .addPostFrameCallback((_) async => await loadAsync(context));
   }
 
@@ -91,7 +92,7 @@ class _HomeState extends State<Home> {
                       ? Icon(Icons.photo, size: 150)
                       : isVideo == true
                           ? Image.file(videopreview)
-                          : Image.file(fileMedia))),
+                          : Image.file(fileMedia!))),
           SizedBox(height: 50),
           TextField(
             controller: txt,
@@ -160,7 +161,7 @@ class _HomeState extends State<Home> {
                     timeInSecForIosWeb: 2,
                     fontSize: 16.0);
 
-                final upload = await main.uploadFile(fileMedia);
+                final upload = await main.uploadFile(fileMedia!);
                 await main.postUpload(upload);
               },
             ),
@@ -179,14 +180,14 @@ class _HomeState extends State<Home> {
   Future pickGalleryMedia(BuildContext context) async {
     final media = await FilePicker.platform.pickFiles(type: FileType.media);
     if (media == null) return;
-    final file = File(media.files.first.path);
+    final file = File(media.files.first.path!);
     if (isVideoFile(file.path) == true) isVideo = true;
 
-    if (file == null) {
+    if (file.existsSync() == false) {
       return;
     } else {
 
-      File preview;
+      File? preview;
 
       if (isVideo == true) {
           final vfile = await _flutterVideoCompress.convertVideoToGif(
@@ -208,6 +209,6 @@ class _HomeState extends State<Home> {
 }
 
 bool isVideoFile(String path) {
-  String mimeType = lookupMimeType(path);
+  String? mimeType = lookupMimeType(path);
   return mimeType != null && mimeType.startsWith('video');
 }
