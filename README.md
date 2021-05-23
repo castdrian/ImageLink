@@ -1,3 +1,6 @@
+[![GitHub release](https://img.shields.io/github/release/adrifcastr/ImageLink.svg)](https://GitHub.com/adrifcastr/ImageLink/releases/) [![Support Server](https://img.shields.io/discord/844574704698130492.svg?color=7289da&label=TestingMeme&logo=discord&style=flat-square)](https://discord.gg/MSDcP79cch)
+
+
 # ImageLink
 ### ImageLink is the (non-affiliated) mobile ShareX client!
 
