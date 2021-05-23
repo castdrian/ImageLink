@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mime/mime.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:chewie/chewie.dart';
+import 'package:video_player/video_player.dart';
 import 'main.dart' as main;
 
 class Home extends StatefulWidget {
@@ -18,12 +18,31 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final _flutterVideoCompress = FlutterVideoCompress();
-  late File videopreview;
+  Chewie? player;
   File? fileMedia;
   bool isVideo = false;
   final txt = TextEditingController();
   final List? shared = main.getShared();
+
+  Future<void> initializePlayer() async {
+    print(fileMedia?.path);
+    final videoPlayerController = VideoPlayerController.asset(fileMedia!.path);
+
+    await videoPlayerController.initialize();
+
+    final chewieController = ChewieController(
+      videoPlayerController: videoPlayerController,
+      autoPlay: true,
+      looping: true,
+    );
+
+    final playerWidget = Chewie(
+      controller: chewieController,
+    );
+    setState(() {
+      player = playerWidget;
+    });
+  }
 
   Future<void> shareIntent() async {
     if (shared == null || shared!.isEmpty) return;
@@ -39,23 +58,13 @@ class _HomeState extends State<Home> {
           fontSize: 16.0);
       return;
     }
-
-    File? preview;
-
-    if (isVideo == true) {
-        final file = await _flutterVideoCompress.convertVideoToGif(
-        shared!.first.path,
-        startTime: 0, // default(0)
-        duration: 3, // default(-1)
-        // endTime: -1 // default(-1)
-        );
-        preview = file;
-    }
-
     setState(() {
       fileMedia = File(shared!.first.path);
-      if (preview != null) videopreview = preview;
     });
+    
+    if (isVideo == true) {
+      await initializePlayer();
+    }
 
     Fluttertoast.showToast(
         msg: 'Uploading file...',
@@ -91,7 +100,7 @@ class _HomeState extends State<Home> {
                   child: fileMedia == null
                       ? Icon(Icons.photo, size: 150)
                       : isVideo == true
-                          ? Image.file(videopreview)
+                          ? player
                           : Image.file(fileMedia!))),
           SizedBox(height: 50),
           TextField(
@@ -186,24 +195,14 @@ class _HomeState extends State<Home> {
     if (file.existsSync() == false) {
       return;
     } else {
-
-      File? preview;
-
-      if (isVideo == true) {
-          final vfile = await _flutterVideoCompress.convertVideoToGif(
-          file.path,
-          startTime: 0, // default(0)
-          duration: 3, // default(-1)
-          // endTime: -1 // default(-1)
-          );
-          preview = vfile;
-      }
-
       setState(() {
         fileMedia = file;
         txt.text = p.basename(file.path);
-        if (preview != null) videopreview = preview;
       });
+
+      if (isVideo == true) {
+        await initializePlayer();
+      }
     }
   }
 }

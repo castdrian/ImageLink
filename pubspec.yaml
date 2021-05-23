@@ -37,14 +37,17 @@ dependencies:
   shared_preferences: ^2.0.5
   toggle_switch: ^0.1.9
   receive_sharing_intent: ^1.4.5
-  screenshot_callback: any
+  screenshot_callback:
+    git:
+        url: https://github.com/adrifcastr/flutter_screenshot_callback.git
   flutter_switch: ^0.3.1
   flutter_fgbg: ^0.1.0
   flutter_background: ^1.0.0
   in_app_purchase: ^1.0.0
   flutter_launcher_icons: any
   in_app_update: ^2.0.0
-  flutter_video_compress: ^0.3.7+8
+  chewie: ^1.0.0
+  video_player: ^2.1.1
 
 dev_dependencies:
   flutter_test:
