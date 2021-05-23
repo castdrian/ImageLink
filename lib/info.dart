@@ -54,10 +54,9 @@ class _InfoState extends State<Info> {
             width: double.infinity,
             height: 70.0,
             child: ElevatedButton.icon(
-              label: Text('GitHub', style: TextStyle(fontSize: 25)),
-              icon: Icon(FontAwesomeIcons.github, size: 30),
+              label: Text('In-app Purchase', style: TextStyle(fontSize: 25)),
+              icon: Icon(FontAwesomeIcons.googlePlay, size: 30),
               onPressed: () {
-                launch('https://github.com/adrifcastr/ImageLink');
               },
             ),
           ),
