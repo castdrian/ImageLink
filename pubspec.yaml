@@ -52,6 +52,7 @@ dependencies:
     git:
       url: git://github.com/thehairy/floating_action_row.git
       ref: master
+  flutter_foreground_plugin: ^0.8.0
 
 dev_dependencies:
   flutter_test:
