@@ -44,6 +44,7 @@
         </intent-filter>
 
         </activity>
+        <service android:name="changjoopark.com.flutter_foreground_plugin.FlutterForegroundService"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
@@ -51,7 +52,7 @@
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 </manifest>
