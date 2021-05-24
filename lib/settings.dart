@@ -294,11 +294,7 @@ class _SettingsState extends State<Settings> {
   }
 
   Future importSXCU(BuildContext context) async {
-    await [
-      Permission.storage,
-      Permission.manageExternalStorage,
-      Permission.ignoreBatteryOptimizations,
-    ].request();
+    await Permission.storage.request();
 
     final media = await FilePicker.platform.pickFiles(type: FileType.any);
     if (media == null) return;
@@ -543,11 +539,7 @@ class _SettingsState extends State<Settings> {
   }
 
   Future saveSettings(BuildContext context) async {
-    await [
-      Permission.storage,
-      Permission.manageExternalStorage,
-      Permission.ignoreBatteryOptimizations,
-    ].request();
+    await Permission.storage.request();
 
     if ([rqc.text, rsc.text, agc.text].every((v) => v == '')) {
       Fluttertoast.showToast(

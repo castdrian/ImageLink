@@ -114,13 +114,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future loadAsync(BuildContext context) async {
-    await [
-      Permission.storage,
-      Permission.manageExternalStorage,
-      Permission.ignoreBatteryOptimizations,
-    ].request();
-  }
+  Future loadAsync(BuildContext context) async {}
 
   Future pickGalleryMedia(BuildContext context, FileType type) async {
     final media = await FilePicker.platform.pickFiles(type: type);
