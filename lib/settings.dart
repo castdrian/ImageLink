@@ -129,11 +129,7 @@ class _SettingsState extends State<Settings> {
                           final requrl = prefs.getString('requrl');
 
                           if (requrl == null) {
-                            Fluttertoast.showToast(
-                                msg: 'Nothing to load!',
-                                toastLength: Toast.LENGTH_SHORT,
-                                timeInSecForIosWeb: 2,
-                                fontSize: 16.0);
+                            Fluttertoast.showToast(msg: 'Nothing to load!');
                             return;
                           }
 
@@ -172,11 +168,7 @@ class _SettingsState extends State<Settings> {
                               androidConfig: config);
                           await FlutterBackground.enableBackgroundExecution();
 
-                          Fluttertoast.showToast(
-                              msg: 'Enabled screenshot intercepting!',
-                              toastLength: Toast.LENGTH_SHORT,
-                              timeInSecForIosWeb: 2,
-                              fontSize: 16.0);
+                          Fluttertoast.showToast(msg: 'Enabled screenshot intercepting!');
                         } else {
                           bool enabled =
                               FlutterBackground.isBackgroundExecutionEnabled;
@@ -184,11 +176,7 @@ class _SettingsState extends State<Settings> {
                             await FlutterBackground
                                 .disableBackgroundExecution();
 
-                          Fluttertoast.showToast(
-                              msg: 'Disabled screenshot intercepting!',
-                              toastLength: Toast.LENGTH_SHORT,
-                              timeInSecForIosWeb: 2,
-                              fontSize: 16.0);
+                          Fluttertoast.showToast(msg: 'Disabled screenshot intercepting!');
                         }
                       })),
             ],
@@ -233,11 +221,7 @@ class _SettingsState extends State<Settings> {
     final screendir = prefs.getString('screendir');
 
     if (requrl == null) {
-      Fluttertoast.showToast(
-          msg: 'Nothing to load!',
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 2,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: 'Nothing to load!');
       return;
     }
 
@@ -251,11 +235,7 @@ class _SettingsState extends State<Settings> {
       sdc.text = screendir == null ? "" : screendir;
     });
 
-    Fluttertoast.showToast(
-        msg: 'Settings successfully loaded!',
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIosWeb: 2,
-        fontSize: 16.0);
+    Fluttertoast.showToast(msg: 'Settings successfully loaded!');
 
     if (screenshots == true) {
       bool enabled = FlutterBackground.isBackgroundExecutionEnabled;
@@ -273,22 +253,13 @@ class _SettingsState extends State<Settings> {
       await FlutterBackground.initialize(androidConfig: config);
       await FlutterBackground.enableBackgroundExecution();
 
-      Fluttertoast.showToast(
-          msg: 'Enabled screenshot intercepting!',
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 2,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: 'Enabled screenshot intercepting!');
     } else {
       bool enabled = FlutterBackground.isBackgroundExecutionEnabled;
 
       if (enabled == true) {
         await FlutterBackground.disableBackgroundExecution();
-
-        Fluttertoast.showToast(
-            msg: 'Disabled screenshot intercepting!',
-            toastLength: Toast.LENGTH_SHORT,
-            timeInSecForIosWeb: 2,
-            fontSize: 16.0);
+        Fluttertoast.showToast(msg: 'Disabled screenshot intercepting!');
       }
     }
   }
@@ -519,11 +490,7 @@ class _SettingsState extends State<Settings> {
       }
     });
 
-    Fluttertoast.showToast(
-        msg: 'Successfully imported SXCU!',
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIosWeb: 2,
-        fontSize: 16.0);
+    Fluttertoast.showToast(msg: 'Successfully imported SXCU!');
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('requrl', rqc.text);
@@ -531,22 +498,14 @@ class _SettingsState extends State<Settings> {
     prefs.setString('args', agc.text);
     prefs.setString('fileform', fnc.text);
 
-    Fluttertoast.showToast(
-        msg: 'Settings saved successfully!',
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIosWeb: 2,
-        fontSize: 16.0);
+    Fluttertoast.showToast(msg: 'Settings saved successfully!');
   }
 
   Future saveSettings(BuildContext context) async {
     await Permission.storage.request();
 
     if ([rqc.text, rsc.text, agc.text].every((v) => v == '')) {
-      Fluttertoast.showToast(
-          msg: 'Nothing to save (all fields required)!',
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 2,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: 'Nothing to save (all fields required)!');
       return;
     }
 
@@ -641,11 +600,7 @@ class _SettingsState extends State<Settings> {
     prefs.setString('args', agc.text);
     prefs.setString('fileform', fnc.text);
 
-    Fluttertoast.showToast(
-        msg: 'Settings saved successfully!',
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIosWeb: 2,
-        fontSize: 16.0);
+    Fluttertoast.showToast(msg: 'Settings saved successfully!');
   }
 
   FloatingActionRow buildButtons(BuildContext context) {

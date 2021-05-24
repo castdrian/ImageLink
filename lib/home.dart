@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mime/mime.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
@@ -26,7 +24,6 @@ class _HomeState extends State<Home> {
   FloatingActionRow? buttons;
 
   Future<void> initializePlayer() async {
-    print(fileMedia?.path);
     final videoPlayerController = VideoPlayerController.file(fileMedia!);
 
     await videoPlayerController.initialize();
@@ -52,11 +49,7 @@ class _HomeState extends State<Home> {
     final requrl = prefs.getString('requrl');
 
     if (requrl == null) {
-      Fluttertoast.showToast(
-          msg: 'You must specify settings first!',
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 2,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: 'You must specify settings first!');
       return;
     }
     setState(() {
@@ -67,11 +60,7 @@ class _HomeState extends State<Home> {
       await initializePlayer();
     }
 
-    Fluttertoast.showToast(
-        msg: 'Uploading file...',
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIosWeb: 2,
-        fontSize: 16.0);
+    Fluttertoast.showToast(msg: 'Uploading file...');
 
     final upload = await main.uploadFile(fileMedia!);
     await main.postUpload(upload);
@@ -83,10 +72,6 @@ class _HomeState extends State<Home> {
     shareIntent();
 
     buttons = buildMainButtons(context);
-
-    // Request Permissions after loading the Home Screen
-    WidgetsBinding.instance!
-        .addPostFrameCallback((_) async => await loadAsync(context));
   }
 
   @override
@@ -114,7 +99,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future loadAsync(BuildContext context) async {}
 
   Future pickGalleryMedia(BuildContext context, FileType type) async {
     final media = await FilePicker.platform.pickFiles(type: type);
@@ -157,11 +141,7 @@ class _HomeState extends State<Home> {
             final requrl = prefs.getString('requrl');
 
             if (requrl == null) {
-              Fluttertoast.showToast(
-                  msg: 'You must specify settings first!',
-                  toastLength: Toast.LENGTH_SHORT,
-                  timeInSecForIosWeb: 2,
-                  fontSize: 16.0);
+              Fluttertoast.showToast(msg: 'You must specify settings first!');
               return;
             }
 
@@ -180,11 +160,7 @@ class _HomeState extends State<Home> {
           onTap: () async {
             if (fileMedia == null) return;
 
-            Fluttertoast.showToast(
-                msg: 'Uploading file...',
-                toastLength: Toast.LENGTH_SHORT,
-                timeInSecForIosWeb: 2,
-                fontSize: 16.0);
+            Fluttertoast.showToast(msg: 'Uploading file...');
 
             final upload = await main.uploadFile(fileMedia!);
             await main.postUpload(upload);

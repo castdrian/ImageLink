@@ -145,11 +145,7 @@ class _NavBarState extends State<NavBar> {
       final screenshots = prefs.getBool('screenshots');
       if (screenshots == false) return;
       printWarning('DETECTED SCREENSHOT');
-      Fluttertoast.showToast(
-          msg: 'Detected screenshot!',
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 2,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: 'Detected screenshot!');
 
       final screendir = prefs.getString('screendir')!;
       final dir = Directory(screendir);
@@ -173,11 +169,7 @@ class _NavBarState extends State<NavBar> {
           .first;
       print(uploadfile is File);
 
-      Fluttertoast.showToast(
-          msg: 'Uploading screenshot...',
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 2,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: 'Uploading screenshot...');
 
       final upload = await uploadFile(uploadfile);
       await postUpload(upload);
@@ -265,11 +257,7 @@ Future uploadFile(File file) async {
 
 Future postUpload(dynamic upload) async {
   if (upload is int) {
-    Fluttertoast.showToast(
-        msg: 'Failed to upload file! HTTP Code $upload',
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIosWeb: 2,
-        fontSize: 16.0);
+    Fluttertoast.showToast(msg: 'Failed to upload file! HTTP Code $upload');
     return;
   } else {
     print(upload);
@@ -281,24 +269,14 @@ Future postUpload(dynamic upload) async {
     final rawurl = upload[matched] as String?;
 
     if (rawurl == null) {
-      Fluttertoast.showToast(
-          msg: 'Uploaded, but failed to parse response URL!',
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 2,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: 'Uploaded, but failed to parse response URL!');
       return;
     }
 
     final url = rawurl.replaceAll(RegExp(r'/^http:\/\//i'), 'https://');
 
     Clipboard.setData(ClipboardData(text: url));
-
-    Fluttertoast.showToast(
-        msg: 'File sucessfully uploaded!',
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIosWeb: 2,
-        fontSize: 16.0);
-
+    Fluttertoast.showToast(msg: 'File sucessfully uploaded!');
     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
   }
 }
