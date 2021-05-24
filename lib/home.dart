@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 import 'main.dart' as main;
+import 'package:floating_action_row/floating_action_row.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -21,8 +22,8 @@ class _HomeState extends State<Home> {
   Chewie? player;
   File? fileMedia;
   bool isVideo = false;
-  final txt = TextEditingController();
   final List? shared = main.getShared();
+  FloatingActionRow? buttons;
 
   Future<void> initializePlayer() async {
     print(fileMedia?.path);
@@ -61,7 +62,7 @@ class _HomeState extends State<Home> {
     setState(() {
       fileMedia = File(shared!.first.path);
     });
-    
+
     if (isVideo == true) {
       await initializePlayer();
     }
@@ -81,6 +82,8 @@ class _HomeState extends State<Home> {
     super.initState();
     shareIntent();
 
+    buttons = buildMainButtons(context);
+
     // Request Permissions after loading the Home Screen
     WidgetsBinding.instance!
         .addPostFrameCallback((_) async => await loadAsync(context));
@@ -89,8 +92,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Column(children: <Widget>[
+      resizeToAvoidBottomInset: false,
+      body: Column(
+        children: <Widget>[
           SizedBox(height: 50),
           Flexible(
               child: new OverflowBox(
@@ -102,80 +106,12 @@ class _HomeState extends State<Home> {
                       : isVideo == true
                           ? player
                           : Image.file(fileMedia!))),
-          SizedBox(height: 50),
-          TextField(
-            controller: txt,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Selected file:',
-              isDense: true,
-              contentPadding: EdgeInsets.all(8),
-            ),
-            readOnly: true,
-          ),
-          SizedBox(height: 14),
-          Container(
-            constraints: new BoxConstraints(
-              minHeight: 70.0,
-              maxHeight: 70.0,
-            ),
-            width: double.infinity,
-            height: 70.0,
-            child: ElevatedButton.icon(
-              label: Text('Select file', style: TextStyle(fontSize: 30)),
-              icon: Icon(Icons.image, size: 30),
-              onPressed: () async {
-                if (isVideo == true) isVideo = false;
-
-                final prefs = await SharedPreferences.getInstance();
-                final requrl = prefs.getString('requrl');
-
-                if (requrl == null) {
-                  Fluttertoast.showToast(
-                      msg: 'You must specify settings first!',
-                      toastLength: Toast.LENGTH_SHORT,
-                      timeInSecForIosWeb: 2,
-                      fontSize: 16.0);
-                  return;
-                }
-
-                prefs.setBool('refresh', false);
-                pickGalleryMedia(context);
-              },
-            ),
-          ),
-          SizedBox(height: 14),
-          Container(
-            constraints: new BoxConstraints(
-              minHeight: 70.0,
-              maxHeight: 70.0,
-            ),
-            width: double.infinity,
-            height: 70.0,
-            child: ElevatedButton.icon(
-              label: Text('Upload', style: TextStyle(fontSize: 30)),
-              icon: Icon(Icons.upload_file, size: 30),
-              onPressed: () async {
-                if (fileMedia == null) {
-                  Fluttertoast.showToast(
-                      msg: 'Please select a file!',
-                      toastLength: Toast.LENGTH_SHORT,
-                      timeInSecForIosWeb: 2,
-                      fontSize: 16.0);
-                  return;
-                }
-                Fluttertoast.showToast(
-                    msg: 'Uploading file...',
-                    toastLength: Toast.LENGTH_SHORT,
-                    timeInSecForIosWeb: 2,
-                    fontSize: 16.0);
-
-                final upload = await main.uploadFile(fileMedia!);
-                await main.postUpload(upload);
-              },
-            ),
-          ),
-        ]));
+          SizedBox(height: 100),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: buttons,
+    );
   }
 
   Future loadAsync(BuildContext context) async {
@@ -186,24 +122,129 @@ class _HomeState extends State<Home> {
     ].request();
   }
 
-  Future pickGalleryMedia(BuildContext context) async {
-    final media = await FilePicker.platform.pickFiles(type: FileType.media);
-    if (media == null) return;
+  Future pickGalleryMedia(BuildContext context, FileType type) async {
+    final media = await FilePicker.platform.pickFiles(type: type);
+    if (media == null) {
+      setState(() {
+        buttons = buildMainButtons(context);
+      });
+      return;
+    }
     final file = File(media.files.first.path!);
     if (isVideoFile(file.path) == true) isVideo = true;
 
     if (file.existsSync() == false) {
+      setState(() {
+        buttons = buildMainButtons(context);
+      });
       return;
     } else {
       setState(() {
         fileMedia = file;
-        txt.text = p.basename(file.path);
+        buttons = buildMainButtons(context);
       });
 
       if (isVideo == true) {
         await initializePlayer();
       }
     }
+  }
+
+  FloatingActionRow buildMainButtons(BuildContext context) {
+    return FloatingActionRow(
+      color: Colors.blueAccent,
+      children: <Widget>[
+        FloatingActionRowButton(
+          icon: Icon(Icons.image),
+          onTap: () async {
+            if (isVideo == true) isVideo = false;
+
+            final prefs = await SharedPreferences.getInstance();
+            final requrl = prefs.getString('requrl');
+
+            if (requrl == null) {
+              Fluttertoast.showToast(
+                  msg: 'You must specify settings first!',
+                  toastLength: Toast.LENGTH_SHORT,
+                  timeInSecForIosWeb: 2,
+                  fontSize: 16.0);
+              return;
+            }
+
+            prefs.setBool('refresh', false);
+            setState(() {
+              buttons = buildFileButtons(context);
+            });
+          },
+        ),
+        FloatingActionRowDivider(
+          color: Colors.white,
+        ),
+        FloatingActionRowButton(
+          icon: Icon(Icons.upload_rounded),
+          color: fileMedia == null ? Colors.grey : Colors.transparent,
+          onTap: () async {
+            if (fileMedia == null) return;
+
+            Fluttertoast.showToast(
+                msg: 'Uploading file...',
+                toastLength: Toast.LENGTH_SHORT,
+                timeInSecForIosWeb: 2,
+                fontSize: 16.0);
+
+            final upload = await main.uploadFile(fileMedia!);
+            await main.postUpload(upload);
+          },
+        ),
+        FloatingActionRowButton(
+          icon: Icon(Icons.clear),
+          color: fileMedia == null ? Colors.grey : Colors.red,
+          onTap: () {
+            if (fileMedia == null) return;
+            clearFile(context);
+          },
+        ),
+      ],
+    );
+  }
+
+  FloatingActionRow buildFileButtons(BuildContext context) {
+    return FloatingActionRow(
+      color: Colors.blueAccent,
+      children: <Widget>[
+        FloatingActionRowButton(
+          icon: Icon(Icons.image),
+          onTap: () {
+            pickGalleryMedia(context, FileType.image);
+          },
+        ),
+        FloatingActionRowDivider(
+          color: Colors.white,
+        ),
+        FloatingActionRowButton(
+          icon: Icon(Icons.videocam),
+          onTap: () {
+            pickGalleryMedia(context, FileType.video);
+          },
+        ),
+        FloatingActionRowDivider(
+          color: Colors.white,
+        ),
+        FloatingActionRowButton(
+          icon: Icon(Icons.insert_drive_file_outlined),
+          onTap: () {
+            pickGalleryMedia(context, FileType.any);
+          },
+        ),
+      ],
+    );
+  }
+
+  void clearFile(BuildContext context) {
+    setState(() {
+      fileMedia = null;
+      buttons = buildMainButtons(context);
+    });
   }
 }
 
