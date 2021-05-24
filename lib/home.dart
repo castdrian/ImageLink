@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 import 'main.dart' as main;
+import 'util.dart';
 import 'package:floating_action_row/floating_action_row.dart';
 
 class Home extends StatefulWidget {
@@ -62,8 +63,8 @@ class _HomeState extends State<Home> {
 
     Fluttertoast.showToast(msg: 'Uploading file...');
 
-    final upload = await main.uploadFile(fileMedia!);
-    await main.postUpload(upload);
+    final upload = await uploadFile(fileMedia!);
+    await postUpload(upload);
   }
 
   @override
@@ -162,8 +163,8 @@ class _HomeState extends State<Home> {
 
             Fluttertoast.showToast(msg: 'Uploading file...');
 
-            final upload = await main.uploadFile(fileMedia!);
-            await main.postUpload(upload);
+            final upload = await uploadFile(fileMedia!);
+            await postUpload(upload);
           },
         ),
         FloatingActionRowButton(
