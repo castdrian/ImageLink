@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:package_info/package_info.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:screenshot_callback/screenshot_callback.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,6 +53,8 @@ class NavBar extends StatefulWidget {
 }
 
 List<SharedMediaFile>? _sharedFiles;
+String? ver;
+String? bnum;
 
 getShared() {
   return _sharedFiles;
@@ -59,12 +62,16 @@ getShared() {
 
 class _NavBarState extends State<NavBar> {
   late StreamSubscription _intentDataStreamSubscription;
-
   int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      ver = packageInfo.version;
+      bnum = packageInfo.buildNumber;
+    });
 
     void printWarning(String text) {
       print('\x1B[33m$text\x1B[0m');
@@ -179,7 +186,9 @@ class _NavBarState extends State<NavBar> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('ImageLink™'),
+        title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text('ImageLink™'), Text('v$ver ($bnum)')]),
         leading: Image.asset('assets/icon/icon.png'),
       ),
       body: IndexedStack(

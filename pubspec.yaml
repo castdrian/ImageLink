@@ -54,6 +54,7 @@ dependencies:
       ref: master
   flutter_foreground_plugin: 
     git: https://github.com/jja08111/flutter_foreground_service_plugin.git
+  package_info: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -103,6 +103,7 @@ class _SettingsState extends State<Settings> {
           ),
           SizedBox(height: 5),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                   child: Text('Intercept screenshots:',
@@ -209,6 +210,7 @@ class _SettingsState extends State<Settings> {
           ),
           SizedBox(height: 5),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                   child: Text('Upload destination:',
