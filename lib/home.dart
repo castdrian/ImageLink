@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
 
   Future<void> initializePlayer() async {
     print(fileMedia?.path);
-    final videoPlayerController = VideoPlayerController.asset(fileMedia!.path);
+    final videoPlayerController = VideoPlayerController.file(fileMedia!);
 
     await videoPlayerController.initialize();
 
