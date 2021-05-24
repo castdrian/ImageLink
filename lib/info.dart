@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,48 +18,66 @@ class _InfoState extends State<Info> {
       body: Column(children: <Widget>[
         SizedBox(height: 14),
         Container(
-          constraints: new BoxConstraints(
-              minHeight: 70.0,
-              maxHeight: 70.0,
-            ),
-          width: double.infinity,
-          height: 70.0,
-          child: ElevatedButton.icon(
-            label: Text('In-app Purchase', style: TextStyle(fontSize: 25)),
-            icon: Icon(FontAwesomeIcons.googlePlay, size: 30),
-            onPressed: () {
-            },
-          ),
-        ),
-        SizedBox(height: 14),
-        Container(
-          constraints: new BoxConstraints(
-              minHeight: 70.0,
-              maxHeight: 70.0,
-            ),
-            width: double.infinity,
-            height: 70.0,
-            child: ElevatedButton.icon(
-              label: Text('In-app Purchase', style: TextStyle(fontSize: 25)),
-              icon: Icon(FontAwesomeIcons.googlePlay, size: 30),
-              onPressed: () {
-              },
-            ),
-          ),
-        SizedBox(height: 14),
-        Container(
-          constraints: new BoxConstraints(
-              minHeight: 70.0,
-              maxHeight: 70.0,
-            ),
-            width: double.infinity,
-            height: 70.0,
-            child: ElevatedButton.icon(
-              label: Text('In-app Purchase', style: TextStyle(fontSize: 25)),
-              icon: Icon(FontAwesomeIcons.googlePlay, size: 30),
-              onPressed: () {
-              },
-            ),
+          margin: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(border: Border.all(color: Colors.blue.shade900), borderRadius: BorderRadius.all(Radius.circular(20))),
+          child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                Image.asset('assets/icon/platinum.png', width: 50, height: 50),
+                Text('ImageLink Platinum™', style: TextStyle(fontSize: 20))
+              ]),
+              SizedBox(height: 5),
+              Card(
+                color: Colors.blue.shade900,
+                child: 
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Platinum Monthly™', style: TextStyle(fontSize: 20)),
+                    TextButton(
+                    child: Text('0.99 €'),
+                    onPressed: () {},
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green[800],
+                      primary: Colors.white,
+                    )),
+                ])
+              ),
+              Card(
+                color: Colors.blue.shade900,
+                child: 
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Platinum Annually™', style: TextStyle(fontSize: 20)),
+                    TextButton(
+                    child: Text('9.99 €'),
+                    onPressed: () {},
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green[800],
+                      primary: Colors.white,
+                    )),
+                ])
+              ),
+              Card(
+                color: Colors.blue.shade900,
+                child: 
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Platinum Lifetime™', style: TextStyle(fontSize: 20)),
+                    TextButton(
+                    child: Text('29.99 €'),
+                    onPressed: () {},
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green[800],
+                      primary: Colors.white,
+                    )),
+                ])
+              ),
+            ],)
           ),
         SizedBox(height: 14),
         Container(
