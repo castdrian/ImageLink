@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mime/mime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
@@ -184,18 +183,18 @@ class _HomeState extends State<Home> {
       color: Colors.blueAccent,
       children: <Widget>[
         FloatingActionRowButton(
-          icon: Icon(Icons.image),
+          icon: Icon(Icons.videocam),
           onTap: () {
-            pickGalleryMedia(context, FileType.image);
+            pickGalleryMedia(context, FileType.video);
           },
         ),
         FloatingActionRowDivider(
           color: Colors.white,
         ),
         FloatingActionRowButton(
-          icon: Icon(Icons.videocam),
+          icon: Icon(Icons.image),
           onTap: () {
-            pickGalleryMedia(context, FileType.video);
+            pickGalleryMedia(context, FileType.image);
           },
         ),
         FloatingActionRowDivider(
@@ -217,9 +216,4 @@ class _HomeState extends State<Home> {
       buttons = buildMainButtons(context);
     });
   }
-}
-
-bool isVideoFile(String path) {
-  String? mimeType = lookupMimeType(path);
-  return mimeType != null && mimeType.startsWith('video');
 }

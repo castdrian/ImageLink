@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mime/mime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future uploadFile(File file) async {
@@ -63,4 +64,9 @@ Future postUpload(dynamic upload) async {
     Fluttertoast.showToast(msg: 'File sucessfully uploaded!');
     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
   }
+}
+
+bool isVideoFile(String path) {
+  String? mimeType = lookupMimeType(path);
+  return mimeType != null && mimeType.startsWith('video');
 }
