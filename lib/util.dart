@@ -144,12 +144,16 @@ dynamic historyWidgets(int index) {
     'https://depressed-lemonade.me/jMHeRA.png'
   ];
 
-  final widget = Flexible(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, 
-      mainAxisSize: MainAxisSize.min,
-      children: [
+  final widget = Flexible(
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: [
         Flexible(
           fit: FlexFit.loose,
-          child: Text(list[index], style: TextStyle(fontSize: 15),
+          child: Text(
+            list[index],
+            style: TextStyle(fontSize: 14),
             softWrap: false,
             overflow: TextOverflow.fade,
           ),
@@ -164,7 +168,44 @@ dynamic historyWidgets(int index) {
               backgroundColor: Colors.blue,
               primary: Colors.white,
             )),
-    ])
-  );
+      ]));
   return widget;
+}
+
+void historyPreview(int index, BuildContext context) {
+  const list = [
+    'https://depressed-lemonade.me/jMHeREA.png',
+    'https://depressed-lemonade.me/jMeREA.png',
+    'https://depressed-lemonade.me/jMEA.png',
+    'https://depressed-lemonade.me/jMREA.png',
+    'https://depressed-lemonade.me/jMHeRA.png'
+  ];
+
+  final ext = ['.jpg', '.png', '.gif', '.webp'];
+
+  if (ext.any(list[index].endsWith)) {
+      Widget okButton = TextButton(
+      child: Text('Thanks.'),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text('File:'),
+      content: Flexible(child: Image.network(list[index])),
+      actions: [
+        okButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  } else {
+    Fluttertoast.showToast(msg: 'Preview is only available for images!');
+  }
 }

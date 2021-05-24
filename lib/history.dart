@@ -35,13 +35,14 @@ class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    resizeToAvoidBottomInset: false,
-    body: ListView.builder(
-          itemCount: 5,
-          itemBuilder: (context, index) {
-            return historyWidgets(index);
-        }
-      )
-    );
+        resizeToAvoidBottomInset: false,
+        body: ListView.builder(
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: historyWidgets(index),
+                onLongPress: () => historyPreview(index, context),
+              );
+            }));
   }
 }
