@@ -126,7 +126,7 @@ class _SettingsState extends State<Settings> {
                         setState(() {
                           status = val;
                           prefs.setBool('screenshots', status);
-                          prefs.setBool('refresh', true);
+                          prefs.setBool('refresh', false);
                         });
 
                         if (status == true) {
@@ -137,8 +137,7 @@ class _SettingsState extends State<Settings> {
                             return;
                           }
 
-                          final path =
-                              await FilePicker.platform.getDirectoryPath();
+                          final path = await FilePicker.platform.getDirectoryPath();
 
                           if (path == null) {
                             prefs.setBool('screenshots', false);
@@ -158,6 +157,10 @@ class _SettingsState extends State<Settings> {
                           Fluttertoast.showToast(
                               msg: 'Enabled screenshot intercepting!');
                         } else {
+                          setState(() {
+                            sdc.text = '';
+                            prefs.setString('screendir', '');
+                          });
                           await FlutterForegroundPlugin.stopForegroundService();
                           Fluttertoast.showToast(
                               msg: 'Disabled screenshot intercepting!');
@@ -269,8 +272,8 @@ class _SettingsState extends State<Settings> {
 
       Fluttertoast.showToast(msg: 'Enabled screenshot intercepting!');
     } else {
-        await FlutterForegroundPlugin.stopForegroundService();
-        Fluttertoast.showToast(msg: 'Disabled screenshot intercepting!');
+      await FlutterForegroundPlugin.stopForegroundService();
+      Fluttertoast.showToast(msg: 'Disabled screenshot intercepting!');
     }
   }
 
