@@ -180,7 +180,7 @@ class _NavBarState extends State<NavBar> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('ImageLink™'),
-        leading: new Image.asset("assets/icon/icon.png"),
+        leading: Image.asset('assets/icon/icon.png'),
       ),
       body: IndexedStack(
         children: <Widget>[Home(), Settings(), History(), Info()],

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
@@ -69,4 +70,40 @@ Future postUpload(dynamic upload) async {
 bool isVideoFile(String path) {
   String? mimeType = lookupMimeType(path);
   return mimeType != null && mimeType.startsWith('video');
+}
+
+void platinumDialog(BuildContext context) {
+  Widget yesButton = TextButton(
+              child: Text('Gimme!'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            );
+
+  Widget noButton = TextButton(
+    child: Text('Naw, thanks.'),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text('ImageLink Platinum™'),
+    content: Column(mainAxisSize: MainAxisSize.min, children: [
+      Text('Looks like you found an ImageLink Platinum™ feature!\nSubscribe today to get the most out of ImageLink!'),
+      SizedBox(height: 24),
+      Image.asset('assets/icon/platinum.png', width: 150, height: 150)
+    ],),
+    actions: [
+      noButton,
+      yesButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

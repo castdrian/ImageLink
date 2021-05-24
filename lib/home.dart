@@ -99,7 +99,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-
   Future pickGalleryMedia(BuildContext context, FileType type) async {
     final media = await FilePicker.platform.pickFiles(type: type);
     if (media == null) {
@@ -203,6 +202,9 @@ class _HomeState extends State<Home> {
         FloatingActionRowButton(
           icon: Icon(Icons.insert_drive_file_outlined),
           onTap: () {
+            platinumDialog(context);
+            return;
+            // ignore: dead_code
             pickGalleryMedia(context, FileType.any);
           },
         ),
