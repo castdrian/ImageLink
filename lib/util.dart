@@ -65,6 +65,7 @@ Future postUpload(dynamic upload) async {
 
     Clipboard.setData(ClipboardData(text: url));
     Fluttertoast.showToast(msg: 'File sucessfully uploaded!');
+    await updateHistoryData(url);
     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
   }
 }
@@ -135,14 +136,8 @@ void globalForegroundService() {
   debugPrint('current datetime is ${DateTime.now()}');
 }
 
-dynamic historyWidgets(int index) {
-  const list = [
-    'https://depressed-lemonade.me/jMHeREA.png',
-    'https://depressed-lemonade.me/jMeREA.png',
-    'https://depressed-lemonade.me/jMEA.png',
-    'https://depressed-lemonade.me/jMREA.png',
-    'https://depressed-lemonade.me/jMHeRA.png'
-  ];
+dynamic historyWidgets(int index, SharedPreferences prefs) {
+  final list = jsonDecode(prefs.getString('history') as String);
 
   final widget = Flexible(
       child: Row(
@@ -172,19 +167,12 @@ dynamic historyWidgets(int index) {
   return widget;
 }
 
-void historyPreview(int index, BuildContext context) {
-  const list = [
-    'https://depressed-lemonade.me/jMHeREA.png',
-    'https://depressed-lemonade.me/jMeREA.png',
-    'https://depressed-lemonade.me/jMEA.png',
-    'https://depressed-lemonade.me/jMREA.png',
-    'https://depressed-lemonade.me/jMHeRA.png'
-  ];
-
+void historyPreview(int index, BuildContext context, SharedPreferences prefs) {
   final ext = ['.jpg', '.png', '.gif', '.webp'];
+  final list = jsonDecode(prefs.getString('history') as String);
 
   if (ext.any(list[index].endsWith)) {
-      Widget okButton = TextButton(
+    Widget okButton = TextButton(
       child: Text('Thanks.'),
       onPressed: () {
         Navigator.of(context).pop();
@@ -208,4 +196,35 @@ void historyPreview(int index, BuildContext context) {
   } else {
     Fluttertoast.showToast(msg: 'Preview is only available for images!');
   }
+}
+
+Future updateHistoryData(String input) async {
+  final prefs = await SharedPreferences.getInstance();
+  final data = prefs.getString('history');
+
+  if (data == null) {
+    final list = [];
+    list.add(input);
+    final serialized = jsonEncode(list);
+    prefs.setString('history', serialized);
+  } else {
+    final List deserialized = jsonDecode(data);
+
+    if (deserialized.length >= 20) {
+      deserialized.removeAt(19);
+      deserialized.insert(0, input);
+
+      final encoded = jsonEncode(deserialized);
+      prefs.setString('history', encoded);
+    } else {
+      deserialized.insert(0, input);
+
+      final encoded = jsonEncode(deserialized);
+      prefs.setString('history', encoded);
+    }
+  }
+}
+
+int historyAmount(SharedPreferences prefs) {
+  return jsonDecode(prefs.getString('history') as String).length;
 }
