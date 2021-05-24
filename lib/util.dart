@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_foreground_plugin/flutter_foreground_plugin.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mime/mime.dart';
@@ -108,3 +109,23 @@ void platinumDialog(BuildContext context) {
   );
 }
 
+void startForegroundService() async {
+  await FlutterForegroundPlugin.setServiceMethodInterval(seconds: 5);
+  await FlutterForegroundPlugin.setServiceMethod(globalForegroundService);
+  await FlutterForegroundPlugin.startForegroundService(
+    holdWakeLock: false,
+    onStarted: () {
+      print('Foreground on Started');
+    },
+    onStopped: () {
+      print('Foreground on Stopped');
+    },
+    title: 'ImageLink',
+    content: 'ImageLink screenshot detection',
+    iconName: 'icon',
+  );
+}
+
+void globalForegroundService() {
+  debugPrint('current datetime is ${DateTime.now()}');
+}

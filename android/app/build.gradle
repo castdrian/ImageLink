@@ -55,10 +55,6 @@ android {
             storePassword keystoreProperties['storePassword']
         }
    }
-   
-   aaptOptions {
-      ignoreAssetsPattern "!x86:!*ffprobe"
-   }
 
    buildTypes {
        release {
