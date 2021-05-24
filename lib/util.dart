@@ -56,7 +56,8 @@ Future postUpload(dynamic upload) async {
     final rawurl = upload[matched] as String?;
 
     if (rawurl == null) {
-      Fluttertoast.showToast(msg: 'Uploaded, but failed to parse response URL!');
+      Fluttertoast.showToast(
+          msg: 'Uploaded, but failed to parse response URL!');
       return;
     }
 
@@ -75,11 +76,11 @@ bool isVideoFile(String path) {
 
 void platinumDialog(BuildContext context) {
   Widget yesButton = TextButton(
-              child: Text('Gimme!'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            );
+    child: Text('Gimme!'),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
 
   Widget noButton = TextButton(
     child: Text('Naw, thanks.'),
@@ -90,11 +91,15 @@ void platinumDialog(BuildContext context) {
 
   AlertDialog alert = AlertDialog(
     title: Text('ImageLink Platinum™'),
-    content: Column(mainAxisSize: MainAxisSize.min, children: [
-      Text('Looks like you found an ImageLink Platinum™ feature!\nSubscribe today to get the most out of ImageLink!'),
-      SizedBox(height: 24),
-      Image.asset('assets/icon/platinum.png', width: 150, height: 150)
-    ],),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+            'Looks like you found an ImageLink Platinum™ feature!\nSubscribe today to get the most out of ImageLink!'),
+        SizedBox(height: 24),
+        Image.asset('assets/icon/platinum.png', width: 150, height: 150)
+      ],
+    ),
     actions: [
       noButton,
       yesButton,
@@ -128,4 +133,38 @@ void startForegroundService() async {
 
 void globalForegroundService() {
   debugPrint('current datetime is ${DateTime.now()}');
+}
+
+dynamic historyWidgets(int index) {
+  const list = [
+    'https://depressed-lemonade.me/jMHeREA.png',
+    'https://depressed-lemonade.me/jMeREA.png',
+    'https://depressed-lemonade.me/jMEA.png',
+    'https://depressed-lemonade.me/jMREA.png',
+    'https://depressed-lemonade.me/jMHeRA.png'
+  ];
+
+  final widget = Flexible(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
+          fit: FlexFit.loose,
+          child: Text(list[index], style: TextStyle(fontSize: 15),
+            softWrap: false,
+            overflow: TextOverflow.fade,
+          ),
+        ),
+        TextButton(
+            child: Text('Copy'),
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: list[index]));
+              Fluttertoast.showToast(msg: 'URL copied!');
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.blue,
+              primary: Colors.white,
+            )),
+    ])
+  );
+  return widget;
 }

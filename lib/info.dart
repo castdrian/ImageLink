@@ -37,7 +37,7 @@ class _InfoState extends State<Info> {
                   children: [
                     Text('Platinum Monthly™', style: TextStyle(fontSize: 20)),
                     TextButton(
-                    child: Text('0.99 €'),
+                    child: Text('1.99 €'),
                     onPressed: () {},
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.green[800],
@@ -53,7 +53,7 @@ class _InfoState extends State<Info> {
                   children: [
                     Text('Platinum Annually™', style: TextStyle(fontSize: 20)),
                     TextButton(
-                    child: Text('9.99 €'),
+                    child: Text('12.99 €'),
                     onPressed: () {},
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.green[800],
