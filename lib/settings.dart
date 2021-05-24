@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:imagelink/util.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +29,7 @@ class _SettingsState extends State<Settings> {
   int? idx = 0;
   bool status = false;
   String? dir;
+  String dropdownValue = 'Custom (SXCU)';
 
   @override
   void initState() {
@@ -168,7 +170,8 @@ class _SettingsState extends State<Settings> {
                               androidConfig: config);
                           await FlutterBackground.enableBackgroundExecution();
 
-                          Fluttertoast.showToast(msg: 'Enabled screenshot intercepting!');
+                          Fluttertoast.showToast(
+                              msg: 'Enabled screenshot intercepting!');
                         } else {
                           bool enabled =
                               FlutterBackground.isBackgroundExecutionEnabled;
@@ -176,7 +179,8 @@ class _SettingsState extends State<Settings> {
                             await FlutterBackground
                                 .disableBackgroundExecution();
 
-                          Fluttertoast.showToast(msg: 'Disabled screenshot intercepting!');
+                          Fluttertoast.showToast(
+                              msg: 'Disabled screenshot intercepting!');
                         }
                       })),
             ],
@@ -203,6 +207,48 @@ class _SettingsState extends State<Settings> {
             ),
             readOnly: true,
           ),
+          SizedBox(height: 5),
+          Row(
+            children: [
+              Expanded(
+                  child: Text('Upload destination:',
+                      style: TextStyle(fontSize: 19),
+                      textAlign: TextAlign.center)),
+              Expanded(
+                  child: DropdownButtonHideUnderline(
+                      child: ButtonTheme(
+                alignedDropdown: true,
+                child: DropdownButton<String>(
+                    value: dropdownValue,
+                    iconSize: 24,
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.blue, fontSize: 19),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.blue,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        platinumDialog(context);
+                        return;
+                        // ignore: dead_code
+                        dropdownValue = newValue!;
+                      });
+                    },
+                    items: <String>[
+                      'Custom (SXCU)',
+                      'Imgur',
+                      'oh-mama',
+                      'bingpot'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList()),
+              )))
+            ],
+          )
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
