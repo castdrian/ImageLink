@@ -136,7 +136,6 @@ void globalForegroundService() {
 }
 
 dynamic historyWidgets(int index, List<String> list) {
-  if (list.isEmpty) return ['empty'];
   final widget = Flexible(
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

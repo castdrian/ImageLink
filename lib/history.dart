@@ -17,18 +17,19 @@ class _HistoryState extends State<History> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> list = GetStorage().read('history') ?? [];
+    final list = GetStorage().read('history').cast<String>().toList();
+    print(list);
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: ListView.builder(
-            itemCount: list.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: historyWidgets(
-                    index, list),
-                onLongPress: () => historyPreview(
-                    index, context, list),
-              );
-            }));
+        body: list?.length == 0
+            ? Text('')
+            : ListView.builder(
+                itemCount: list?.length ?? 0,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: historyWidgets(index, list!),
+                    onLongPress: () => historyPreview(index, context, list),
+                  );
+                }));
   }
 }
