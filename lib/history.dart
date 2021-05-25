@@ -1,5 +1,3 @@
-import 'dart:ui';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'util.dart';
@@ -17,32 +15,19 @@ class _HistoryState extends State<History> {
     super.initState();
   }
 
-  List<Widget> nothing = [
-    SizedBox(height: 100),
-    Row(
-      children: [
-        Expanded(
-            child: Text(
-          'Doesn\'t look like anything to me',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 25),
-        )),
-      ],
-    ),
-    SizedBox(height: 40),
-    Icon(FontAwesomeIcons.question, size: 150)
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<String> list = GetStorage().read('history') ?? [];
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: ListView.builder(
-            itemCount: GetStorage().read('history')?.length ?? 0,
+            itemCount: list.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: historyWidgets(index, GetStorage().read('history') ?? <String>[]),
-                onLongPress: () => historyPreview(index, context, GetStorage().read('history') ?? <String>[]),
+                title: historyWidgets(
+                    index, list),
+                onLongPress: () => historyPreview(
+                    index, context, list),
               );
             }));
   }

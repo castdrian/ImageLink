@@ -68,7 +68,7 @@ class _NavBarState extends State<NavBar> {
   @override
   void initState() {
     super.initState();
-
+    GetStorage().remove('history');
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       ver = packageInfo.version;
       bnum = packageInfo.buildNumber;
@@ -179,6 +179,8 @@ class _NavBarState extends State<NavBar> {
     });
   }
 
+  final _pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,13 +191,17 @@ class _NavBarState extends State<NavBar> {
             children: [Text('ImageLink™'), Text('v$ver ($bnum)')]),
         leading: Image.asset('assets/icon/icon.png'),
       ),
-      body: IndexedStack(
-        children: <Widget>[Home(), Settings(), History(), Info()],
-        index: _currentIndex,
+      body: PageView(
+        children: <Widget>[KeepAlivePage(child: Home()),
+                    KeepAlivePage(child: Settings()),
+                    KeepAlivePage(child: History()),
+                    KeepAlivePage(child: Info())],
+        controller: _pageController,
+        onPageChanged: onPageChanged,
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        onTap: onTabTapped, // new
+        onTap: navigateToPage, // new
         currentIndex: _currentIndex, // new
         items: [
           BottomNavigationBarItem(
@@ -216,7 +222,12 @@ class _NavBarState extends State<NavBar> {
     );
   }
 
-  void onTabTapped(int index) {
+  void navigateToPage(int page) {
+    _pageController.animateToPage(page,
+        duration: Duration(milliseconds: 300), curve: Curves.ease);
+  }
+
+  void onPageChanged(int index) {
     setState(() {
       _currentIndex = index;
       if (index == 2) {
@@ -224,4 +235,30 @@ class _NavBarState extends State<NavBar> {
       }
     });
   }
+}
+
+class KeepAlivePage extends StatefulWidget {
+  KeepAlivePage({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  final Widget child;
+
+  @override
+  _KeepAlivePageState createState() => _KeepAlivePageState();
+}
+
+class _KeepAlivePageState extends State<KeepAlivePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    /// Dont't forget this
+    super.build(context);
+
+    return widget.child;
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }

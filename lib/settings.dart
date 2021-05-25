@@ -34,9 +34,8 @@ class _SettingsState extends State<Settings> {
 
   @override
   void initState() {
+    //WidgetsBinding.instance!.addPostFrameCallback((_) async => await loadAsync(context));
     super.initState();
-    WidgetsBinding.instance!
-        .addPostFrameCallback((_) async => await loadAsync(context));
   }
 
   @override
