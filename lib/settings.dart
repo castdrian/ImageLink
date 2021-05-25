@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_foreground_plugin/flutter_foreground_plugin.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:imagelink/util.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:floating_action_row/floating_action_row.dart';
@@ -120,16 +120,14 @@ class _SettingsState extends State<Settings> {
                       padding: 8.0,
                       showOnOff: true,
                       onToggle: (val) async {
-                        final prefs = await SharedPreferences.getInstance();
-
                         setState(() {
                           status = val;
-                          prefs.setBool('screenshots', status);
-                          prefs.setBool('refresh', false);
+                          GetStorage().write('screenshots', status == true ? 1 : 0);
+                          GetStorage().write('refresh', 0);
                         });
 
                         if (status == true) {
-                          final requrl = prefs.getString('requrl');
+                          final requrl = GetStorage().read('requrl');
 
                           if (requrl == null) {
                             Fluttertoast.showToast(msg: 'Nothing to load!');
@@ -139,7 +137,7 @@ class _SettingsState extends State<Settings> {
                           final path = await FilePicker.platform.getDirectoryPath();
 
                           if (path == null) {
-                            prefs.setBool('screenshots', false);
+                            GetStorage().write('screenshots', 0);
                             setState(() {
                               status = false;
                             });
@@ -149,7 +147,7 @@ class _SettingsState extends State<Settings> {
 
                           setState(() {
                             sdc.text = dir!;
-                            prefs.setString('screendir', dir!);
+                            GetStorage().write('screendir', dir!);
                           });
 
                           startForegroundService();
@@ -158,7 +156,7 @@ class _SettingsState extends State<Settings> {
                         } else {
                           setState(() {
                             sdc.text = '';
-                            prefs.setString('screendir', '');
+                            GetStorage().write('screendir', '');
                           });
                           await FlutterForegroundPlugin.stopForegroundService();
                           Fluttertoast.showToast(
@@ -240,14 +238,13 @@ class _SettingsState extends State<Settings> {
   }
 
   Future loadAsync(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    final requrl = prefs.getString('requrl');
-    final resprop = prefs.getString('resprop');
-    final args = prefs.getString('args');
-    final type = prefs.getInt('argtype');
-    final filename = prefs.getString('fileform');
-    final screenshots = prefs.getBool('screenshots');
-    final screendir = prefs.getString('screendir');
+    final requrl = GetStorage().read('requrl');
+    final resprop = GetStorage().read('resprop');
+    final args = GetStorage().read('args');
+    final type = GetStorage().read('argtype');
+    final filename = GetStorage().read('fileform');
+    final screenshots = GetStorage().read('screenshots');
+    final screendir = GetStorage().read('screendir');
 
     if (requrl == null) {
       Fluttertoast.showToast(msg: 'Nothing to load!');
@@ -483,7 +480,6 @@ class _SettingsState extends State<Settings> {
     }
 
     final matchedText = resmatch.group(0)!;
-    final idxprefs = await SharedPreferences.getInstance();
 
     setState(() {
       sxc.text = p.basename(file.path);
@@ -494,21 +490,20 @@ class _SettingsState extends State<Settings> {
       if (sxcu['Headers'] == null) {
         agc.text = jsonEncode(sxcu['Arguments']);
         idx = 0;
-        idxprefs.setInt('argtype', 0);
+        GetStorage().write('argtype', 0);
       } else {
         agc.text = jsonEncode(sxcu['Headers']);
         idx = 1;
-        idxprefs.setInt('argtype', 1);
+        GetStorage().write('argtype', 1);
       }
     });
 
     Fluttertoast.showToast(msg: 'Successfully imported SXCU!');
 
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('requrl', rqc.text);
-    prefs.setString('resprop', matchedText);
-    prefs.setString('args', agc.text);
-    prefs.setString('fileform', fnc.text);
+    GetStorage().write('requrl', rqc.text);
+    GetStorage().write('resprop', matchedText);
+    GetStorage().write('args', agc.text);
+    GetStorage().write('fileform', fnc.text);
 
     Fluttertoast.showToast(msg: 'Settings saved successfully!');
   }
@@ -606,11 +601,10 @@ class _SettingsState extends State<Settings> {
       return;
     }
 
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('requrl', rqc.text);
-    prefs.setString('resprop', rsc.text);
-    prefs.setString('args', agc.text);
-    prefs.setString('fileform', fnc.text);
+    GetStorage().write('requrl', rqc.text);
+    GetStorage().write('resprop', rsc.text);
+    GetStorage().write('args', agc.text);
+    GetStorage().write('fileform', fnc.text);
 
     Fluttertoast.showToast(msg: 'Settings saved successfully!');
   }

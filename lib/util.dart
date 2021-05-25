@@ -3,17 +3,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_plugin/flutter_foreground_plugin.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mime/mime.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future uploadFile(File file) async {
-  final prefs = await SharedPreferences.getInstance();
-  final requrl = prefs.getString('requrl')!;
-  final args = prefs.getString('args')!;
-  final type = prefs.getInt('argtype');
-  final filename = prefs.getString('fileform')!;
+  final requrl = GetStorage().read('requrl')!;
+  final args = GetStorage().read('args')!;
+  final type = GetStorage().read('argtype');
+  final filename = GetStorage().read('fileform')!;
 
   final fields = jsonDecode(args);
   final req = http.MultipartRequest('POST', Uri.parse(requrl));
@@ -35,7 +34,7 @@ Future uploadFile(File file) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final responseString = await response.stream.bytesToString();
     final body = jsonDecode(responseString);
-    prefs.setBool('refresh', true);
+    GetStorage().write('refresh', 1);
     return body;
   } else {
     return response.statusCode;
@@ -48,8 +47,7 @@ Future postUpload(dynamic upload) async {
     return;
   } else {
     print(upload);
-    final prefs = await SharedPreferences.getInstance();
-    final resprop = prefs.getString('resprop')!;
+    final resprop = GetStorage().read('resprop')!;
     final regexp = RegExp(r'\$json:([a-zA-Z]+)\$');
     final match = regexp.firstMatch(resprop)!;
     final matched = match.group(1);
@@ -196,26 +194,20 @@ void historyPreview(int index, BuildContext context, List<String> list) {
 }
 
 Future updateHistoryData(String input) async {
-  final prefs = await SharedPreferences.getInstance();
-  final data = prefs.getStringList('history');
+  final data = GetStorage().read('history');
 
   if (data == null || data.isEmpty) {
     final List<String> list = [];
     list.add(input);
-    final serialized = jsonEncode(list);
-    prefs.setStringList('history', list);
+    GetStorage().write('history', list);
   } else {
     if (data.length >= 20) {
       data.removeAt(19);
       data.insert(0, input);
-
-      final encoded = jsonEncode(data);
-      prefs.setStringList('history', data);
+      GetStorage().write('history', data);
     } else {
       data.insert(0, input);
-
-      final encoded = jsonEncode(data);
-      prefs.setStringList('history', data);
+      GetStorage().write('history', data);
     }
   }
 }

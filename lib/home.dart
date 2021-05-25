@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:chewie/chewie.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:video_player/video_player.dart';
 import 'main.dart' as main;
 import 'util.dart';
@@ -45,8 +45,7 @@ class _HomeState extends State<Home> {
   Future<void> shareIntent() async {
     if (shared == null || shared!.isEmpty) return;
 
-    final prefs = await SharedPreferences.getInstance();
-    final requrl = prefs.getString('requrl');
+    final requrl = GetStorage().read('requrl');
 
     if (requrl == null) {
       Fluttertoast.showToast(msg: 'You must specify settings first!');
@@ -136,15 +135,14 @@ class _HomeState extends State<Home> {
           onTap: () async {
             if (isVideo == true) isVideo = false;
 
-            final prefs = await SharedPreferences.getInstance();
-            final requrl = prefs.getString('requrl');
+            final requrl = GetStorage().read('requrl');
 
             if (requrl == null) {
               Fluttertoast.showToast(msg: 'You must specify settings first!');
               return;
             }
 
-            prefs.setBool('refresh', false);
+            GetStorage().write('refresh', 0);
             setState(() {
               buttons = buildFileButtons(context);
             });

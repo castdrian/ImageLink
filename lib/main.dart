@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:screenshot_callback/screenshot_callback.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'home.dart';
@@ -15,10 +15,9 @@ import 'settings.dart';
 import 'history.dart';
 import 'info.dart';
 import 'util.dart';
-import 'globals.dart';
 
 void main() async {
-  await Globals.init();
+  await GetStorage.init();
   runApp(MyApp());
 }
 
@@ -107,9 +106,7 @@ class _NavBarState extends State<NavBar> {
 
     StreamSubscription<FGBGType> subscription;
     subscription = FGBGEvents.stream.listen((event) async {
-      final prefs = await SharedPreferences.getInstance();
-
-      if (event == FGBGType.foreground && prefs.getBool('refresh') == true) {
+      if (event == FGBGType.foreground && GetStorage().read('refresh') == 1) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NavBar()),
@@ -148,13 +145,12 @@ class _NavBarState extends State<NavBar> {
     ScreenshotCallback screenshotCallback = ScreenshotCallback();
     screenshotCallback.addListener(() async {
       printWarning('DETECTED SCREENSHOT');
-      final prefs = await SharedPreferences.getInstance();
-      final screenshots = prefs.getBool('screenshots');
-      if (screenshots == false) return;
+      final screenshots = GetStorage().read('screenshots');
+      if (screenshots == 0) return;
       printWarning('DETECTED SCREENSHOT');
       Fluttertoast.showToast(msg: 'Detected screenshot!');
 
-      final screendir = prefs.getString('screendir')!;
+      final screendir = GetStorage().read('screendir');
       final dir = Directory(screendir);
       final files = dir.listSync();
       if (files.isEmpty == true) return;
