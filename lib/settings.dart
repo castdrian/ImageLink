@@ -34,8 +34,8 @@ class _SettingsState extends State<Settings> {
 
   @override
   void initState() {
-    //WidgetsBinding.instance!.addPostFrameCallback((_) async => await loadAsync(context));
     super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) async => await loadAsync(context));
   }
 
   @override
@@ -313,9 +313,9 @@ class _SettingsState extends State<Settings> {
       agc.text = args!;
       fnc.text = filename!;
       idx = type;
-      status = screenshots ?? false;
+      status = screenshots == 0 ? false : true;
       sdc.text = screendir == null ? "" : screendir;
-      autoexit = exit ?? false;
+      autoexit = exit  == 0 ? false : true;
     });
 
     Fluttertoast.showToast(msg: 'Settings successfully loaded!');
