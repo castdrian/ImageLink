@@ -123,7 +123,8 @@ class _SettingsState extends State<Settings> {
                       onToggle: (val) async {
                         setState(() {
                           status = val;
-                          GetStorage().write('screenshots', status == true ? 1 : 0);
+                          GetStorage()
+                              .write('screenshots', status == true ? 1 : 0);
                           GetStorage().write('refresh', 0);
                         });
 
@@ -135,7 +136,8 @@ class _SettingsState extends State<Settings> {
                             return;
                           }
 
-                          final path = await FilePicker.platform.getDirectoryPath();
+                          final path =
+                              await FilePicker.platform.getDirectoryPath();
 
                           if (path == null) {
                             GetStorage().write('screenshots', 0);
@@ -239,21 +241,21 @@ class _SettingsState extends State<Settings> {
                       style: TextStyle(fontSize: 19),
                       textAlign: TextAlign.center)),
               Expanded(
-              child: FlutterSwitch(
-                  width: 100.0,
-                  height: 40.0,
-                  valueFontSize: 20.0,
-                  toggleSize: 40.0,
-                  value: autoexit,
-                  borderRadius: 30.0,
-                  padding: 8.0,
-                  showOnOff: true,
-                  onToggle: (val) async {
-                    setState(() {
-                      autoexit = val;
-                      GetStorage().write('autoexit', status == true ? 1 : 0);
-                    });
-                  })),
+                  child: FlutterSwitch(
+                      width: 100.0,
+                      height: 40.0,
+                      valueFontSize: 20.0,
+                      toggleSize: 40.0,
+                      value: autoexit,
+                      borderRadius: 30.0,
+                      padding: 8.0,
+                      showOnOff: true,
+                      onToggle: (val) async {
+                        setState(() {
+                          autoexit = val;
+                          GetStorage().write('autoexit', val == true ? 1 : 0);
+                        });
+                      })),
             ],
           ),
         ],
@@ -271,6 +273,7 @@ class _SettingsState extends State<Settings> {
     final filename = GetStorage().read('fileform');
     final screenshots = GetStorage().read('screenshots');
     final screendir = GetStorage().read('screendir');
+    final exit = GetStorage().read('autoexit');
 
     if (requrl == null) {
       Fluttertoast.showToast(msg: 'Nothing to load!');
@@ -285,6 +288,7 @@ class _SettingsState extends State<Settings> {
       idx = type;
       status = screenshots ?? false;
       sdc.text = screendir == null ? "" : screendir;
+      autoexit = exit ?? false;
     });
 
     Fluttertoast.showToast(msg: 'Settings successfully loaded!');

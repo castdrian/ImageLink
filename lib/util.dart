@@ -64,7 +64,7 @@ Future postUpload(dynamic upload) async {
     Clipboard.setData(ClipboardData(text: url));
     Fluttertoast.showToast(msg: 'File sucessfully uploaded!');
     await updateHistoryData(url);
-    //SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    if (GetStorage().read('autoexit') == 1) SystemChannels.platform.invokeMethod('SystemNavigator.pop');
   }
 }
 
@@ -202,7 +202,7 @@ void historyPreview(int index, BuildContext context, List<String> list) {
 }
 
 Future updateHistoryData(String input) async {
-  List<String> data = GetStorage().read('history');
+  List<String> data = GetStorage().read('history') ?? [];
   if (data.isEmpty) {
     final list = <String>[];
     list.add(input);

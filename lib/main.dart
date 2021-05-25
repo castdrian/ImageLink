@@ -68,8 +68,6 @@ class _NavBarState extends State<NavBar> {
   @override
   void initState() {
     super.initState();
-    GetStorage().remove('history');
-    print(GetStorage().read('history'));
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       ver = packageInfo.version;

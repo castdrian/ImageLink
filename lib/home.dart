@@ -161,6 +161,8 @@ class _HomeState extends State<Home> {
 
             final upload = await uploadFile(fileMedia!);
             await postUpload(upload);
+            setState(() {
+            });
           },
         ),
         FloatingActionRowButton(
