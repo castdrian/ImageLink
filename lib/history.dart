@@ -41,8 +41,8 @@ class _HistoryState extends State<History> {
             itemCount: GetStorage().read('history')?.length ?? 0,
             itemBuilder: (context, index) {
               return ListTile(
-                title: historyWidgets(index, GetStorage().read('history') ?? []),
-                onLongPress: () => historyPreview(index, context, GetStorage().read('history') ?? []),
+                title: historyWidgets(index, GetStorage().read('history') ?? <String>[]),
+                onLongPress: () => historyPreview(index, context, GetStorage().read('history') ?? <String>[]),
               );
             }));
   }

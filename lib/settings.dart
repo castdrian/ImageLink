@@ -28,6 +28,7 @@ class _SettingsState extends State<Settings> {
   final fnc = TextEditingController();
   int? idx = 0;
   bool status = false;
+  bool autoexit = false;
   String? dir;
   String dropdownValue = 'Custom (SXCU)';
 
@@ -229,7 +230,32 @@ class _SettingsState extends State<Settings> {
                     }).toList()),
               )))
             ],
-          )
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                  child: Text('Post-upload auto-exit:',
+                      style: TextStyle(fontSize: 19),
+                      textAlign: TextAlign.center)),
+              Expanded(
+              child: FlutterSwitch(
+                  width: 100.0,
+                  height: 40.0,
+                  valueFontSize: 20.0,
+                  toggleSize: 40.0,
+                  value: autoexit,
+                  borderRadius: 30.0,
+                  padding: 8.0,
+                  showOnOff: true,
+                  onToggle: (val) async {
+                    setState(() {
+                      autoexit = val;
+                      GetStorage().write('autoexit', status == true ? 1 : 0);
+                    });
+                  })),
+            ],
+          ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

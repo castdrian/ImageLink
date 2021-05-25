@@ -176,7 +176,15 @@ void historyPreview(int index, BuildContext context, List<String> list) {
 
     AlertDialog alert = AlertDialog(
       title: Text('File:'),
-      content: Flexible(child: Image.network(list[index])),
+      content: Flexible(
+        child: Image.network(
+          list[index],
+          errorBuilder:
+              (BuildContext context, Object exception, StackTrace? stackTrace) {
+            return const Text('Couldn\'t load preview.');
+          },
+        ),
+      ),
       actions: [
         okButton,
       ],
@@ -194,21 +202,19 @@ void historyPreview(int index, BuildContext context, List<String> list) {
 }
 
 Future updateHistoryData(String input) async {
-  final data = GetStorage().read('history');
-
-  if (data == null || data.isEmpty) {
+  List<String> data = GetStorage().read('history');
+  if (data.isEmpty) {
     final list = <String>[];
     list.add(input);
-    print(list);
     GetStorage().write('history', list);
   } else {
     if (data.length >= 20) {
       data.removeAt(19);
       data.insert(0, input);
-      //GetStorage().write('history', data);
+      GetStorage().write('history', data);
     } else {
       data.insert(0, input);
-      //GetStorage().write('history', data);
+      GetStorage().write('history', data);
     }
   }
 }
