@@ -15,8 +15,10 @@ import 'settings.dart';
 import 'history.dart';
 import 'info.dart';
 import 'util.dart';
+import 'globals.dart';
 
-void main() {
+void main() async {
+  await Globals.init();
   runApp(MyApp());
 }
 
@@ -67,7 +69,7 @@ class _NavBarState extends State<NavBar> {
   @override
   void initState() {
     super.initState();
-    
+
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       ver = packageInfo.version;
       bnum = packageInfo.buildNumber;

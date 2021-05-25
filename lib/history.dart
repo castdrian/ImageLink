@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:imagelink/util.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'globals.dart';
 
 class History extends StatefulWidget {
   @override
@@ -38,11 +38,11 @@ class _HistoryState extends State<History> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: ListView.builder(
-            itemCount: 20,
+            itemCount: Globals.prefs?.getStringList('history')?.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: historyWidgets(index),
-                onLongPress: () => historyPreview(index, context),
+                title: historyWidgets(index, Globals.prefs?.getStringList('history') as List<String>),
+                onLongPress: () => historyPreview(index, context, Globals.prefs?.getStringList('history') as List<String>),
               );
             }));
   }

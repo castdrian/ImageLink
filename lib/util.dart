@@ -136,9 +136,7 @@ void globalForegroundService() {
   debugPrint('current datetime is ${DateTime.now()}');
 }
 
-dynamic historyWidgets(int index, SharedPreferences prefs) {
-  final list = jsonDecode(prefs.getString('history') as String);
-
+dynamic historyWidgets(int index, List<String> list) {
   final widget = Flexible(
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,9 +165,8 @@ dynamic historyWidgets(int index, SharedPreferences prefs) {
   return widget;
 }
 
-void historyPreview(int index, BuildContext context, SharedPreferences prefs) {
+void historyPreview(int index, BuildContext context, List<String> list) {
   final ext = ['.jpg', '.png', '.gif', '.webp'];
-  final list = jsonDecode(prefs.getString('history') as String);
 
   if (ext.any(list[index].endsWith)) {
     Widget okButton = TextButton(
@@ -200,31 +197,25 @@ void historyPreview(int index, BuildContext context, SharedPreferences prefs) {
 
 Future updateHistoryData(String input) async {
   final prefs = await SharedPreferences.getInstance();
-  final data = prefs.getString('history');
+  final data = prefs.getStringList('history');
 
-  if (data == null) {
-    final list = [];
+  if (data == null || data.isEmpty) {
+    final List<String> list = [];
     list.add(input);
     final serialized = jsonEncode(list);
-    prefs.setString('history', serialized);
+    prefs.setStringList('history', list);
   } else {
-    final List deserialized = jsonDecode(data);
+    if (data.length >= 20) {
+      data.removeAt(19);
+      data.insert(0, input);
 
-    if (deserialized.length >= 20) {
-      deserialized.removeAt(19);
-      deserialized.insert(0, input);
-
-      final encoded = jsonEncode(deserialized);
-      prefs.setString('history', encoded);
+      final encoded = jsonEncode(data);
+      prefs.setStringList('history', data);
     } else {
-      deserialized.insert(0, input);
+      data.insert(0, input);
 
-      final encoded = jsonEncode(deserialized);
-      prefs.setString('history', encoded);
+      final encoded = jsonEncode(data);
+      prefs.setStringList('history', data);
     }
   }
-}
-
-int historyAmount(SharedPreferences prefs) {
-  return jsonDecode(prefs.getString('history') as String).length;
 }

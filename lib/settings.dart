@@ -49,7 +49,7 @@ class _SettingsState extends State<Settings> {
             controller: rqc,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Request URL (example.com/upload.php):',
+              labelText: 'Request URL (example.com/upload):',
               isDense: true,
               contentPadding: EdgeInsets.all(8),
             ),
