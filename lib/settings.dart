@@ -145,6 +145,34 @@ class _SettingsState extends State<Settings> {
                               status = false;
                             });
                             return;
+                          } else if (path == '/') {
+                            GetStorage().write('screenshots', 0);
+                            setState(() {
+                              status = false;
+                            });
+
+                            Widget okButton = TextButton(
+                              child: Text('My mistake.'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            );
+
+                            AlertDialog alert = AlertDialog(
+                              title: Text('Protected directoy:'),
+                              content: Text('You chose a directory that is protected by Android.\nImageLink cannot read protected directories.'),
+                              actions: [
+                                okButton,
+                              ],
+                            );
+
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return alert;
+                              },
+                            );
+                            return;
                           }
                           dir = path;
 
