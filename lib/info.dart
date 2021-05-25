@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -38,7 +39,9 @@ class _InfoState extends State<Info> {
                     Text('Platinum Monthly™', style: TextStyle(fontSize: 20)),
                     TextButton(
                     child: Text('1.99 €'),
-                    onPressed: () {},
+                    onPressed: () {
+                      Fluttertoast.showToast(msg: 'Coming soon my dear friend!');
+                    },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.green[800],
                       primary: Colors.white,
@@ -54,7 +57,9 @@ class _InfoState extends State<Info> {
                     Text('Platinum Annually™', style: TextStyle(fontSize: 20)),
                     TextButton(
                     child: Text('12.99 €'),
-                    onPressed: () {},
+                    onPressed: () {
+                      Fluttertoast.showToast(msg: 'Coming soon my dear friend!');
+                    },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.green[800],
                       primary: Colors.white,
@@ -70,7 +75,9 @@ class _InfoState extends State<Info> {
                     Text('Platinum Lifetime™', style: TextStyle(fontSize: 20)),
                     TextButton(
                     child: Text('29.99 €'),
-                    onPressed: () {},
+                    onPressed: () {
+                      Fluttertoast.showToast(msg: 'Coming soon my dear friend!');
+                    },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.green[800],
                       primary: Colors.white,
