@@ -140,36 +140,35 @@ void globalForegroundService() {
 dynamic historyWidgets(int index, List<String> list, BuildContext context) {
   final ext = ['.jpg', '.png', '.gif', '.webp'];
   final widget = Container(
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-        Container(
-          child: Image.network(list[index], errorBuilder:
-              (BuildContext context, Object exception, StackTrace? stackTrace) {
-            return ext.any(list[index].endsWith) == true
-                ? Icon(Icons.broken_image_outlined)
-                : Icon(Icons.video_library);
-          }),
-          width: 50,
-        ),
-        Text(
-          list[index],
-          style: TextStyle(fontSize: 12),
-          softWrap: false,
-          overflow: TextOverflow.fade,
-        ),
-        TextButton(
-            child: Text('Copy'),
-            onPressed: () {
-              Clipboard.setData(ClipboardData(text: list[index]));
-              Fluttertoast.showToast(msg: 'URL copied!');
-            },
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.blue,
-              primary: Colors.white,
-            )),
-      ]));
+  child: Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  mainAxisSize: MainAxisSize.max,
+  children: [
+    Container(child: Image.network(list[index],
+      loadingBuilder: (context, child, loadingProgress) =>
+          (loadingProgress == null) ? child : CircularProgressIndicator(),
+      errorBuilder: (context, error, stackTrace) =>  ext.any(list[index].endsWith) == true
+        ? Icon(Icons.broken_image_outlined)
+        : Icon(Icons.video_library),
+    ), width: 50
+    ), 
+      Text(
+        list[index],
+        style: TextStyle(fontSize: 12),
+        softWrap: false,
+        overflow: TextOverflow.fade,
+      ),
+      TextButton(
+          child: Text('Copy'),
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: list[index]));
+            Fluttertoast.showToast(msg: 'URL copied!');
+          },
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.blue,
+            primary: Colors.white,
+          )),
+    ]));
   return widget;
 }
 
@@ -212,7 +211,7 @@ void historyPreview(int index, BuildContext context, List<String> list) {
 }
 
 Future updateHistoryData(String input) async {
-  List<String> data = GetStorage().read('history') ?? [];
+  final data = GetStorage().read('history').cast<String>().toList();
   if (data.isEmpty) {
     final list = <String>[];
     list.add(input);
