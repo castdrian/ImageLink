@@ -35,7 +35,6 @@ dependencies:
   mime: ^1.0.0
   permission_handler: ^8.0.0+1
   get_storage: ^2.0.2
-  toggle_switch: ^0.1.9
   receive_sharing_intent: ^1.4.5
   screenshot_callback:
     git:

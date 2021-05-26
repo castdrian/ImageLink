@@ -8,7 +8,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:imagelink/util.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:floating_action_row/floating_action_row.dart';
 
