@@ -136,20 +136,17 @@ void globalForegroundService() {
 }
 
 dynamic historyWidgets(int index, List<String> list) {
-  final widget = Flexible(
+  final widget = Container(
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
           children: [
-        Flexible(
-          fit: FlexFit.loose,
-          child: Text(
+        Text(
             list[index],
             style: TextStyle(fontSize: 14),
             softWrap: false,
             overflow: TextOverflow.fade,
           ),
-        ),
         TextButton(
             child: Text('Copy'),
             onPressed: () {
