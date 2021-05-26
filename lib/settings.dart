@@ -30,6 +30,7 @@ class _SettingsState extends State<Settings>
   final rsc = TextEditingController();
   final agc = TextEditingController();
   final fnc = TextEditingController();
+  final txc = TextEditingController();
   int? idx = 0;
   bool status = false;
   bool autoexit = false;
@@ -104,22 +105,37 @@ class _SettingsState extends State<Settings>
                 maxLines: 3,
               ),
               SizedBox(height: 5),
-              new ToggleSwitch(
-                fontSize: 20,
-                initialLabelIndex: idx!,
-                minHeight: 40,
-                minWidth: double.infinity,
-                cornerRadius: 20.0,
-                activeBgColor: Colors.blue,
-                activeFgColor: Colors.white,
-                inactiveBgColor: Colors.grey,
-                inactiveFgColor: Colors.white,
-                labels: ['Arguments', 'Headers'],
-                onToggle: (index) async {
-                  setState(() {
-                    idx = index;
-                  });
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                      child: TextField(
+                    controller: txc,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Type:',
+                      isDense: true,
+                      contentPadding: EdgeInsets.all(8),
+                    ),
+                    readOnly: true,
+                  )),
+                  Expanded(
+                      child: FlutterSwitch(
+                          width: 70.0,
+                          height: 30.0,
+                          valueFontSize: 20.0,
+                          toggleSize: 30.0,
+                          value: idx == 1 ? true : false,
+                          borderRadius: 30.0,
+                          padding: 4.0,
+                          showOnOff: false,
+                          onToggle: (val) async {
+                            setState(() {
+                              idx = val == true ? 1 : 0;
+                              txc.text = val == true ? 'Headers' : 'Arguments';
+                            });
+                          })),
+                ],
               ),
               SizedBox(height: 5),
               TextField(
@@ -135,23 +151,24 @@ class _SettingsState extends State<Settings>
               SizedBox(height: 5),
             ]),
             Column(children: <Widget>[
+              SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                       child: Text('Intercept screenshots:',
-                          style: TextStyle(fontSize: 19),
+                          style: TextStyle(fontSize: 15),
                           textAlign: TextAlign.center)),
                   Expanded(
                       child: FlutterSwitch(
-                          width: 100.0,
-                          height: 40.0,
+                          width: 70.0,
+                          height: 30.0,
                           valueFontSize: 20.0,
-                          toggleSize: 40.0,
+                          toggleSize: 30.0,
                           value: status,
                           borderRadius: 30.0,
-                          padding: 8.0,
-                          showOnOff: true,
+                          padding: 4.0,
+                          showOnOff: false,
                           onToggle: (val) async {
                             setState(() {
                               status = val;
@@ -247,7 +264,7 @@ class _SettingsState extends State<Settings>
                 children: [
                   Expanded(
                       child: Text('Upload destination:',
-                          style: TextStyle(fontSize: 19),
+                          style: TextStyle(fontSize: 15),
                           textAlign: TextAlign.center)),
                   Expanded(
                       child: DropdownButtonHideUnderline(
@@ -258,7 +275,7 @@ class _SettingsState extends State<Settings>
                         iconSize: 24,
                         elevation: 16,
                         style:
-                            const TextStyle(color: Colors.blue, fontSize: 19),
+                            const TextStyle(color: Colors.blue, fontSize: 15),
                         underline: Container(
                           height: 2,
                           color: Colors.blue,
@@ -290,18 +307,18 @@ class _SettingsState extends State<Settings>
                 children: [
                   Expanded(
                       child: Text('Post-upload auto-exit:',
-                          style: TextStyle(fontSize: 19),
+                          style: TextStyle(fontSize: 15),
                           textAlign: TextAlign.center)),
                   Expanded(
                       child: FlutterSwitch(
-                          width: 100.0,
-                          height: 40.0,
+                          width: 70.0,
+                          height: 30.0,
                           valueFontSize: 20.0,
-                          toggleSize: 40.0,
+                          toggleSize: 30.0,
                           value: autoexit,
                           borderRadius: 30.0,
-                          padding: 8.0,
-                          showOnOff: true,
+                          padding: 4.0,
+                          showOnOff: false,
                           onToggle: (val) async {
                             setState(() {
                               autoexit = val;
@@ -319,7 +336,7 @@ class _SettingsState extends State<Settings>
       ),
     );
   }
-  
+
   Future loadAsync(BuildContext context) async {
     final requrl = GetStorage().read('requrl');
     final resprop = GetStorage().read('resprop');
@@ -344,6 +361,7 @@ class _SettingsState extends State<Settings>
       status = screenshots == 0 ? false : true;
       sdc.text = screendir == null ? "" : screendir;
       autoexit = exit == 0 ? false : true;
+      txc.text = idx == 1 ? 'Headers' : 'Arguments';
     });
 
     Fluttertoast.showToast(msg: 'Settings successfully loaded!');
