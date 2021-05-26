@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mime/mime.dart';
+import 'main.dart' as main;
 
 Future uploadFile(File file) async {
   final requrl = GetStorage().read('requrl')!;
@@ -79,6 +80,7 @@ void platinumDialog(BuildContext context) {
     child: Text('Gimme!'),
     onPressed: () {
       Navigator.of(context).pop();
+      main.pageController.animateToPage(3, duration: Duration(milliseconds: 300), curve: Curves.ease);
     },
   );
 
@@ -142,21 +144,21 @@ dynamic historyWidgets(int index, List<String> list, BuildContext context) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
           children: [
-          Container(
-              child: Image.network(
-          list[index],
-          errorBuilder:
+        Container(
+          child: Image.network(list[index], errorBuilder:
               (BuildContext context, Object exception, StackTrace? stackTrace) {
-            return ext.any(list[index].endsWith) == true ? Icon(Icons.broken_image_outlined) : Icon(Icons.video_library);
-          }), 
-              width: 50,
-          ),
+            return ext.any(list[index].endsWith) == true
+                ? Icon(Icons.broken_image_outlined)
+                : Icon(Icons.video_library);
+          }),
+          width: 50,
+        ),
         Text(
-            list[index],
-            style: TextStyle(fontSize: 12),
-            softWrap: false,
-            overflow: TextOverflow.fade,
-          ),
+          list[index],
+          style: TextStyle(fontSize: 12),
+          softWrap: false,
+          overflow: TextOverflow.fade,
+        ),
         TextButton(
             child: Text('Copy'),
             onPressed: () {

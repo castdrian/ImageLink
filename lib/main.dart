@@ -54,6 +54,7 @@ class NavBar extends StatefulWidget {
 }
 
 List<SharedMediaFile>? _sharedFiles;
+PageController pageController = PageController();
 String? ver;
 String? bnum;
 
@@ -179,8 +180,6 @@ class _NavBarState extends State<NavBar> {
     });
   }
 
-  final _pageController = PageController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,7 +195,7 @@ class _NavBarState extends State<NavBar> {
                     KeepAlivePage(child: Settings()),
                     KeepAlivePage(child: History()),
                     KeepAlivePage(child: Info())],
-        controller: _pageController,
+        controller: pageController,
         onPageChanged: onPageChanged,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -223,7 +222,7 @@ class _NavBarState extends State<NavBar> {
   }
 
   void navigateToPage(int page) {
-    _pageController.animateToPage(page,
+    pageController.animateToPage(page,
         duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 
