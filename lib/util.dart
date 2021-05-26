@@ -135,15 +135,25 @@ void globalForegroundService() {
   debugPrint('current datetime is ${DateTime.now()}');
 }
 
-dynamic historyWidgets(int index, List<String> list) {
+dynamic historyWidgets(int index, List<String> list, BuildContext context) {
+  final ext = ['.jpg', '.png', '.gif', '.webp'];
   final widget = Container(
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           children: [
+          Container(
+              child: Image.network(
+          list[index],
+          errorBuilder:
+              (BuildContext context, Object exception, StackTrace? stackTrace) {
+            return ext.any(list[index].endsWith) == true ? Icon(Icons.broken_image_outlined) : Icon(Icons.video_library);
+          }), 
+              width: 50,
+          ),
         Text(
             list[index],
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 12),
             softWrap: false,
             overflow: TextOverflow.fade,
           ),
@@ -174,7 +184,7 @@ void historyPreview(int index, BuildContext context, List<String> list) {
 
     AlertDialog alert = AlertDialog(
       title: Text('File:'),
-      content: Flexible(
+      content: Container(
         child: Image.network(
           list[index],
           errorBuilder:

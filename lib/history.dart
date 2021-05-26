@@ -27,7 +27,7 @@ class _HistoryState extends State<History> {
                 itemCount: list?.length ?? 0,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: historyWidgets(index, list!),
+                    title: historyWidgets(index, list!, context),
                     onLongPress: () => historyPreview(index, context, list),
                   );
                 }));
