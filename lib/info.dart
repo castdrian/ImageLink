@@ -95,6 +95,9 @@ class _InfoState extends State<Info> {
           width: double.infinity,
           height: 70.0,
           child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              onPrimary: Colors.white,
+              primary: Color(0xFF5865F2)),
             label: Text('Discord', style: TextStyle(fontSize: 25)),
             icon: Icon(FontAwesomeIcons.discord, size: 30),
             onPressed: () {
@@ -127,6 +130,7 @@ class _InfoState extends State<Info> {
           width: double.infinity,
           height: 70.0,
           child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(onPrimary: Colors.white, primary: Color(0xFFEB459E)),
             label: Text('Credits', style: TextStyle(fontSize: 25)),
             icon: Icon(FontAwesomeIcons.creditCard, size: 30),
             onPressed: () {
