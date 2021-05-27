@@ -51,6 +51,7 @@ dependencies:
     git: https://github.com/jja08111/flutter_foreground_service_plugin.git
   package_info: ^2.0.0
   flutter_speed_dial: ^4.0.0-dev
+  google_mobile_ads: ^0.13.0
 
 dev_dependencies:
   flutter_test:

@@ -2,7 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'main.dart' as main;
 
 class Info extends StatefulWidget {
   @override
@@ -157,6 +159,14 @@ class _InfoState extends State<Info> {
                   );
             },
           ),
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            width: main.infoAd.size.width.toDouble(),
+            height: main.infoAd.size.height.toDouble(),
+            child: AdWidget(ad: main.infoAd),
+        ) 
         ),
       ])
     );

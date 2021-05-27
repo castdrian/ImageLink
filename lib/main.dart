@@ -10,13 +10,17 @@ import 'package:screenshot_callback/screenshot_callback.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'home.dart';
 import 'settings.dart';
 import 'history.dart';
 import 'info.dart';
 import 'util.dart';
+import 'ad_helper.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await GetStorage.init();
   runApp(MyApp());
 }
@@ -62,6 +66,12 @@ getShared() {
   return _sharedFiles;
 }
 
+late BannerAd homeAd;
+late BannerAd tabOneAd;
+late BannerAd tabTwoAd;
+late BannerAd historyAd;
+late BannerAd infoAd;
+
 class _NavBarState extends State<NavBar> {
   late StreamSubscription _intentDataStreamSubscription;
   int _currentIndex = 0;
@@ -69,7 +79,88 @@ class _NavBarState extends State<NavBar> {
   @override
   void initState() {
     super.initState();
-    
+
+    homeAd = BannerAd(
+      adUnitId: AdHelper.homeBanner,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          print('Ad loaded!');
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    );
+
+    tabOneAd = BannerAd(
+      adUnitId: AdHelper.homeBanner,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          print('Ad loaded!');
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    );
+
+    tabTwoAd = BannerAd(
+      adUnitId: AdHelper.homeBanner,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          print('Ad loaded!');
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    );
+
+    historyAd = BannerAd(
+      adUnitId: AdHelper.homeBanner,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          print('Ad loaded!');
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    );
+
+    infoAd = BannerAd(
+      adUnitId: AdHelper.homeBanner,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          print('Ad loaded!');
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    );
+
+    homeAd.load();
+    tabOneAd.load();
+    tabTwoAd.load();
+    historyAd.load();
+    infoAd.load();
+
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       ver = packageInfo.version;
       bnum = packageInfo.buildNumber;
@@ -187,15 +278,19 @@ class _NavBarState extends State<NavBar> {
       appBar: AppBar(
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('ImageLink™'), Text('v$ver ($bnum)', style: TextStyle(fontSize: 12))]),
+            children: [
+              Text('ImageLink™'),
+              Text('v$ver ($bnum)', style: TextStyle(fontSize: 12))
+            ]),
         leading: Image.asset('assets/icon/icon.png'),
       ),
       body: PageView(
-        children: <Widget>[KeepAlivePage(child: Home()),
-                    KeepAlivePage(child: Settings()),
-                    KeepAlivePage(child: History()),
-                    KeepAlivePage(child: Info())
-                    ],
+        children: <Widget>[
+          KeepAlivePage(child: Home()),
+          KeepAlivePage(child: Settings()),
+          KeepAlivePage(child: History()),
+          KeepAlivePage(child: Info()),
+        ],
         controller: pageController,
         onPageChanged: onPageChanged,
       ),

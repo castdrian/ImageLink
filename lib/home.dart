@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:chewie/chewie.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'main.dart' as main;
@@ -89,6 +90,14 @@ class _HomeState extends State<Home> {
       resizeToAvoidBottomInset: false,
       body: Column(
         children: <Widget>[
+          Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: main.homeAd.size.width.toDouble(),
+                height: main.homeAd.size.height.toDouble(),
+                child: AdWidget(ad: main.homeAd),
+              ),
+            ),
           SizedBox(height: 50),
           Flexible(
               child: new OverflowBox(

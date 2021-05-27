@@ -7,10 +7,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:imagelink/util.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'main.dart' as main;
 
 class Settings extends StatefulWidget {
   @override
@@ -157,6 +159,14 @@ class _SettingsState extends State<Settings>
                 readOnly: true,
               ),
               SizedBox(height: 5),
+               Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: main.tabOneAd.size.width.toDouble(),
+                height: main.tabOneAd.size.height.toDouble(),
+                child: AdWidget(ad: main.tabOneAd),
+              ),
+            ),
             ]),
             Column(children: <Widget>[
               SizedBox(height: 5),
@@ -335,6 +345,15 @@ class _SettingsState extends State<Settings>
                           })),
                 ],
               ),
+              SizedBox(height: 5),
+              Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: main.tabTwoAd.size.width.toDouble(),
+                height: main.tabTwoAd.size.height.toDouble(),
+                child: AdWidget(ad: main.tabTwoAd),
+              ),
+            ),
             ])
           ],
         ),
