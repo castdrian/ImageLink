@@ -2,7 +2,7 @@
 [![Support Server](https://img.shields.io/discord/844574704698130492.svg?color=7289da&label=ImageLink&logo=discord&style=flat-round)](https://discord.gg/MSDcP79cch)
 
 # ImageLink
-### ImageLink is the (non-affiliated) mobile ShareX client!
+### ImageLink is the (non-affiliated) mobile ShareX-like uploader client!
 
 With ImageLink you can upload images, videos and files to your own server!
 You can import existing .sxcu configuration that you use on your desktop devices and are immediately ready to go!
