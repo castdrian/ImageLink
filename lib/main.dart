@@ -187,7 +187,7 @@ class _NavBarState extends State<NavBar> {
       appBar: AppBar(
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('ImageLink™'), Text('v$ver ($bnum)', style: TextStyle(fontSize: 10))]),
+            children: [Text('ImageLink™'), Text('v$ver ($bnum)', style: TextStyle(fontSize: 12))]),
         leading: Image.asset('assets/icon/icon.png'),
       ),
       body: PageView(
