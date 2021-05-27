@@ -23,16 +23,13 @@ class _HomeState extends State<Home> {
   dynamic buttons;
   final List? shared = main.getShared();
   late ScrollController scrollController;
-  bool dialVisible = true;
   final renderOverlay = true;
   final visible = true;
   final switchLabelPosition = false;
   final extend = false;
   final rmicons = false;
-  final customDialRoot = false;
   final closeManually = false;
   final useRAnimation = true;
-  final isDialOpen = ValueNotifier<bool>(false);
   final speedDialDirection = SpeedDialDirection.Left;
   final selectedfABLocation = FloatingActionButtonLocation.endDocked;
 
@@ -145,30 +142,11 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void setDialVisible(bool value) {
-    setState(() {
-      dialVisible = value;
-    });
-  }
-
   SpeedDial buildSpeedDial() {
     return SpeedDial(
       icon: Icons.upload_file,
       activeIcon: Icons.close,
-      openCloseDial: isDialOpen,
-      dialRoot: customDialRoot
-          ? (ctx, open, key, toggleChildren, layerLink) {
-              return CompositedTransformTarget(
-                link: layerLink,
-                child: TextButton(
-                  key: key,
-                  onPressed: toggleChildren,
-                  child: Text("Text Button"),
-                ),
-              );
-            }
-          : null,
-      buttonSize: 56, // it's the SpeedDial size which defaults to 56 itself
+      buttonSize: 56,
       childrenButtonSize: 56.0,
       visible: visible,
       direction: speedDialDirection,
@@ -188,13 +166,64 @@ class _HomeState extends State<Home> {
           backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
           label: 'Select file',
-          onTap: () => print("FIRST CHILD"),
+          onTap: () => setState(() {
+            fileMedia = null;
+            buttons = buildSelectDial();
+          }),
         ),
         SpeedDialChild(
           child: !rmicons ? Icon(Icons.upload) : null,
           backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
           label: 'Upload',
+          onTap: () => print('SECOND CHILD'),
+        )
+      ],
+    );
+  }
+
+  SpeedDial buildSelectDial() {
+    return SpeedDial(
+      icon: Icons.upload_file,
+      activeIcon: Icons.close,
+      buttonSize: 56,
+      childrenButtonSize: 56.0,
+      visible: visible,
+      direction: speedDialDirection,
+      switchLabelPosition: switchLabelPosition,
+      closeManually: closeManually,
+      renderOverlay: renderOverlay,
+      curve: Curves.bounceIn,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.5,
+      useRotationAnimation: useRAnimation,
+      elevation: 8.0,
+      shape: CircleBorder(),
+      onClose: () => setState(() {
+        fileMedia = null;
+        buttons = buildSpeedDial();
+      }),
+      childMargin: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      children: [
+        SpeedDialChild(
+          child: !rmicons ? Icon(Icons.image) : null,
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          label: 'Image',
+          onTap: () => print("FIRST CHILD"),
+        ),
+        SpeedDialChild(
+          child: !rmicons ? Icon(Icons.video_collection) : null,
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          label: 'Video',
+          onTap: () => print("FIRST CHILD"),
+        ),
+        SpeedDialChild(
+          child: !rmicons ? Icon(Icons.file_copy) : null,
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          label: 'File',
           onTap: () => print('SECOND CHILD'),
         )
       ],

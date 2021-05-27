@@ -35,16 +35,12 @@ class _SettingsState extends State<Settings>
   bool autoexit = false;
   String? dir;
   String dropdownValue = 'Custom (SXCU)';
-  bool dialVisible = true;
   final renderOverlay = true;
   final visible = true;
-  final switchLabelPosition = false;
   final extend = false;
   final rmicons = false;
-  final customDialRoot = false;
   final closeManually = false;
   final useRAnimation = true;
-  final isDialOpen = ValueNotifier<bool>(false);
   final speedDialDirection = SpeedDialDirection.Left;
   final selectedfABLocation = FloatingActionButtonLocation.endDocked;
 
@@ -346,34 +342,14 @@ class _SettingsState extends State<Settings>
     );
   }
 
-    void setDialVisible(bool value) {
-    setState(() {
-      dialVisible = value;
-    });
-  }
-
   SpeedDial buildSpeedDial() {
     return SpeedDial(
       icon: Icons.save,
       activeIcon: Icons.close,
-      openCloseDial: isDialOpen,
-      dialRoot: customDialRoot
-          ? (ctx, open, key, toggleChildren, layerLink) {
-              return CompositedTransformTarget(
-                link: layerLink,
-                child: TextButton(
-                  key: key,
-                  onPressed: toggleChildren,
-                  child: Text("Text Button"),
-                ),
-              );
-            }
-          : null,
       buttonSize: 56,
       childrenButtonSize: 56.0,
       visible: visible,
       direction: speedDialDirection,
-      switchLabelPosition: switchLabelPosition,
       closeManually: closeManually,
       renderOverlay: renderOverlay,
       curve: Curves.bounceIn,
