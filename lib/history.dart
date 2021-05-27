@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'util.dart';
 
@@ -28,7 +30,10 @@ class _HistoryState extends State<History> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: historyWidgets(index, list!, context),
-                    onLongPress: () => historyPreview(index, context, list),
+                    onLongPress: () {
+                      Clipboard.setData(ClipboardData(text: list[index]));
+                      Fluttertoast.showToast(msg: 'URL copied!');
+                    },
                   );
                 }));
   }

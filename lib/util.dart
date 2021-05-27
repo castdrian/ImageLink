@@ -150,64 +150,16 @@ dynamic historyWidgets(int index, List<String> list, BuildContext context) {
       errorBuilder: (context, error, stackTrace) =>  ext.any(list[index].endsWith) == true
         ? Icon(Icons.broken_image_outlined)
         : Icon(Icons.video_library),
-    ), width: 50
+    ), width: 70,
     ), 
       Text(
         list[index],
-        style: TextStyle(fontSize: 12),
+        style: TextStyle(fontSize: 14),
         softWrap: false,
         overflow: TextOverflow.fade,
-      ),
-      TextButton(
-          child: Text('Copy'),
-          onPressed: () {
-            Clipboard.setData(ClipboardData(text: list[index]));
-            Fluttertoast.showToast(msg: 'URL copied!');
-          },
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.blue,
-            primary: Colors.white,
-          )),
+      )
     ]));
   return widget;
-}
-
-void historyPreview(int index, BuildContext context, List<String> list) {
-  final ext = ['.jpg', '.png', '.gif', '.webp'];
-
-  if (ext.any(list[index].endsWith)) {
-    Widget okButton = TextButton(
-      child: Text('Thanks.'),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-
-    AlertDialog alert = AlertDialog(
-      title: Text('File:'),
-      content: Container(
-        child: Image.network(
-          list[index],
-          errorBuilder:
-              (BuildContext context, Object exception, StackTrace? stackTrace) {
-            return const Text('Couldn\'t load preview.');
-          },
-        ),
-      ),
-      actions: [
-        okButton,
-      ],
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  } else {
-    Fluttertoast.showToast(msg: 'Preview is only available for images!');
-  }
 }
 
 Future updateHistoryData(String input) async {
