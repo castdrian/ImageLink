@@ -5,6 +5,7 @@ import 'package:flutter_foreground_plugin/flutter_foreground_plugin.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:imagelink/util.dart';
 import 'package:path/path.dart' as p;
@@ -358,7 +359,7 @@ class _SettingsState extends State<Settings>
       useRotationAnimation: useRAnimation,
       elevation: 8.0,
       shape: CircleBorder(),
-      childMargin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      childMargin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       children: [
         SpeedDialChild(
           child: !rmicons ? Icon(Icons.save) : null,
@@ -373,7 +374,14 @@ class _SettingsState extends State<Settings>
           foregroundColor: Colors.white,
           label: 'Import SXCU',
           onTap: () => importSXCU(context),
-        )
+        ),
+        SpeedDialChild(
+          child: !rmicons ? Icon(FontAwesomeIcons.googleDrive) : null,
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          label: 'Drive sync',
+          onTap: () => platinumDialog(context),
+        ),
       ],
     );
   }
