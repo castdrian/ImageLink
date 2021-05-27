@@ -5,9 +5,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:chewie/chewie.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'main.dart' as main;
 import 'util.dart';
-import 'package:floating_action_row/floating_action_row.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -20,8 +20,21 @@ class _HomeState extends State<Home> {
   Chewie? player;
   File? fileMedia;
   bool isVideo = false;
+  dynamic buttons;
   final List? shared = main.getShared();
-  FloatingActionRow? buttons;
+  late ScrollController scrollController;
+  bool dialVisible = true;
+  final renderOverlay = true;
+  final visible = true;
+  final switchLabelPosition = false;
+  final extend = false;
+  final rmicons = false;
+  final customDialRoot = false;
+  final closeManually = false;
+  final useRAnimation = true;
+  final isDialOpen = ValueNotifier<bool>(false);
+  final speedDialDirection = SpeedDialDirection.Left;
+  final selectedfABLocation = FloatingActionButtonLocation.endDocked;
 
   Future<void> initializePlayer() async {
     final videoPlayerController = VideoPlayerController.file(fileMedia!);
@@ -70,7 +83,7 @@ class _HomeState extends State<Home> {
     super.initState();
     shareIntent();
 
-    buttons = buildMainButtons(context);
+    buttons = buildSpeedDial();
   }
 
   @override
@@ -93,7 +106,6 @@ class _HomeState extends State<Home> {
           SizedBox(height: 100),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: buttons,
     );
   }
@@ -102,7 +114,7 @@ class _HomeState extends State<Home> {
     final media = await FilePicker.platform.pickFiles(type: type);
     if (media == null) {
       setState(() {
-        buttons = buildMainButtons(context);
+        buttons = buildSpeedDial();
       });
       return;
     }
@@ -111,13 +123,13 @@ class _HomeState extends State<Home> {
 
     if (file.existsSync() == false) {
       setState(() {
-        buttons = buildMainButtons(context);
+        buttons = buildSpeedDial();
       });
       return;
     } else {
       setState(() {
         fileMedia = file;
-        buttons = buildMainButtons(context);
+        buttons = buildSpeedDial();
       });
 
       if (isVideo == true) {
@@ -126,96 +138,66 @@ class _HomeState extends State<Home> {
     }
   }
 
-  FloatingActionRow buildMainButtons(BuildContext context) {
-    return FloatingActionRow(
-      color: Colors.blueAccent,
-      children: <Widget>[
-        FloatingActionRowButton(
-          icon: Icon(Icons.image),
-          onTap: () async {
-            if (isVideo == true) isVideo = false;
-
-            final requrl = GetStorage().read('requrl');
-
-            if (requrl == null) {
-              Fluttertoast.showToast(msg: 'You must specify settings first!');
-              return;
-            }
-
-            GetStorage().write('refresh', 0);
-            setState(() {
-              buttons = buildFileButtons(context);
-            });
-          },
-        ),
-        FloatingActionRowDivider(
-          color: Colors.white,
-        ),
-        FloatingActionRowButton(
-          icon: Icon(Icons.upload_rounded),
-          color: fileMedia == null ? Colors.grey : Colors.transparent,
-          onTap: () async {
-            if (fileMedia == null) return;
-
-            Fluttertoast.showToast(msg: 'Uploading file...');
-
-            final upload = await uploadFile(fileMedia!);
-            await postUpload(upload);
-            setState(() {
-            });
-          },
-        ),
-        FloatingActionRowButton(
-          icon: Icon(Icons.clear),
-          color: fileMedia == null ? Colors.grey : Colors.red,
-          onTap: () {
-            if (fileMedia == null) return;
-            clearFile(context);
-          },
-        ),
-      ],
-    );
-  }
-
-  FloatingActionRow buildFileButtons(BuildContext context) {
-    return FloatingActionRow(
-      color: Colors.blueAccent,
-      children: <Widget>[
-        FloatingActionRowButton(
-          icon: Icon(Icons.videocam),
-          onTap: () {
-            pickGalleryMedia(context, FileType.video);
-          },
-        ),
-        FloatingActionRowDivider(
-          color: Colors.white,
-        ),
-        FloatingActionRowButton(
-          icon: Icon(Icons.image),
-          onTap: () {
-            pickGalleryMedia(context, FileType.image);
-          },
-        ),
-        FloatingActionRowDivider(
-          color: Colors.white,
-        ),
-        FloatingActionRowButton(
-          icon: Icon(Icons.insert_drive_file_outlined),
-          onTap: () {
-            platinumDialog(context);
-            return;
-            // ignore: dead_code
-            pickGalleryMedia(context, FileType.any);
-          },
-        ),
-      ],
-    );
-  }
-
   void clearFile(BuildContext context) {
     setState(() {
       fileMedia = null;
-      buttons = buildMainButtons(context);
+      buttons = buildSpeedDial();
     });
+  }
+
+  void setDialVisible(bool value) {
+    setState(() {
+      dialVisible = value;
+    });
+  }
+
+  SpeedDial buildSpeedDial() {
+    return SpeedDial(
+      icon: Icons.upload_file,
+      activeIcon: Icons.close,
+      openCloseDial: isDialOpen,
+      dialRoot: customDialRoot
+          ? (ctx, open, key, toggleChildren, layerLink) {
+              return CompositedTransformTarget(
+                link: layerLink,
+                child: TextButton(
+                  key: key,
+                  onPressed: toggleChildren,
+                  child: Text("Text Button"),
+                ),
+              );
+            }
+          : null,
+      buttonSize: 56, // it's the SpeedDial size which defaults to 56 itself
+      childrenButtonSize: 56.0,
+      visible: visible,
+      direction: speedDialDirection,
+      switchLabelPosition: switchLabelPosition,
+      closeManually: closeManually,
+      renderOverlay: renderOverlay,
+      curve: Curves.bounceIn,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.5,
+      useRotationAnimation: useRAnimation,
+      elevation: 8.0,
+      shape: CircleBorder(),
+      childMargin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      children: [
+        SpeedDialChild(
+          child: !rmicons ? Icon(Icons.upload_file) : null,
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          label: 'Select file',
+          onTap: () => print("FIRST CHILD"),
+        ),
+        SpeedDialChild(
+          child: !rmicons ? Icon(Icons.upload) : null,
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          label: 'Upload',
+          onTap: () => print('SECOND CHILD'),
+        )
+      ],
+    );
   }
 }

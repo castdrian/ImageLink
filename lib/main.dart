@@ -187,14 +187,15 @@ class _NavBarState extends State<NavBar> {
       appBar: AppBar(
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('ImageLink™'), Text('v$ver ($bnum)')]),
+            children: [Text('ImageLink™'), Text('v$ver ($bnum)', style: TextStyle(fontSize: 10))]),
         leading: Image.asset('assets/icon/icon.png'),
       ),
       body: PageView(
         children: <Widget>[KeepAlivePage(child: Home()),
                     KeepAlivePage(child: Settings()),
                     KeepAlivePage(child: History()),
-                    KeepAlivePage(child: Info())],
+                    KeepAlivePage(child: Info())
+                    ],
         controller: pageController,
         onPageChanged: onPageChanged,
       ),

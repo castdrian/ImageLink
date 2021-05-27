@@ -141,15 +141,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2+2"
-  floating_action_row:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: master
-      resolved-ref: "0d725775001932d27c21a2c347364e614dd470bd"
-      url: "git://github.com/thehairy/floating_action_row.git"
-    source: git
-    version: "0.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -192,6 +183,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  flutter_speed_dial:
+    dependency: "direct main"
+    description:
+      name: flutter_speed_dial
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0-dev"
   flutter_switch:
     dependency: "direct main"
     description:

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_plugin/flutter_foreground_plugin.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get_storage/get_storage.dart';
@@ -9,7 +10,6 @@ import 'package:imagelink/util.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:floating_action_row/floating_action_row.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -35,6 +35,18 @@ class _SettingsState extends State<Settings>
   bool autoexit = false;
   String? dir;
   String dropdownValue = 'Custom (SXCU)';
+  bool dialVisible = true;
+  final renderOverlay = true;
+  final visible = true;
+  final switchLabelPosition = false;
+  final extend = false;
+  final rmicons = false;
+  final customDialRoot = false;
+  final closeManually = false;
+  final useRAnimation = true;
+  final isDialOpen = ValueNotifier<bool>(false);
+  final speedDialDirection = SpeedDialDirection.Left;
+  final selectedfABLocation = FloatingActionButtonLocation.endDocked;
 
   @override
   void initState() {
@@ -321,8 +333,7 @@ class _SettingsState extends State<Settings>
                           onToggle: (val) async {
                             setState(() {
                               autoexit = val;
-                              GetStorage()
-                                  .write('autoexit', val == true ? 1 : 0);
+                              GetStorage().write('autoexit', val == true ? 1 : 0);
                             });
                           })),
                 ],
@@ -330,12 +341,67 @@ class _SettingsState extends State<Settings>
             ])
           ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: buildButtons(context),
+        floatingActionButton: buildSpeedDial(),
       ),
     );
   }
 
+    void setDialVisible(bool value) {
+    setState(() {
+      dialVisible = value;
+    });
+  }
+
+  SpeedDial buildSpeedDial() {
+    return SpeedDial(
+      icon: Icons.save,
+      activeIcon: Icons.close,
+      openCloseDial: isDialOpen,
+      dialRoot: customDialRoot
+          ? (ctx, open, key, toggleChildren, layerLink) {
+              return CompositedTransformTarget(
+                link: layerLink,
+                child: TextButton(
+                  key: key,
+                  onPressed: toggleChildren,
+                  child: Text("Text Button"),
+                ),
+              );
+            }
+          : null,
+      buttonSize: 56,
+      childrenButtonSize: 56.0,
+      visible: visible,
+      direction: speedDialDirection,
+      switchLabelPosition: switchLabelPosition,
+      closeManually: closeManually,
+      renderOverlay: renderOverlay,
+      curve: Curves.bounceIn,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.5,
+      useRotationAnimation: useRAnimation,
+      elevation: 8.0,
+      shape: CircleBorder(),
+      childMargin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      children: [
+        SpeedDialChild(
+          child: !rmicons ? Icon(Icons.save) : null,
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          label: 'Save settings',
+          onTap: () => saveSettings(context),
+        ),
+        SpeedDialChild(
+          child: !rmicons ? Icon(Icons.upload_file) : null,
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          label: 'Import SXCU',
+          onTap: () => importSXCU(context),
+        )
+      ],
+    );
+  }
+  
   Future loadAsync(BuildContext context) async {
     final requrl = GetStorage().read('requrl');
     final resprop = GetStorage().read('resprop');
@@ -709,28 +775,5 @@ class _SettingsState extends State<Settings>
     GetStorage().write('fileform', fnc.text);
 
     Fluttertoast.showToast(msg: 'Settings saved successfully!');
-  }
-
-  FloatingActionRow buildButtons(BuildContext context) {
-    return FloatingActionRow(
-      color: Colors.blueAccent,
-      children: <Widget>[
-        FloatingActionRowButton(
-          icon: Icon(Icons.upload_file),
-          onTap: () {
-            importSXCU(context);
-          },
-        ),
-        FloatingActionRowDivider(
-          color: Colors.white,
-        ),
-        FloatingActionRowButton(
-          icon: Icon(Icons.save),
-          onTap: () {
-            saveSettings(context);
-          },
-        ),
-      ],
-    );
   }
 }

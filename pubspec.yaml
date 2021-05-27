@@ -1,5 +1,5 @@
 name: imagelink
-description: A mobile ShareX client.
+description: A mobile image uploader.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -47,13 +47,10 @@ dependencies:
   in_app_update: ^2.0.0
   chewie: ^1.0.0
   video_player: ^2.1.1
-  floating_action_row:
-    git:
-      url: git://github.com/thehairy/floating_action_row.git
-      ref: master
   flutter_foreground_plugin: 
     git: https://github.com/jja08111/flutter_foreground_service_plugin.git
   package_info: ^2.0.0
+  flutter_speed_dial: ^4.0.0-dev
 
 dev_dependencies:
   flutter_test:
