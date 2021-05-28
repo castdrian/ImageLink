@@ -107,9 +107,31 @@ class _InfoState extends State<Info> {
                                     style: TextStyle(fontSize: 20)),
                                 TextButton(
                                     child: Text('1.99 €'),
-                                    onPressed: () {
-                                      Fluttertoast.showToast(
-                                          msg: 'Coming soon my dear friend!');
+                                    onPressed: () async {
+                                      try {
+                                        final offerings =
+                                            await Purchases.getOfferings();
+                                        if (offerings.current != null &&
+                                            offerings.current?.monthly !=
+                                                null) {
+                                          final product =
+                                              offerings.current?.monthly;
+                                          PurchaserInfo purchaserInfo =
+                                              await Purchases.purchasePackage(
+                                                  product as Package);
+                                          if (purchaserInfo.entitlements
+                                              .all['Platinum']!.isActive) {
+                                            Phoenix.rebirth(context);
+                                          }
+                                        } else {
+                                          Fluttertoast.showToast(
+                                              msg: 'An error occured.');
+                                        }
+                                      } on PlatformException catch (e) {
+                                        print(e);
+                                        Fluttertoast.showToast(
+                                            msg: 'An error occured.');
+                                      }
                                     },
                                     style: TextButton.styleFrom(
                                       backgroundColor: Colors.green[800],
@@ -125,9 +147,30 @@ class _InfoState extends State<Info> {
                                     style: TextStyle(fontSize: 20)),
                                 TextButton(
                                     child: Text('12.99 €'),
-                                    onPressed: () {
-                                      Fluttertoast.showToast(
-                                          msg: 'Coming soon my dear friend!');
+                                    onPressed: () async {
+                                      try {
+                                        final offerings =
+                                            await Purchases.getOfferings();
+                                        if (offerings.current != null &&
+                                            offerings.current?.annual != null) {
+                                          final product =
+                                              offerings.current?.annual;
+                                          PurchaserInfo purchaserInfo =
+                                              await Purchases.purchasePackage(
+                                                  product as Package);
+                                          if (purchaserInfo.entitlements
+                                              .all['Platinum']!.isActive) {
+                                            Phoenix.rebirth(context);
+                                          }
+                                        } else {
+                                          Fluttertoast.showToast(
+                                              msg: 'An error occured.');
+                                        }
+                                      } on PlatformException catch (e) {
+                                        print(e);
+                                        Fluttertoast.showToast(
+                                            msg: 'An error occured.');
+                                      }
                                     },
                                     style: TextButton.styleFrom(
                                       backgroundColor: Colors.green[800],
@@ -143,9 +186,24 @@ class _InfoState extends State<Info> {
                                     style: TextStyle(fontSize: 20)),
                                 TextButton(
                                     child: Text('29.99 €'),
-                                    onPressed: () {
-                                      Fluttertoast.showToast(
-                                          msg: 'Coming soon my dear friend!');
+                                    onPressed: () async {
+                                      try {
+                                        final offerings = await Purchases.getOfferings();
+                                        if (offerings.current != null && offerings.current?.lifetime != null) {
+                                          final product = offerings.current?.lifetime;
+                                          PurchaserInfo purchaserInfo = await Purchases.purchasePackage(product as Package);
+                                          if (purchaserInfo.entitlements.all['Platinum']!.isActive) {
+                                            Phoenix.rebirth(context);
+                                          }
+                                        } else {
+                                          Fluttertoast.showToast(
+                                            msg: 'An error occured.');
+                                        }
+                                      } on PlatformException catch (e) {
+                                        print(e);
+                                        Fluttertoast.showToast(
+                                            msg: 'An error occured.');
+                                      }
                                     },
                                     style: TextButton.styleFrom(
                                       backgroundColor: Colors.green[800],
@@ -172,7 +230,8 @@ class _InfoState extends State<Info> {
                                   'is user platinum? ${main.appData.isPlatinum}');
 
                               if (main.appData.isPlatinum) {
-                                Fluttertoast.showToast(msg: 'Purchase restored!');
+                                Fluttertoast.showToast(
+                                    msg: 'Purchase restored!');
                                 Phoenix.rebirth(context);
                               } else {
                                 Fluttertoast.showToast(
