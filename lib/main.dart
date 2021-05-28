@@ -317,10 +317,10 @@ class _NavBarState extends State<NavBar> {
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('ImageLink™'),
+              appData.isPlatinum == true ? Text('ImageLink Platinum™') : Text('ImageLink™'),
               Text('v$ver ($bnum)', style: TextStyle(fontSize: 12))
             ]),
-        leading: Image.asset('assets/icon/icon.png'),
+        leading: appData.isPlatinum == true ? Image.asset('assets/icon/platinum.png') : Image.asset('assets/icon/icon.png'),
       ),
       body: PageView(
         children: <Widget>[
