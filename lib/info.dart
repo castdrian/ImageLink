@@ -86,16 +86,25 @@ class _InfoState extends State<Info> {
                     )),
                 ])
               ),
+              TextButton(
+                    child: Text('Restore purchase'),
+                    onPressed: () {
+                      Fluttertoast.showToast(msg: 'Coming soon my dear friend!');
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green[800],
+                      primary: Colors.white,
+                    )),
             ],)
           ),
-        SizedBox(height: 14),
+        SizedBox(height: 10),
         Container(
           constraints: new BoxConstraints(
-              minHeight: 70.0,
-              maxHeight: 70.0,
+              minHeight: 50.0,
+              maxHeight: 50.0,
             ),
           width: double.infinity,
-          height: 70.0,
+          height: 50.0,
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               onPrimary: Colors.white,
@@ -107,14 +116,14 @@ class _InfoState extends State<Info> {
             },
           ),
         ),
-        SizedBox(height: 14),
+        SizedBox(height: 10),
         Container(
           constraints: new BoxConstraints(
-              minHeight: 70.0,
-              maxHeight: 70.0,
+              minHeight: 50.0,
+              maxHeight: 50.0,
             ),
           width: double.infinity,
-          height: 70.0,
+          height: 50.0,
           child: ElevatedButton.icon(
             label: Text('Twitter', style: TextStyle(fontSize: 25)),
             icon: Icon(FontAwesomeIcons.twitter, size: 30),
@@ -123,14 +132,14 @@ class _InfoState extends State<Info> {
             },
           ),
         ),
-        SizedBox(height: 14),
+        SizedBox(height: 10),
         Container(
           constraints: new BoxConstraints(
-              minHeight: 70.0,
-              maxHeight: 70.0,
+              minHeight: 50.0,
+              maxHeight: 50.0,
             ),
           width: double.infinity,
-          height: 70.0,
+          height: 50.0,
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(onPrimary: Colors.white, primary: Color(0xFFEB459E)),
             label: Text('Credits', style: TextStyle(fontSize: 25)),
@@ -160,6 +169,7 @@ class _InfoState extends State<Info> {
             },
           ),
         ),
+        SizedBox(height: 10),
         Align(
           alignment: Alignment.topCenter,
           child: Container(
