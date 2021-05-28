@@ -298,7 +298,7 @@ class _NavBarState extends State<NavBar> {
       purchaserInfo = await Purchases.getPurchaserInfo();
       print(purchaserInfo.toString());
       if (purchaserInfo.entitlements.all['Platinum'] != null) {
-        appData.isPlatinum = purchaserInfo.entitlements.all['all_features']!.isActive;
+        appData.isPlatinum = purchaserInfo.entitlements.all['Platinum']!.isActive;
       } else {
         appData.isPlatinum = false;
       }
