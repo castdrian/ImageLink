@@ -42,7 +42,6 @@ dependencies:
   flutter_switch: ^0.3.1
   flutter_fgbg: ^0.1.0
   flutter_background: ^1.0.0
-  in_app_purchase: ^1.0.0
   flutter_launcher_icons: any
   in_app_update: ^2.0.0
   chewie: ^1.0.0
@@ -52,6 +51,8 @@ dependencies:
   package_info: ^2.0.0
   flutter_speed_dial: ^4.0.0-dev
   google_mobile_ads: ^0.13.0
+  purchases_flutter: ^3.2.2
+  rflutter_alert: ^2.0.2
 
 dev_dependencies:
   flutter_test:

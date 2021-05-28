@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:screenshot_callback/screenshot_callback.dart';
 import 'package:get_storage/get_storage.dart';
@@ -50,6 +51,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
+final appData = AppData();
+
+class AppData {
+  static final AppData _appData = new AppData._internal();
+
+  bool isPlatinum = false;
+
+  factory AppData() {
+    return _appData;
+  }
+  AppData._internal();
+}
+
 class NavBar extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -79,6 +93,8 @@ class _NavBarState extends State<NavBar> {
   @override
   void initState() {
     super.initState();
+
+    initPlatformState();
 
     homeAd = BannerAd(
       adUnitId: AdHelper.homeBanner,
@@ -269,6 +285,28 @@ class _NavBarState extends State<NavBar> {
       final upload = await uploadFile(uploadfile);
       await postUpload(upload);
     });
+  }
+
+  Future<void> initPlatformState() async {
+    appData.isPlatinum = false;
+
+    await Purchases.setDebugLogsEnabled(true);
+    await Purchases.setup('QHSsSMTkDVwplonOqaZNmynGdtDwtqDf');
+
+    PurchaserInfo purchaserInfo;
+    try {
+      purchaserInfo = await Purchases.getPurchaserInfo();
+      print(purchaserInfo.toString());
+      if (purchaserInfo.entitlements.all['Platinum'] != null) {
+        appData.isPlatinum = purchaserInfo.entitlements.all['all_features']!.isActive;
+      } else {
+        appData.isPlatinum = false;
+      }
+    } on PlatformException catch (e) {
+      print(e);
+    }
+
+    print('#### is user platinum? ${appData.isPlatinum}');
   }
 
   @override

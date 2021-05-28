@@ -21,7 +21,7 @@ class _HistoryState extends State<History> {
 
   @override
   Widget build(BuildContext context) {
-    final list = GetStorage().read('history').cast<String>().toList();
+    final list = GetStorage().read('history')?.cast<String>().toList();
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: list?.length == 0
