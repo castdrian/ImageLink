@@ -22,6 +22,7 @@ import 'ad_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initPlatformState();
   MobileAds.instance.initialize();
   await GetStorage.init();
   runApp(Phoenix(child: MyApp()));
@@ -81,6 +82,28 @@ getShared() {
   return _sharedFiles;
 }
 
+Future<void> initPlatformState() async {
+    appData.isPlatinum = false;
+
+    await Purchases.setDebugLogsEnabled(true);
+    await Purchases.setup('QHSsSMTkDVwplonOqaZNmynGdtDwtqDf');
+
+    PurchaserInfo purchaserInfo;
+    try {
+      purchaserInfo = await Purchases.getPurchaserInfo();
+      print(purchaserInfo.toString());
+      if (purchaserInfo.entitlements.all['Platinum'] != null) {
+        appData.isPlatinum = purchaserInfo.entitlements.all['Platinum']!.isActive;
+      } else {
+        appData.isPlatinum = false;
+      }
+    } on PlatformException catch (e) {
+      print(e);
+    }
+
+    print('#### is user platinum? ${appData.isPlatinum}');
+  }
+
 late BannerAd homeAd;
 late BannerAd tabOneAd;
 late BannerAd tabTwoAd;
@@ -94,8 +117,6 @@ class _NavBarState extends State<NavBar> {
   @override
   void initState() {
     super.initState();
-
-    initPlatformState();
 
     homeAd = BannerAd(
       adUnitId: AdHelper.homeBanner,
@@ -286,28 +307,6 @@ class _NavBarState extends State<NavBar> {
       final upload = await uploadFile(uploadfile);
       await postUpload(upload);
     });
-  }
-
-  Future<void> initPlatformState() async {
-    appData.isPlatinum = false;
-
-    await Purchases.setDebugLogsEnabled(true);
-    await Purchases.setup('QHSsSMTkDVwplonOqaZNmynGdtDwtqDf');
-
-    PurchaserInfo purchaserInfo;
-    try {
-      purchaserInfo = await Purchases.getPurchaserInfo();
-      print(purchaserInfo.toString());
-      if (purchaserInfo.entitlements.all['Platinum'] != null) {
-        appData.isPlatinum = purchaserInfo.entitlements.all['Platinum']!.isActive;
-      } else {
-        appData.isPlatinum = false;
-      }
-    } on PlatformException catch (e) {
-      print(e);
-    }
-
-    print('#### is user platinum? ${appData.isPlatinum}');
   }
 
   @override
