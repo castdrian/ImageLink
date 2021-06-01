@@ -200,7 +200,7 @@ class _InfoState extends State<Info> {
                                                     product as Package);
                                             if (purchaserInfo.entitlements
                                                 .all['Platinum']!.isActive) {
-                                              Phoenix.rebirth(context);
+                                              await Phoenix.rebirth(context);
                                             }
                                           } else {
                                             Fluttertoast.showToast(
@@ -263,7 +263,7 @@ class _InfoState extends State<Info> {
                             )),
                       ],
                     )),
-            Align(
+                main.appData.isPlatinum ? Container() : Align(
                 alignment: Alignment.topCenter,
                 child: Container(
                   width: main.infoAd.size.width.toDouble(),

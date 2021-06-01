@@ -150,7 +150,7 @@ class _SettingsState extends State<Settings>
                 readOnly: true,
               ),
               SizedBox(height: 5),
-               Align(
+              main.appData.isPlatinum ? Container() :Align(
               alignment: Alignment.topCenter,
               child: Container(
                 width: main.tabOneAd.size.width.toDouble(),
@@ -337,7 +337,7 @@ class _SettingsState extends State<Settings>
                 ],
               ),
               SizedBox(height: 5),
-              Align(
+              main.appData.isPlatinum ? Container() : Align(
               alignment: Alignment.topCenter,
               child: Container(
                 width: main.tabTwoAd.size.width.toDouble(),

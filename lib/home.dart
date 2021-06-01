@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
   resizeToAvoidBottomInset: false,
   body: Column(
     children: <Widget>[
-      Align(
+      main.appData.isPlatinum ? Container() : Align(
         alignment: Alignment.topCenter,
         child: Container(
           width: main.homeAd.size.width.toDouble(),

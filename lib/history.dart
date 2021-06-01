@@ -27,7 +27,7 @@ class _HistoryState extends State<History> {
         body: list?.length == 0
             ? Text('')
             : Column(children: [
-              Align(
+              main.appData.isPlatinum ? Container() : Align(
                 alignment: Alignment.topCenter,
                 child: Container(
                   width: main.historyAd.size.width.toDouble(),

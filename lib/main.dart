@@ -317,8 +317,8 @@ class _NavBarState extends State<NavBar> {
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              appData.isPlatinum == true ? Text('ImageLink Platinum™') : Text('ImageLink™'),
-              Text('v$ver ($bnum)', style: TextStyle(fontSize: 12))
+              appData.isPlatinum ? Text('ImageLink Platinum™') : Text('ImageLink™'),
+              kReleaseMode ? Text('v$ver ($bnum)', style: TextStyle(fontSize: 12)) : Text('')
             ]),
         leading: appData.isPlatinum == true ? Image.asset('assets/icon/platinum.png') : Image.asset('assets/icon/icon.png'),
       ),
