@@ -76,40 +76,42 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-  onWillPop: () {
-    Phoenix.rebirth(context);
-    return Future.value(false);
-  },
-  child: Scaffold(
-  resizeToAvoidBottomInset: false,
-  body: Column(
-    children: <Widget>[
-      main.appData.isPlatinum ? Container() : Align(
-        alignment: Alignment.topCenter,
-        child: Container(
-          width: main.homeAd.size.width.toDouble(),
-          height: main.homeAd.size.height.toDouble(),
-          child: AdWidget(ad: main.homeAd),
-        ),
-      ),
-      SizedBox(height: 50),
-      Flexible(
-          child: new OverflowBox(
-              minWidth: 0.0,
-              minHeight: 0.0,
-              maxWidth: double.infinity,
-              child: fileMedia == null
-                  ? Icon(Icons.photo, size: 150)
-                  : isVideo == true
-                      ? player
-                      : Image.file(fileMedia!))),
-      SizedBox(height: 100),
-    ],
-  ),
-  floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-  floatingActionButton: buttons,
-)
-  );
+        onWillPop: () {
+          Phoenix.rebirth(context);
+          return Future.value(false);
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Column(
+            children: <Widget>[
+              main.appData.isPlatinum
+                  ? Container()
+                  : Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        width: main.homeAd.size.width.toDouble(),
+                        height: main.homeAd.size.height.toDouble(),
+                        child: AdWidget(ad: main.homeAd),
+                      ),
+                    ),
+              SizedBox(height: 50),
+              Flexible(
+                  child: new OverflowBox(
+                      minWidth: 0.0,
+                      minHeight: 0.0,
+                      maxWidth: double.infinity,
+                      child: fileMedia == null
+                          ? Icon(Icons.photo, size: 150)
+                          : isVideo == true
+                              ? player
+                              : Image.file(fileMedia!))),
+              SizedBox(height: 100),
+            ],
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: buttons,
+        ));
   }
 
   Future pickGalleryMedia(BuildContext context, FileType type) async {
@@ -147,26 +149,48 @@ class _HomeState extends State<Home> {
     });
   }
 
- Column uploadColumn(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-     children: [
-          FloatingActionButton.extended(
-            onPressed: () => null,
-            label: const Text('Upload'),
-            icon: const Icon(Icons.upload),
-            backgroundColor: Colors.blue,
-        ),
-        SizedBox(height: 10),
-        FloatingActionButton.extended(
-          onPressed: () => setState(() {
+  Column uploadColumn(BuildContext context) {
+    return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+      FloatingActionButton.extended(
+        onPressed: () async {
+          if (fileMedia == null) {
+            Fluttertoast.showToast(msg: 'You must select a file first!');
+            return;
+          }
+
+          Fluttertoast.showToast(msg: 'Uploading file...');
+
+          final upload = await uploadFile(fileMedia!);
+          await postUpload(upload);
+          setState(() {});
+        },
+        label: const Text('Upload'),
+        icon: const Icon(Icons.upload),
+        backgroundColor: fileMedia == null ? Colors.grey : Colors.blue,
+      ),
+      SizedBox(height: 10),
+      FloatingActionButton.extended(
+        onPressed: () async {
+          if (isVideo == true) isVideo = false;
+
+          final requrl = GetStorage().read('requrl');
+
+          if (requrl == null) {
+            Fluttertoast.showToast(msg: 'You must specify settings first!');
+            main.pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.ease);
+            return;
+          }
+
+          GetStorage().write('refresh', 0);
+          setState(() {
             fileMedia = null;
-            buttons = selectRow(context);
-          }),
-          label: const Text('Select file'),
-          icon: const Icon(Icons.upload_file),
-          backgroundColor: Colors.blue,
-        ),
+            buttons = uploadColumn(context);
+          });
+        },
+        label: const Text('Select file'),
+        icon: const Icon(Icons.upload_file),
+        backgroundColor: Colors.blue,
+      ),
     ]);
   }
 
@@ -185,7 +209,9 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.blue,
       ),
       FloatingActionButton.extended(
-        onPressed: () => main.appData.isPlatinum ? pickGalleryMedia(context, FileType.any) : platinumDialog(context),
+        onPressed: () => main.appData.isPlatinum
+            ? pickGalleryMedia(context, FileType.any)
+            : platinumDialog(context),
         label: const Text('File'),
         icon: const Icon(Icons.file_copy),
         backgroundColor: Colors.blue,

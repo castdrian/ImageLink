@@ -155,15 +155,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  flutter_speed_dial:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: master
-      resolved-ref: acd680e3cdc901e22057763888bd0b8eb46e1fa5
-      url: "git://github.com/darioielardi/flutter_speed_dial.git"
-    source: git
-    version: "4.0.0-dev.1"
   flutter_switch:
     dependency: "direct main"
     description:
