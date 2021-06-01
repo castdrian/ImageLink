@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
 import 'main.dart' as main;
 
 Future uploadFile(File file) async {
@@ -18,7 +19,11 @@ Future uploadFile(File file) async {
   final fields = jsonDecode(args);
   final req = http.MultipartRequest('POST', Uri.parse(requrl));
 
-  req.files.add(await http.MultipartFile.fromPath(filename, file.path));
+  String mimeType = lookupMimeType(file.path) as String;
+  String mimee = mimeType.split('/')[0];
+  String mtype = mimeType.split('/')[1];
+
+  req.files.add(await http.MultipartFile.fromPath(filename, file.path, contentType: MediaType(mimee, mtype)));
 
   if (type == 0) {
     fields.forEach((k, v) {
