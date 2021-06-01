@@ -118,7 +118,7 @@ class _HomeState extends State<Home> {
     final media = await FilePicker.platform.pickFiles(type: type);
     if (media == null) {
       setState(() {
-        buttons = uploadColumn;
+        buttons = uploadColumn(context);
       });
       return;
     }
@@ -127,13 +127,13 @@ class _HomeState extends State<Home> {
 
     if (file.existsSync() == false) {
       setState(() {
-        buttons = uploadColumn;
+        buttons = uploadColumn(context);
       });
       return;
     } else {
       setState(() {
         fileMedia = file;
-        buttons = uploadColumn;
+        buttons = uploadColumn(context);
       });
 
       if (isVideo == true) {
@@ -170,21 +170,22 @@ class _HomeState extends State<Home> {
       ),
       SizedBox(height: 10),
       FloatingActionButton.extended(
-        onPressed: () async {
+        onPressed: () {
           if (isVideo == true) isVideo = false;
 
           final requrl = GetStorage().read('requrl');
 
           if (requrl == null) {
             Fluttertoast.showToast(msg: 'You must specify settings first!');
-            main.pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.ease);
+            main.pageController.animateToPage(1,
+                duration: Duration(milliseconds: 300), curve: Curves.ease);
             return;
           }
 
           GetStorage().write('refresh', 0);
           setState(() {
             fileMedia = null;
-            buttons = uploadColumn(context);
+            buttons = selectRow(context);
           });
         },
         label: const Text('Select file'),

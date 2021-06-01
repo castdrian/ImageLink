@@ -29,7 +29,7 @@ Future uploadFile(File file) async {
     fields.forEach((k, v) {
       req.fields[k] = v;
     });
-  } else {
+  } else if (type == 1) {
     final headers = new Map<String, String>.from(fields);
     req.headers.addAll(headers);
   }
@@ -168,8 +168,8 @@ dynamic historyWidgets(int index, List<String> list, BuildContext context) {
 }
 
 Future updateHistoryData(String input) async {
-  final data = GetStorage().read('history').cast<String>().toList();
-  if (data.isEmpty) {
+  final data = GetStorage().read('history')?.cast<String>().toList();
+  if (data == null || data.isEmpty) {
     final list = <String>[];
     list.add(input);
     GetStorage().write('history', list);

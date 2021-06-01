@@ -126,77 +126,52 @@ class _SettingsState extends State<Settings>
                   ],
                 ),
                 SizedBox(height: 5),
-                GetStorage().read('body') == 1 ? Flexible(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 4,
-                      itemBuilder: (context, index) {
-                        keycontrollers.add(TextEditingController());
-                        valuecontrollers.add(TextEditingController());
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Flexible(
-                              child: TextField(
-                                controller: keycontrollers[index],
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Key:',
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.all(8),
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              child: TextField(
-                                controller: valuecontrollers[index],
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Value:',
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.all(8),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      }),
-                ) : Container(),
+                GetStorage().read('body') == 1
+                    ? TextField(
+                        controller: agc,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            alignLabelWithHint: true,
+                            labelText: 'JSON (multipart/form-data):'),
+                        maxLines: 3,
+                      )
+                    : Container(),
                 SizedBox(height: 5),
-                GetStorage().read('body') == 1 ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                        child: TextField(
-                      controller: txc,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Type:',
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(8),
-                      ),
-                      readOnly: true,
-                    )),
-                    Expanded(
-                        child: FlutterSwitch(
-                            width: 70.0,
-                            height: 30.0,
-                            valueFontSize: 20.0,
-                            toggleSize: 30.0,
-                            value: idx == 1 ? true : false,
-                            borderRadius: 30.0,
-                            padding: 4.0,
-                            showOnOff: false,
-                            onToggle: (val) async {
-                              setState(() {
-                                idx = val == true ? 1 : 0;
-                                txc.text =
-                                    val == true ? 'Headers' : 'Arguments';
-                              });
-                            })),
-                  ],
-                ) : Container(),
+                GetStorage().read('body') == 1
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                              child: TextField(
+                            controller: txc,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Type:',
+                              isDense: true,
+                              contentPadding: EdgeInsets.all(8),
+                            ),
+                            readOnly: true,
+                          )),
+                          Expanded(
+                              child: FlutterSwitch(
+                                  width: 70.0,
+                                  height: 30.0,
+                                  valueFontSize: 20.0,
+                                  toggleSize: 30.0,
+                                  value: idx == 1 ? true : false,
+                                  borderRadius: 30.0,
+                                  padding: 4.0,
+                                  showOnOff: false,
+                                  onToggle: (val) async {
+                                    setState(() {
+                                      idx = val == true ? 1 : 0;
+                                      txc.text =
+                                          val == true ? 'Headers' : 'Arguments';
+                                    });
+                                  })),
+                        ],
+                      )
+                    : Container(),
                 SizedBox(height: 5),
                 TextField(
                   controller: sxc,
@@ -444,6 +419,7 @@ class _SettingsState extends State<Settings>
     final screenshots = GetStorage().read('screenshots');
     final screendir = GetStorage().read('screendir');
     final exit = GetStorage().read('autoexit');
+    final argbody = GetStorage().read('body');
 
     if (requrl == null) {
       Fluttertoast.showToast(msg: 'Nothing to load!');
@@ -459,6 +435,7 @@ class _SettingsState extends State<Settings>
       status = screenshots == 0 ? false : true;
       sdc.text = screendir == null ? "" : screendir;
       autoexit = exit == 0 ? false : true;
+      body = argbody == 0 ? false : true;
       txc.text = idx == 1 ? 'Headers' : 'Arguments';
     });
 
@@ -508,35 +485,9 @@ class _SettingsState extends State<Settings>
     }
 
     dynamic sxcu;
-    try {
-      final content = await file.readAsString();
-      sxcu = jsonDecode(content);
-      print(sxcu);
-    } on FormatException catch (e) {
-      print(e);
-      Widget okButton = TextButton(
-        child: Text('I accept this error.'),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      );
-
-      AlertDialog alert = AlertDialog(
-        title: Text('Invalid JSON'),
-        content: Text('The selected file did not contain valid JSON!'),
-        actions: [
-          okButton,
-        ],
-      );
-
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-      return;
-    }
+    final content = await file.readAsString();
+    sxcu = jsonDecode(content);
+    print(sxcu);
     final regexp = RegExp(
         r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
     final match = regexp.firstMatch(sxcu['RequestURL']);
@@ -582,34 +533,6 @@ class _SettingsState extends State<Settings>
       AlertDialog alert = AlertDialog(
         title: Text('Invalid request type'),
         content: Text('The SXCU request type must be multipart/form-data!'),
-        actions: [
-          okButton,
-        ],
-      );
-
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-      return;
-    }
-
-    final args = sxcu['Arguments'];
-    final headers = sxcu['Headers'];
-
-    if (args == null && headers == null) {
-      Widget okButton = TextButton(
-        child: Text('I accept this error.'),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      );
-
-      AlertDialog alert = AlertDialog(
-        title: Text('Invalid request data'),
-        content: Text('The SXCU request must contain arguments or headers!'),
         actions: [
           okButton,
         ],
@@ -691,11 +614,16 @@ class _SettingsState extends State<Settings>
       if (sxcu['Headers'] == null) {
         agc.text = jsonEncode(sxcu['Arguments']);
         idx = 0;
+        body = true;
         GetStorage().write('argtype', 0);
-      } else {
+      } else if (sxcu['Arguments'] == null) {
         agc.text = jsonEncode(sxcu['Headers']);
         idx = 1;
+        body = true;
         GetStorage().write('argtype', 1);
+      } else if (sxcu['Arguments'] == null && sxcu['Headers'] == null) {
+        body = false;
+        GetStorage().write('argtype', 2);
       }
     });
 
@@ -712,7 +640,7 @@ class _SettingsState extends State<Settings>
   Future saveSettings(BuildContext context) async {
     await Permission.storage.request();
 
-    if ([rqc.text, rsc.text, agc.text].every((v) => v == '')) {
+    if ([rqc.text, rsc.text].every((v) => v == '')) {
       Fluttertoast.showToast(msg: 'Nothing to save (all fields required)!');
       return;
     }
@@ -760,34 +688,6 @@ class _SettingsState extends State<Settings>
       AlertDialog alert = AlertDialog(
         title: Text('Invalid response property'),
         content: Text('The response property did not match \$json:value\$'),
-        actions: [
-          okButton,
-        ],
-      );
-
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-      return;
-    }
-
-    try {
-      jsonDecode(agc.text);
-    } on FormatException catch (e) {
-      print(e);
-      Widget okButton = TextButton(
-        child: Text('I accept this error.'),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      );
-
-      AlertDialog alert = AlertDialog(
-        title: Text('Invalid JSON'),
-        content: Text('The arguments field did not contain valid JSON!'),
         actions: [
           okButton,
         ],
