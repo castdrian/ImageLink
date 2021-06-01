@@ -36,6 +36,7 @@ class _SettingsState extends State<Settings>
   int? idx = 0;
   bool status = false;
   bool autoexit = false;
+  bool body = false;
   String? dir;
   String dropdownValue = 'Custom (SXCU)';
 
@@ -52,379 +53,388 @@ class _SettingsState extends State<Settings>
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          flexibleSpace: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TabBar(tabs: [
-                Tab(icon: Icon(Icons.upload_file)),
-                Tab(icon: Image.asset('assets/icon/icon.png', scale: 20)),
-              ]),
-            ],
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            flexibleSpace: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TabBar(tabs: [
+                  Tab(icon: Icon(Icons.upload_file)),
+                  Tab(icon: Image.asset('assets/icon/icon.png', scale: 20)),
+                ]),
+              ],
+            ),
           ),
-        ),
-        body: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            Column(children: <Widget>[
-              SizedBox(height: 5),
-              TextField(
-                controller: rqc,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Request URL (example.com/upload):',
-                  isDense: true,
-                  contentPadding: EdgeInsets.all(8),
-                ),
-              ),
-              SizedBox(height: 5),
-              TextField(
-                controller: rsc,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Response property (\$json:parameter\$):',
-                  isDense: true,
-                  contentPadding: EdgeInsets.all(8),
-                ),
-              ),
-              SizedBox(height: 5),
-              TextField(
-                controller: fnc,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'FileFormName:',
-                  isDense: true,
-                  contentPadding: EdgeInsets.all(8),
-                ),
-              ),
-              SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Text('Request body:',
-                          style: TextStyle(fontSize: 15),
-                          textAlign: TextAlign.center)),
-                  Expanded(
-                      child: FlutterSwitch(
-                          width: 70.0,
-                          height: 30.0,
-                          valueFontSize: 20.0,
-                          toggleSize: 30.0,
-                          value: autoexit,
-                          borderRadius: 30.0,
-                          padding: 4.0,
-                          showOnOff: false,
-                          onToggle: (val) async {
-                            setState(() {
-                            });
-                          })),
-                ],
-              ),
-              SizedBox(height: 5),
-              Flexible(child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  keycontrollers.add(TextEditingController());
-                  valuecontrollers.add(TextEditingController());
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                  Flexible(
-                    child: TextField(
-                  controller: keycontrollers[index],
+          body: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              Column(children: <Widget>[
+                SizedBox(height: 5),
+                TextField(
+                  controller: rqc,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Key:',
+                    labelText: 'Request URL (example.com/upload):',
                     isDense: true,
                     contentPadding: EdgeInsets.all(8),
                   ),
                 ),
+                SizedBox(height: 5),
+                TextField(
+                  controller: rsc,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Response property (\$json:parameter\$):',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(8),
                   ),
-                  Flexible(
-                    child: TextField(
-                    controller: valuecontrollers[index],
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Value:',
-                      isDense: true,
-                      contentPadding: EdgeInsets.all(8),
-                    ),
                 ),
+                SizedBox(height: 5),
+                TextField(
+                  controller: fnc,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'FileFormName:',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(8),
+                  ),
                 ),
-              ],
-                );
-            }
-                ),
-              ),
-              SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: TextField(
-                    controller: txc,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Type:',
-                      isDense: true,
-                      contentPadding: EdgeInsets.all(8),
-                    ),
-                    readOnly: true,
-                  )),
-                  Expanded(
-                      child: FlutterSwitch(
-                          width: 70.0,
-                          height: 30.0,
-                          valueFontSize: 20.0,
-                          toggleSize: 30.0,
-                          value: idx == 1 ? true : false,
-                          borderRadius: 30.0,
-                          padding: 4.0,
-                          showOnOff: false,
-                          onToggle: (val) async {
-                            setState(() {
-                              idx = val == true ? 1 : 0;
-                              txc.text = val == true ? 'Headers' : 'Arguments';
-                            });
-                          })),
-                ],
-              ),
-              SizedBox(height: 5),
-              TextField(
-                controller: sxc,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Selected SXCU:',
-                  isDense: true,
-                  contentPadding: EdgeInsets.all(8),
-                ),
-                readOnly: true,
-              ),
-              SizedBox(height: 5),
-              main.appData.isPlatinum ? Container() :Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                width: main.tabOneAd.size.width.toDouble(),
-                height: main.tabOneAd.size.height.toDouble(),
-                child: AdWidget(ad: main.tabOneAd),
-              ),
-            ),
-            ]),
-            Column(children: <Widget>[
-              SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Text('Intercept screenshots:',
-                          style: TextStyle(fontSize: 15),
-                          textAlign: TextAlign.center)),
-                  Expanded(
-                      child: FlutterSwitch(
-                          width: 70.0,
-                          height: 30.0,
-                          valueFontSize: 20.0,
-                          toggleSize: 30.0,
-                          value: status,
-                          borderRadius: 30.0,
-                          padding: 4.0,
-                          showOnOff: false,
-                          onToggle: (val) async {
-                            setState(() {
-                              status = val;
-                              GetStorage()
-                                  .write('screenshots', status == true ? 1 : 0);
-                              GetStorage().write('refresh', 0);
-                            });
-
-                            if (status == true) {
-                              final requrl = GetStorage().read('requrl');
-
-                              if (requrl == null) {
-                                Fluttertoast.showToast(msg: 'Nothing to load!');
-                                return;
-                              }
-
-                              final path =
-                                  await FilePicker.platform.getDirectoryPath();
-
-                              if (path == null) {
-                                GetStorage().write('screenshots', 0);
-                                setState(() {
-                                  status = false;
-                                });
-                                return;
-                              } else if (path == '/') {
-                                GetStorage().write('screenshots', 0);
-                                setState(() {
-                                  status = false;
-                                });
-
-                                Widget okButton = TextButton(
-                                  child: Text('My mistake.'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                );
-
-                                AlertDialog alert = AlertDialog(
-                                  title: Text('Protected directoy:'),
-                                  content: Text(
-                                      'You chose a directory that is protected by Android.\nImageLink cannot read protected directories.'),
-                                  actions: [
-                                    okButton,
-                                  ],
-                                );
-
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return alert;
-                                  },
-                                );
-                                return;
-                              }
-                              dir = path;
-
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        child: Text('Request body:',
+                            style: TextStyle(fontSize: 15),
+                            textAlign: TextAlign.center)),
+                    Expanded(
+                        child: FlutterSwitch(
+                            width: 70.0,
+                            height: 30.0,
+                            valueFontSize: 20.0,
+                            toggleSize: 30.0,
+                            value: body,
+                            borderRadius: 30.0,
+                            padding: 4.0,
+                            showOnOff: false,
+                            onToggle: (val) {
                               setState(() {
-                                sdc.text = dir!;
-                                GetStorage().write('screendir', dir!);
+                                body = val;
+                                GetStorage().write('body', val == true ? 1 : 0);
                               });
-
-                              startForegroundService();
-                              Fluttertoast.showToast(
-                                  msg: 'Enabled screenshot intercepting!');
-                            } else {
-                              setState(() {
-                                sdc.text = '';
-                                GetStorage().write('screendir', '');
-                              });
-                              await FlutterForegroundPlugin
-                                  .stopForegroundService();
-                              Fluttertoast.showToast(
-                                  msg: 'Disabled screenshot intercepting!');
-                            }
-                          })),
-                ],
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: sdc,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Screenshot directory:',
-                  isDense: true,
-                  contentPadding: EdgeInsets.all(8),
+                            })),
+                  ],
                 ),
-                readOnly: true,
-              ),
-              SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Text('Upload destination:',
-                          style: TextStyle(fontSize: 15),
-                          textAlign: TextAlign.center)),
-                  Expanded(
-                      child: DropdownButtonHideUnderline(
-                          child: ButtonTheme(
-                    alignedDropdown: true,
-                    child: DropdownButton<String>(
-                        value: dropdownValue,
-                        iconSize: 24,
-                        elevation: 16,
-                        style:
-                            const TextStyle(color: Colors.blue, fontSize: 15),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.blue,
+                SizedBox(height: 5),
+                GetStorage().read('body') == 1 ? Flexible(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        keycontrollers.add(TextEditingController());
+                        valuecontrollers.add(TextEditingController());
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: TextField(
+                                controller: keycontrollers[index],
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Key:',
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.all(8),
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: TextField(
+                                controller: valuecontrollers[index],
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Value:',
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.all(8),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                ) : Container(),
+                SizedBox(height: 5),
+                GetStorage().read('body') == 1 ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        child: TextField(
+                      controller: txc,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Type:',
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(8),
+                      ),
+                      readOnly: true,
+                    )),
+                    Expanded(
+                        child: FlutterSwitch(
+                            width: 70.0,
+                            height: 30.0,
+                            valueFontSize: 20.0,
+                            toggleSize: 30.0,
+                            value: idx == 1 ? true : false,
+                            borderRadius: 30.0,
+                            padding: 4.0,
+                            showOnOff: false,
+                            onToggle: (val) async {
+                              setState(() {
+                                idx = val == true ? 1 : 0;
+                                txc.text =
+                                    val == true ? 'Headers' : 'Arguments';
+                              });
+                            })),
+                  ],
+                ) : Container(),
+                SizedBox(height: 5),
+                TextField(
+                  controller: sxc,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Selected SXCU:',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(8),
+                  ),
+                  readOnly: true,
+                ),
+                SizedBox(height: 5),
+                main.appData.isPlatinum
+                    ? Container()
+                    : Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          width: main.tabOneAd.size.width.toDouble(),
+                          height: main.tabOneAd.size.height.toDouble(),
+                          child: AdWidget(ad: main.tabOneAd),
                         ),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            platinumDialog(context);
-                            return;
-                            // ignore: dead_code
-                            dropdownValue = newValue!;
-                          });
-                        },
-                        items: <String>[
-                          'Custom (SXCU)',
-                          'Imgur',
-                          'oh-mama',
-                          'bingpot'
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList()),
-                  )))
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Text('Post-upload auto-exit:',
-                          style: TextStyle(fontSize: 15),
-                          textAlign: TextAlign.center)),
-                  Expanded(
-                      child: FlutterSwitch(
-                          width: 70.0,
-                          height: 30.0,
-                          valueFontSize: 20.0,
-                          toggleSize: 30.0,
-                          value: autoexit,
-                          borderRadius: 30.0,
-                          padding: 4.0,
-                          showOnOff: false,
-                          onToggle: (val) async {
+                      ),
+              ]),
+              Column(children: <Widget>[
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        child: Text('Intercept screenshots:',
+                            style: TextStyle(fontSize: 15),
+                            textAlign: TextAlign.center)),
+                    Expanded(
+                        child: FlutterSwitch(
+                            width: 70.0,
+                            height: 30.0,
+                            valueFontSize: 20.0,
+                            toggleSize: 30.0,
+                            value: status,
+                            borderRadius: 30.0,
+                            padding: 4.0,
+                            showOnOff: false,
+                            onToggle: (val) async {
+                              setState(() {
+                                status = val;
+                                GetStorage().write(
+                                    'screenshots', status == true ? 1 : 0);
+                                GetStorage().write('refresh', 0);
+                              });
+
+                              if (status == true) {
+                                final requrl = GetStorage().read('requrl');
+
+                                if (requrl == null) {
+                                  Fluttertoast.showToast(
+                                      msg: 'Nothing to load!');
+                                  return;
+                                }
+
+                                final path = await FilePicker.platform
+                                    .getDirectoryPath();
+
+                                if (path == null) {
+                                  GetStorage().write('screenshots', 0);
+                                  setState(() {
+                                    status = false;
+                                  });
+                                  return;
+                                } else if (path == '/') {
+                                  GetStorage().write('screenshots', 0);
+                                  setState(() {
+                                    status = false;
+                                  });
+
+                                  Widget okButton = TextButton(
+                                    child: Text('My mistake.'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+
+                                  AlertDialog alert = AlertDialog(
+                                    title: Text('Protected directoy:'),
+                                    content: Text(
+                                        'You chose a directory that is protected by Android.\nImageLink cannot read protected directories.'),
+                                    actions: [
+                                      okButton,
+                                    ],
+                                  );
+
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return alert;
+                                    },
+                                  );
+                                  return;
+                                }
+                                dir = path;
+
+                                setState(() {
+                                  sdc.text = dir!;
+                                  GetStorage().write('screendir', dir!);
+                                });
+
+                                startForegroundService();
+                                Fluttertoast.showToast(
+                                    msg: 'Enabled screenshot intercepting!');
+                              } else {
+                                setState(() {
+                                  sdc.text = '';
+                                  GetStorage().write('screendir', '');
+                                });
+                                await FlutterForegroundPlugin
+                                    .stopForegroundService();
+                                Fluttertoast.showToast(
+                                    msg: 'Disabled screenshot intercepting!');
+                              }
+                            })),
+                  ],
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: sdc,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Screenshot directory:',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(8),
+                  ),
+                  readOnly: true,
+                ),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        child: Text('Upload destination:',
+                            style: TextStyle(fontSize: 15),
+                            textAlign: TextAlign.center)),
+                    Expanded(
+                        child: DropdownButtonHideUnderline(
+                            child: ButtonTheme(
+                      alignedDropdown: true,
+                      child: DropdownButton<String>(
+                          value: dropdownValue,
+                          iconSize: 24,
+                          elevation: 16,
+                          style:
+                              const TextStyle(color: Colors.blue, fontSize: 15),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.blue,
+                          ),
+                          onChanged: (String? newValue) {
                             setState(() {
-                              autoexit = val;
-                              GetStorage().write('autoexit', val == true ? 1 : 0);
+                              platinumDialog(context);
+                              return;
+                              // ignore: dead_code
+                              dropdownValue = newValue!;
                             });
-                          })),
-                ],
-              ),
-              SizedBox(height: 5),
-              main.appData.isPlatinum ? Container() : Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                width: main.tabTwoAd.size.width.toDouble(),
-                height: main.tabTwoAd.size.height.toDouble(),
-                child: AdWidget(ad: main.tabTwoAd),
-              ),
-            ),
-            ])
-          ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
+                          },
+                          items: <String>[
+                            'Custom (SXCU)',
+                            'Imgur',
+                            'oh-mama',
+                            'bingpot'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList()),
+                    )))
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        child: Text('Post-upload auto-exit:',
+                            style: TextStyle(fontSize: 15),
+                            textAlign: TextAlign.center)),
+                    Expanded(
+                        child: FlutterSwitch(
+                            width: 70.0,
+                            height: 30.0,
+                            valueFontSize: 20.0,
+                            toggleSize: 30.0,
+                            value: autoexit,
+                            borderRadius: 30.0,
+                            padding: 4.0,
+                            showOnOff: false,
+                            onToggle: (val) async {
+                              setState(() {
+                                autoexit = val;
+                                GetStorage()
+                                    .write('autoexit', val == true ? 1 : 0);
+                              });
+                            })),
+                  ],
+                ),
+                SizedBox(height: 5),
+                main.appData.isPlatinum
+                    ? Container()
+                    : Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          width: main.tabTwoAd.size.width.toDouble(),
+                          height: main.tabTwoAd.size.height.toDouble(),
+                          child: AdWidget(ad: main.tabTwoAd),
+                        ),
+                      ),
+              ])
+            ],
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
               FloatingActionButton.extended(
-              onPressed: () => importSXCU(context),
-              label: const Text('Import SXCU'),
-              icon: const Icon(Icons.upload_file),
-              backgroundColor: Colors.blue,
-            ),
+                onPressed: () => importSXCU(context),
+                label: const Text('Import SXCU'),
+                icon: const Icon(Icons.upload_file),
+                backgroundColor: Colors.blue,
+              ),
               FloatingActionButton.extended(
                 onPressed: () => saveSettings(context),
                 label: const Text('Save settings'),
                 icon: const Icon(Icons.save),
                 backgroundColor: Colors.blue,
-            ),
-          ],
-        )
-      ),
+              ),
+            ],
+          )),
     );
   }
-  
+
   Future loadAsync(BuildContext context) async {
     final requrl = GetStorage().read('requrl');
     final resprop = GetStorage().read('resprop');
