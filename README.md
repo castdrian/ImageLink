@@ -17,8 +17,8 @@ You can [join the ImageLink Discord Guild](https://discord.gg/MSDcP79cch) if you
 
 ### Screenshots
 
-<a href="https://depressed-lemonade.me/X2eRrBp.png"><img src="https://depressed-lemonade.me/X2eRrBp.png"/></a>
-<a href="https://depressed-lemonade.me/w8zH5Ll.png"><img src="https://depressed-lemonade.me/w8zH5Ll.png"/></a>
+<a href="https://depressed-lemonade.me/vHGLDDX.png"><img src="https://depressed-lemonade.me/vHGLDDX.png"/></a>
+<a href="https://depressed-lemonade.me/KEoIKAW.png"><img src="https://depressed-lemonade.me/KEoIKAW.png"/></a>
 
 
 ### Supported SXCU's
