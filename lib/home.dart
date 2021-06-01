@@ -173,19 +173,19 @@ class _HomeState extends State<Home> {
   Row selectRow(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
       FloatingActionButton.extended(
-        onPressed: () => null,
+        onPressed: () => pickGalleryMedia(context, FileType.video),
         label: const Text('Video'),
         icon: const Icon(Icons.video_collection),
         backgroundColor: Colors.blue,
       ),
       FloatingActionButton.extended(
-        onPressed: () => null,
+        onPressed: () => pickGalleryMedia(context, FileType.image),
         label: const Text('Image'),
         icon: const Icon(Icons.image),
         backgroundColor: Colors.blue,
       ),
       FloatingActionButton.extended(
-        onPressed: () => null,
+        onPressed: () => main.appData.isPlatinum ? pickGalleryMedia(context, FileType.any) : platinumDialog(context),
         label: const Text('File'),
         icon: const Icon(Icons.file_copy),
         backgroundColor: Colors.blue,
