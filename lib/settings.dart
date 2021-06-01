@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_foreground_plugin/flutter_foreground_plugin.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:imagelink/util.dart';
@@ -328,7 +329,8 @@ class _SettingsState extends State<Settings>
                           ),
                           onChanged: (String? newValue) {
                             setState(() {
-                              platinumDialog(context);
+                              main.appData.isPlatinum ? Fluttertoast.showToast(
+                                      msg: 'Coming soon!') : platinumDialog(context);
                               return;
                               // ignore: dead_code
                               dropdownValue = newValue!;
@@ -374,6 +376,24 @@ class _SettingsState extends State<Settings>
                             })),
                   ],
                 ),
+                SizedBox(height: 5),
+                Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FloatingActionButton.extended(
+                onPressed: () => main.appData.isPlatinum ? Fluttertoast.showToast(msg: 'Coming soon!') : platinumDialog(context),
+                label: const Text('Drive import'),
+                icon: const Icon(Icons.add_to_drive),
+                backgroundColor: Colors.blue,
+              ),
+              FloatingActionButton.extended(
+                onPressed: () => main.appData.isPlatinum ? Fluttertoast.showToast(msg: 'Coming soon!') : platinumDialog(context),
+                label: const Text('Drive export'),
+                icon: const Icon(FontAwesomeIcons.googleDrive),
+                backgroundColor: Colors.blue,
+              ),
+            ],
+          ),
                 SizedBox(height: 5),
                 main.appData.isPlatinum
                     ? Container()

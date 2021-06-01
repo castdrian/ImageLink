@@ -200,6 +200,8 @@ class _InfoState extends State<Info> {
                                                     product as Package);
                                             if (purchaserInfo.entitlements
                                                 .all['Platinum']!.isActive) {
+                                                   Fluttertoast.showToast(
+                                      msg: 'Please click the restore purchase button!');
                                               await Phoenix.rebirth(context);
                                             }
                                           } else {

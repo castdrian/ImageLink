@@ -155,11 +155,11 @@ dynamic historyWidgets(int index, List<String> list, BuildContext context) {
       errorBuilder: (context, error, stackTrace) =>  ext.any(list[index].endsWith) == true
         ? Icon(Icons.broken_image_outlined)
         : Icon(Icons.video_library),
-    ), width: 70,
+    ), width: 50,
     ), 
       Text(
         list[index],
-        style: TextStyle(fontSize: 14),
+        style: TextStyle(fontSize: 12),
         softWrap: false,
         overflow: TextOverflow.fade,
       )
