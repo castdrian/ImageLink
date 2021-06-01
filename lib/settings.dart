@@ -31,6 +31,8 @@ class _SettingsState extends State<Settings>
   final agc = TextEditingController();
   final fnc = TextEditingController();
   final txc = TextEditingController();
+  List<TextEditingController> keycontrollers = [];
+  List<TextEditingController> valuecontrollers = [];
   int? idx = 0;
   bool status = false;
   bool autoexit = false;
@@ -76,7 +78,7 @@ class _SettingsState extends State<Settings>
                   contentPadding: EdgeInsets.all(8),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               TextField(
                 controller: rsc,
                 decoration: InputDecoration(
@@ -86,7 +88,7 @@ class _SettingsState extends State<Settings>
                   contentPadding: EdgeInsets.all(8),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               TextField(
                 controller: fnc,
                 decoration: InputDecoration(
@@ -96,14 +98,67 @@ class _SettingsState extends State<Settings>
                   contentPadding: EdgeInsets.all(8),
                 ),
               ),
-              SizedBox(height: 10),
-              TextField(
-                controller: agc,
-                decoration: InputDecoration(
+              SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                      child: Text('Request body:',
+                          style: TextStyle(fontSize: 15),
+                          textAlign: TextAlign.center)),
+                  Expanded(
+                      child: FlutterSwitch(
+                          width: 70.0,
+                          height: 30.0,
+                          valueFontSize: 20.0,
+                          toggleSize: 30.0,
+                          value: autoexit,
+                          borderRadius: 30.0,
+                          padding: 4.0,
+                          showOnOff: false,
+                          onToggle: (val) async {
+                            setState(() {
+                            });
+                          })),
+                ],
+              ),
+              SizedBox(height: 5),
+              Flexible(child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: 4,
+                itemBuilder: (context, index) {
+                  keycontrollers.add(TextEditingController());
+                  valuecontrollers.add(TextEditingController());
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                  Flexible(
+                    child: TextField(
+                  controller: keycontrollers[index],
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    alignLabelWithHint: true,
-                    labelText: 'JSON (multipart/form-data):'),
-                maxLines: 3,
+                    labelText: 'Key:',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(8),
+                  ),
+                ),
+                  ),
+                  Flexible(
+                    child: TextField(
+                    controller: valuecontrollers[index],
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Value:',
+                      isDense: true,
+                      contentPadding: EdgeInsets.all(8),
+                    ),
+                ),
+                ),
+              ],
+                );
+            }
+                ),
               ),
               SizedBox(height: 5),
               Row(
