@@ -49,7 +49,10 @@ dependencies:
   flutter_foreground_plugin: 
     git: https://github.com/jja08111/flutter_foreground_service_plugin.git
   package_info: ^2.0.0
-  flutter_speed_dial: ^4.0.0-dev
+  flutter_speed_dial: 
+    git:
+        url: git://github.com/darioielardi/flutter_speed_dial.git
+        ref: master
   google_mobile_ads: ^0.13.0
   purchases_flutter: ^3.2.2
   flutter_phoenix: ^1.0.0
