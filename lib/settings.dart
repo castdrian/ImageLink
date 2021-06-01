@@ -358,7 +358,28 @@ class _SettingsState extends State<Settings>
             ])
           ],
         ),
-        floatingActionButton: buildSpeedDial(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+              FloatingActionButton.extended(
+              onPressed: () {
+                // Add your onPressed code here!
+              },
+              label: const Text('Import SXCU'),
+              icon: const Icon(Icons.upload_file),
+              backgroundColor: Colors.blue,
+            ),
+              FloatingActionButton.extended(
+              onPressed: () {
+                // Add your onPressed code here!
+              },
+              label: const Text('Save settings'),
+              icon: const Icon(Icons.save),
+              backgroundColor: Colors.blue,
+            ),
+          ],
+        )
       ),
     );
   }
