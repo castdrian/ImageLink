@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_plugin/flutter_foreground_plugin.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:imagelink/util.dart';
@@ -38,14 +36,6 @@ class _SettingsState extends State<Settings>
   bool autoexit = false;
   String? dir;
   String dropdownValue = 'Custom (SXCU)';
-  final renderOverlay = true;
-  final visible = true;
-  final extend = false;
-  final rmicons = false;
-  final closeManually = false;
-  final useRAnimation = true;
-  final speedDialDirection = SpeedDialDirection.Left;
-  final selectedfABLocation = FloatingActionButtonLocation.endDocked;
 
   @override
   void initState() {
@@ -363,67 +353,20 @@ class _SettingsState extends State<Settings>
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
               FloatingActionButton.extended(
-              onPressed: () {
-                // Add your onPressed code here!
-              },
+              onPressed: () => importSXCU(context),
               label: const Text('Import SXCU'),
               icon: const Icon(Icons.upload_file),
               backgroundColor: Colors.blue,
             ),
               FloatingActionButton.extended(
-              onPressed: () {
-                // Add your onPressed code here!
-              },
-              label: const Text('Save settings'),
-              icon: const Icon(Icons.save),
-              backgroundColor: Colors.blue,
+                onPressed: () => saveSettings(context),
+                label: const Text('Save settings'),
+                icon: const Icon(Icons.save),
+                backgroundColor: Colors.blue,
             ),
           ],
         )
       ),
-    );
-  }
-
-  SpeedDial buildSpeedDial() {
-    return SpeedDial(
-      icon: Icons.save,
-      activeIcon: Icons.close,
-      buttonSize: 56,
-      childrenButtonSize: 56.0,
-      visible: visible,
-      direction: speedDialDirection,
-      closeManually: closeManually,
-      renderOverlay: renderOverlay,
-      curve: Curves.bounceIn,
-      overlayColor: Colors.black,
-      overlayOpacity: 0.5,
-      useRotationAnimation: useRAnimation,
-      elevation: 8.0,
-      shape: CircleBorder(),
-      childMargin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      children: [
-        SpeedDialChild(
-          child: !rmicons ? Icon(Icons.save) : null,
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-          label: 'Save settings',
-          onTap: () => saveSettings(context),
-        ),
-        SpeedDialChild(
-          child: !rmicons ? Icon(Icons.upload_file) : null,
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-          label: 'Import SXCU',
-          onTap: () => importSXCU(context),
-        ),
-        SpeedDialChild(
-          child: !rmicons ? Icon(FontAwesomeIcons.googleDrive) : null,
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-          label: 'Drive sync',
-          onTap: () => platinumDialog(context),
-        ),
-      ],
     );
   }
   
