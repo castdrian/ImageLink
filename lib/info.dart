@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -124,10 +125,7 @@ class _InfoState extends State<Info> {
                                             Fluttertoast.showToast(
                                                 msg:
                                                     'Success! Please restart the application!');
-                                            Phoenix.rebirth(context);
-                                            SystemChannels.platform
-                                                .invokeMethod(
-                                                    'SystemNavigator.pop');
+                                            exit(0);
                                           }
                                         } else {
                                           Fluttertoast.showToast(
@@ -169,10 +167,7 @@ class _InfoState extends State<Info> {
                                             Fluttertoast.showToast(
                                                 msg:
                                                     'Success! Please restart the application!');
-                                            Phoenix.rebirth(context);
-                                            SystemChannels.platform
-                                                .invokeMethod(
-                                                    'SystemNavigator.pop');
+                                            exit(0);
                                           }
                                         } else {
                                           Fluttertoast.showToast(
@@ -215,10 +210,7 @@ class _InfoState extends State<Info> {
                                             Fluttertoast.showToast(
                                                 msg:
                                                     'Success! Please restart the application!');
-                                            Phoenix.rebirth(context);
-                                            SystemChannels.platform
-                                                .invokeMethod(
-                                                    'SystemNavigator.pop');
+                                                exit(0);
                                           }
                                         } else {
                                           Fluttertoast.showToast(
