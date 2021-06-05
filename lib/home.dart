@@ -7,6 +7,7 @@ import 'package:chewie/chewie.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:video_player/video_player.dart';
+import 'ad_helper.dart';
 import 'main.dart' as main;
 import 'util.dart';
 
@@ -23,6 +24,7 @@ class _HomeState extends State<Home> {
   bool isVideo = false;
   dynamic buttons;
   final List? shared = main.getShared();
+  InterstitialAd? _interstitialAd;
 
   Future<void> initializePlayer() async {
     final videoPlayerController = VideoPlayerController.file(fileMedia!);
@@ -71,6 +73,33 @@ class _HomeState extends State<Home> {
     super.initState();
     shareIntent();
     buttons = uploadColumn(context);
+
+    InterstitialAd.load(
+      adUnitId: AdHelper.uploadInters,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          // Keep a reference to the ad so you can show it later.
+          this._interstitialAd = ad;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('InterstitialAd failed to load: $error');
+        },
+    ));
+
+    _interstitialAd?.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+        print('%ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+      },
+      onAdImpression: (InterstitialAd ad) => print('$ad impression occurred.'),
+    );
   }
 
   @override
@@ -163,6 +192,7 @@ class _HomeState extends State<Home> {
           final upload = await uploadFile(fileMedia!);
           await postUpload(upload);
           setState(() {});
+          if (!main.appData.isPlatinum) _interstitialAd?.show();
         },
         label: const Text('Upload'),
         icon: const Icon(Icons.upload),

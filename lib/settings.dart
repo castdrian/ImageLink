@@ -11,6 +11,7 @@ import 'package:imagelink/util.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'ad_helper.dart';
 import 'main.dart' as main;
 
 class Settings extends StatefulWidget {
@@ -40,12 +41,68 @@ class _SettingsState extends State<Settings>
   bool body = false;
   String? dir;
   String dropdownValue = 'Custom (SXCU)';
+  InterstitialAd? _interstitialAd;
+  InterstitialAd? _sinterstitialAd;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!
         .addPostFrameCallback((_) async => await loadAsync(context));
+    
+        InterstitialAd.load(
+        adUnitId: AdHelper.importInters,
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            // Keep a reference to the ad so you can show it later.
+            this._interstitialAd = ad;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('InterstitialAd failed to load: $error');
+          },
+      ));
+
+      _interstitialAd?.fullScreenContentCallback = FullScreenContentCallback(
+        onAdShowedFullScreenContent: (InterstitialAd ad) =>
+          print('%ad onAdShowedFullScreenContent.'),
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          print('$ad onAdDismissedFullScreenContent.');
+          ad.dispose();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          print('$ad onAdFailedToShowFullScreenContent: $error');
+          ad.dispose();
+        },
+        onAdImpression: (InterstitialAd ad) => print('$ad impression occurred.'),
+      );
+
+      InterstitialAd.load(
+      adUnitId: AdHelper.saveInters,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          // Keep a reference to the ad so you can show it later.
+          this._sinterstitialAd = ad;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('InterstitialAd failed to load: $error');
+        },
+    ));
+
+    _sinterstitialAd?.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+        print('%ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+      },
+      onAdImpression: (InterstitialAd ad) => print('$ad impression occurred.'),
+    );
   }
 
   @override
@@ -488,7 +545,7 @@ class _SettingsState extends State<Settings>
     if (media == null) return;
     final file = File(media.files.first.path!);
     final extension = p.extension(file.path);
-    print(extension);
+
     if (extension != '.sxcu') {
       Widget okButton = TextButton(
         child: Text('I accept this error.'),
@@ -665,6 +722,7 @@ class _SettingsState extends State<Settings>
     GetStorage().write('fileform', fnc.text);
 
     Fluttertoast.showToast(msg: 'Settings saved successfully!');
+    if (!main.appData.isPlatinum) _interstitialAd?.show();
   }
 
   Future saveSettings(BuildContext context) async {
@@ -672,6 +730,7 @@ class _SettingsState extends State<Settings>
 
     if ([rqc.text, rsc.text].every((v) => v == '')) {
       Fluttertoast.showToast(msg: 'Nothing to save (all fields required)!');
+      if (!main.appData.isPlatinum) _sinterstitialAd?.show();
       return;
     }
 
@@ -739,5 +798,6 @@ class _SettingsState extends State<Settings>
     GetStorage().write('destination', dropdownValue == 'Custom (SXCU)' ? 0 : 1);
 
     Fluttertoast.showToast(msg: 'Settings saved successfully!');
+    if (!main.appData.isPlatinum) _sinterstitialAd?.show();
   }
 }
