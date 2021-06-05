@@ -11,39 +11,53 @@ import 'package:http_parser/http_parser.dart';
 import 'main.dart' as main;
 
 Future uploadFile(File file) async {
-  final requrl = GetStorage().read('requrl')!;
-  final args = GetStorage().read('args')!;
-  final type = GetStorage().read('argtype');
-  final filename = GetStorage().read('fileform')!;
+  if (GetStorage().read('destination') == 0) {
+    final requrl = GetStorage().read('requrl')!;
+    final args = GetStorage().read('args')!;
+    final type = GetStorage().read('argtype');
+    final filename = GetStorage().read('fileform')!;
 
-  final fields = jsonDecode(args);
-  final req = http.MultipartRequest('POST', Uri.parse(requrl));
+    final fields = jsonDecode(args);
+    final req = http.MultipartRequest('POST', Uri.parse(requrl));
 
-  String mimeType = lookupMimeType(file.path) as String;
-  String mimee = mimeType.split('/')[0];
-  String mtype = mimeType.split('/')[1];
+    String mimeType = lookupMimeType(file.path) as String;
+    String mimee = mimeType.split('/')[0];
+    String mtype = mimeType.split('/')[1];
 
-  req.files.add(await http.MultipartFile.fromPath(filename, file.path, contentType: MediaType(mimee, mtype)));
+    req.files.add(await http.MultipartFile.fromPath(filename, file.path,
+        contentType: MediaType(mimee, mtype)));
 
-  if (type == 0) {
-    fields.forEach((k, v) {
-      req.fields[k] = v;
-    });
-  } else if (type == 1) {
-    final headers = new Map<String, String>.from(fields);
-    req.headers.addAll(headers);
-  }
+    if (type == 0) {
+      fields.forEach((k, v) {
+        req.fields[k] = v;
+      });
+    } else if (type == 1) {
+      final headers = new Map<String, String>.from(fields);
+      req.headers.addAll(headers);
+    }
 
-  final response = await req.send();
-  print(response.statusCode);
+    final response = await req.send();
 
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final responseString = await response.stream.bytesToString();
-    final body = jsonDecode(responseString);
-    GetStorage().write('refresh', 1);
-    return body;
-  } else {
-    return response.statusCode;
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final responseString = await response.stream.bytesToString();
+      final body = jsonDecode(responseString);
+      GetStorage().write('refresh', 1);
+      return body;
+    } else {
+      return response.statusCode;
+    }
+  } else if (GetStorage().read('destination') == 1) {
+    final response = await imgurUpload(file);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final responseString = await response.stream.bytesToString();
+      final body = jsonDecode(responseString);
+      print(body);
+      GetStorage().write('refresh', 1);
+      return body;
+    } else {
+      return response.statusCode;
+    }
   }
 }
 
@@ -53,25 +67,33 @@ Future postUpload(dynamic upload) async {
     return;
   } else {
     print(upload);
-    final resprop = GetStorage().read('resprop')!;
-    final regexp = RegExp(r'\$json:([a-zA-Z]+)\$');
-    final match = regexp.firstMatch(resprop)!;
-    final matched = match.group(1);
-    final rawurl = upload[matched] as String?;
 
-    if (rawurl == null) {
-      Fluttertoast.showToast(
-          msg: 'Uploaded, but failed to parse response URL!');
-      return;
+    if (GetStorage().read('destination') == 0) {
+      final resprop = GetStorage().read('resprop')!;
+      final regexp = RegExp(r'\$json:([a-zA-Z]+)\$');
+      final match = regexp.firstMatch(resprop)!;
+      final matched = match.group(1);
+      final rawurl = upload[matched] as String?;
+
+      if (rawurl == null) {
+        Fluttertoast.showToast(
+            msg: 'Uploaded, but failed to parse response URL!');
+        return;
+      }
+
+      final url = rawurl.replaceAll(RegExp(r'/^http:\/\//i'), 'https://');
+
+      Clipboard.setData(ClipboardData(text: url));
+      Fluttertoast.showToast(msg: 'File sucessfully uploaded!');
+      await updateHistoryData(url);
+      if (GetStorage().read('autoexit') == 1)
+        SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    } else if (GetStorage().read('destination') == 1) {
+      final url = upload['data']['link'];
+      Clipboard.setData(ClipboardData(text: url));
+      Fluttertoast.showToast(msg: 'File sucessfully uploaded!');
+      await updateHistoryData(url);
     }
-
-    final url = rawurl.replaceAll(RegExp(r'/^http:\/\//i'), 'https://');
-
-    Clipboard.setData(ClipboardData(text: url));
-    Fluttertoast.showToast(msg: 'File sucessfully uploaded!');
-    await updateHistoryData(url);
-    if (GetStorage().read('autoexit') == 1)
-      SystemChannels.platform.invokeMethod('SystemNavigator.pop');
   }
 }
 
@@ -85,7 +107,8 @@ void platinumDialog(BuildContext context) {
     child: Text('Gimme!'),
     onPressed: () {
       Navigator.of(context).pop();
-      main.pageController.animateToPage(3, duration: Duration(milliseconds: 300), curve: Curves.ease);
+      main.pageController.animateToPage(3,
+          duration: Duration(milliseconds: 300), curve: Curves.ease);
     },
   );
 
@@ -145,25 +168,29 @@ void globalForegroundService() {
 dynamic historyWidgets(int index, List<String> list, BuildContext context) {
   final ext = ['.jpg', '.png', '.gif', '.webp'];
   final widget = Container(
-  child: Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  mainAxisSize: MainAxisSize.max,
-  children: [
-    Container(child: Image.network(list[index],
-      loadingBuilder: (context, child, loadingProgress) =>
-          (loadingProgress == null) ? child : CircularProgressIndicator(),
-      errorBuilder: (context, error, stackTrace) =>  ext.any(list[index].endsWith) == true
-        ? Icon(Icons.broken_image_outlined)
-        : Icon(Icons.video_library),
-    ), width: 50,
-    ), 
-      Text(
-        list[index],
-        style: TextStyle(fontSize: 12),
-        softWrap: false,
-        overflow: TextOverflow.fade,
-      )
-    ]));
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+        Container(
+          child: Image.network(
+            list[index],
+            loadingBuilder: (context, child, loadingProgress) =>
+                (loadingProgress == null) ? child : CircularProgressIndicator(),
+            errorBuilder: (context, error, stackTrace) =>
+                ext.any(list[index].endsWith) == true
+                    ? Icon(Icons.broken_image_outlined)
+                    : Icon(Icons.video_library),
+          ),
+          width: 50,
+        ),
+        Text(
+          list[index],
+          style: TextStyle(fontSize: 12),
+          softWrap: false,
+          overflow: TextOverflow.fade,
+        )
+      ]));
   return widget;
 }
 
@@ -183,4 +210,23 @@ Future updateHistoryData(String input) async {
       GetStorage().write('history', data);
     }
   }
+}
+
+Future<http.StreamedResponse> imgurUpload(File file) async {
+  final req = http.MultipartRequest(
+      'POST', Uri.parse('https://api.imgur.com/3/upload'));
+
+  String mimeType = lookupMimeType(file.path) as String;
+  String mimee = mimeType.split('/')[0];
+  String mtype = mimeType.split('/')[1];
+
+  req.files.add(await http.MultipartFile.fromPath('image', file.path,
+      contentType: MediaType(mimee, mtype)));
+
+  req.headers
+      .addAll({HttpHeaders.authorizationHeader: 'Client-ID 867afe9433c0a53'});
+
+  final response = await req.send();
+
+  return response;
 }

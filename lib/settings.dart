@@ -329,18 +329,21 @@ class _SettingsState extends State<Settings>
                           ),
                           onChanged: (String? newValue) {
                             setState(() {
-                              main.appData.isPlatinum ? Fluttertoast.showToast(
-                                      msg: 'Coming soon!') : platinumDialog(context);
-                              return;
-                              // ignore: dead_code
-                              dropdownValue = newValue!;
+                              if (main.appData.isPlatinum) {
+                                if (newValue == 'Custom (SXCU)') {
+                                  dropdownValue = newValue!;
+                                  GetStorage().write('destination', 0);
+                                } else if (newValue == 'Imgur')
+                                  dropdownValue = newValue!;
+                                GetStorage().write('destination', 1);
+                              } else {
+                                platinumDialog(context);
+                              }
                             });
                           },
                           items: <String>[
                             'Custom (SXCU)',
                             'Imgur',
-                            'oh-mama',
-                            'bingpot'
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -378,22 +381,26 @@ class _SettingsState extends State<Settings>
                 ),
                 SizedBox(height: 5),
                 Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FloatingActionButton.extended(
-                onPressed: () => main.appData.isPlatinum ? Fluttertoast.showToast(msg: 'Coming soon!') : platinumDialog(context),
-                label: const Text('Drive import'),
-                icon: const Icon(Icons.add_to_drive),
-                backgroundColor: Colors.blue,
-              ),
-              FloatingActionButton.extended(
-                onPressed: () => main.appData.isPlatinum ? Fluttertoast.showToast(msg: 'Coming soon!') : platinumDialog(context),
-                label: const Text('Drive export'),
-                icon: const Icon(FontAwesomeIcons.googleDrive),
-                backgroundColor: Colors.blue,
-              ),
-            ],
-          ),
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FloatingActionButton.extended(
+                      onPressed: () => main.appData.isPlatinum
+                          ? Fluttertoast.showToast(msg: 'Coming soon!')
+                          : platinumDialog(context),
+                      label: const Text('Drive import'),
+                      icon: const Icon(Icons.add_to_drive),
+                      backgroundColor: Colors.blue,
+                    ),
+                    FloatingActionButton.extended(
+                      onPressed: () => main.appData.isPlatinum
+                          ? Fluttertoast.showToast(msg: 'Coming soon!')
+                          : platinumDialog(context),
+                      label: const Text('Drive export'),
+                      icon: const Icon(FontAwesomeIcons.googleDrive),
+                      backgroundColor: Colors.blue,
+                    ),
+                  ],
+                ),
                 SizedBox(height: 5),
                 main.appData.isPlatinum
                     ? Container()
@@ -440,6 +447,7 @@ class _SettingsState extends State<Settings>
     final screendir = GetStorage().read('screendir');
     final exit = GetStorage().read('autoexit');
     final argbody = GetStorage().read('body');
+    final dest = GetStorage().read('destination');
 
     if (requrl == null) {
       Fluttertoast.showToast(msg: 'Nothing to load!');
@@ -457,6 +465,8 @@ class _SettingsState extends State<Settings>
       autoexit = exit == 0 ? false : true;
       body = argbody == 0 ? false : true;
       txc.text = idx == 1 ? 'Headers' : 'Arguments';
+      if (dest != null) dest == 0 ? dropdownValue = 'Custom (SXCU)' : dropdownValue = 'Imgur';
+      else GetStorage().write('destination', 0);
     });
 
     Fluttertoast.showToast(msg: 'Settings successfully loaded!');
@@ -726,6 +736,7 @@ class _SettingsState extends State<Settings>
     GetStorage().write('resprop', rsc.text);
     GetStorage().write('args', agc.text);
     GetStorage().write('fileform', fnc.text);
+    GetStorage().write('destination', dropdownValue == 'Custom (SXCU)' ? 0 : 1);
 
     Fluttertoast.showToast(msg: 'Settings saved successfully!');
   }
