@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -125,7 +124,7 @@ class _InfoState extends State<Info> {
                                             Fluttertoast.showToast(
                                                 msg:
                                                     'Success! Please restart the application!');
-                                            exit(0);
+                                            SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                                           }
                                         } else {
                                           Fluttertoast.showToast(
@@ -167,7 +166,7 @@ class _InfoState extends State<Info> {
                                             Fluttertoast.showToast(
                                                 msg:
                                                     'Success! Please restart the application!');
-                                            exit(0);
+                                            SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                                           }
                                         } else {
                                           Fluttertoast.showToast(
@@ -210,7 +209,7 @@ class _InfoState extends State<Info> {
                                             Fluttertoast.showToast(
                                                 msg:
                                                     'Success! Please restart the application!');
-                                                exit(0);
+                                                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                                           }
                                         } else {
                                           Fluttertoast.showToast(
