@@ -1,5 +1,5 @@
 [![GitHub version](https://badge.fury.io/gh/adrifcastr%2FImageLink.svg)](https://github.com/adrifcastr/ImageLink)
-[![Support Server](https://img.shields.io/discord/844574704698130492.svg?color=7289da&label=ImageLink&logo=discord&style=flat-round)](https://discord.gg/MSDcP79cch)
+[![Support Server](https://img.shields.io/discord/844574704698130492.svg?color=7289da&label=ImageLink&logo=discord&style=flat-round)](https://discord.gg/d23n5vAbD5)
 
 # ImageLink
 ### ImageLink is the (non-affiliated) mobile ShareX-like uploader client!
@@ -12,7 +12,7 @@ You can import existing .sxcu configuration that you use on your desktop devices
 - Intercept and upload screenshots if wanted
 
 You can [download ImageLink from Google Play](https://play.google.com/store/apps/details?id=com.castdrian.imagelink)!\
-You can [join the ImageLink Discord Guild](https://discord.gg/RCCaTwcFHv) if you have any questions or feedback!
+You can [join the ImageLink Discord Guild](https://discord.gg/d23n5vAbD5) if you have any questions or feedback!
 
 
 ### Screenshots
