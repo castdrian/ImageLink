@@ -12,7 +12,7 @@ You can import existing .sxcu configuration that you use on your desktop devices
 - Intercept and upload screenshots if wanted
 
 You can [download ImageLink from Google Play](https://play.google.com/store/apps/details?id=com.castdrian.imagelink)!\
-You can [join the ImageLink Discord Guild](https://discord.gg/MSDcP79cch) if you have any questions or feedback!
+You can [join the ImageLink Discord Guild](https://discord.gg/RCCaTwcFHv) if you have any questions or feedback!
 
 
 ### Screenshots
