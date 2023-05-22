@@ -1,3 +1,5 @@
+<span style="color: #FF4136; font-size: 24px;">⚠️ Deprecation Notice:</span> [ImageLink](https://github.com/ImageLink) is deprecated, use [Imageing](https://github.com/ImageingApp/Imageing) instead.
+
 [![GitHub version](https://badge.fury.io/gh/adrifcastr%2FImageLink.svg)](https://github.com/adrifcastr/ImageLink)
 [![Support Server](https://img.shields.io/discord/844574704698130492.svg?color=7289da&label=ImageLink&logo=discord&style=flat-round)](https://discord.gg/d23n5vAbD5)
 
